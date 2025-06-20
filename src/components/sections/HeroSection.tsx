@@ -22,7 +22,7 @@ export default function HeroSection() {
         
         <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16">
           {/* Tablet Device Mockup - Horizontal */}
-          <div className="device-mockup tablet transform hover:-translate-y-2 transition-transform duration-500 ease-in-out camera-float">
+          <div className="device-mockup tablet">
             <div className="rounded-[40px] border border-[#0bfe88]/20 shadow-[0_50px_100px_-20px_rgba(11,254,136,0.3),0_30px_60px_-30px_rgba(0,0,0,0.8)] bg-[#1a1a1a] p-2 w-[640px] h-[380px] relative">
               {/* Tablet camera */}
               <div className="absolute top-1/2 -left-1 transform -translate-y-1/2 w-[6px] h-[6px] bg-[#333] rounded-full z-50 border border-[#444]"></div>
@@ -40,12 +40,14 @@ export default function HeroSection() {
                       <div className="w-1.5 h-1.5 bg-[#0bfe88] rounded-full recording-dot"></div>
                       <span className="text-white text-xs">LIVE</span>
                     </div>
-                    <div className="text-[#0bfe88] text-sm font-bold">SyncWorkflow</div>
+                    <div className="text-sm font-bold">
+                      <span className="text-white">Sync</span><span className="text-[#3777ff]">Workflow</span>
+                    </div>
                   </div>
                 </div>
                 
                 {/* Form UI */}
-                <div className="form-ui h-full p-8 pt-12">
+                <div className="form-ui h-full p-8 pt-12 relative z-30">
                   <div className="flex flex-row gap-10 h-full">
                     {/* Left side - Form fields */}
                     <div className="flex-1 space-y-4">
@@ -53,19 +55,19 @@ export default function HeroSection() {
                       <input 
                         type="text" 
                         placeholder="NAME" 
-                        className="w-full bg-black bg-opacity-40 backdrop-blur-sm text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400"
+                        className="w-full bg-gray-800 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400 border border-gray-700"
                       />
                       
                       <input 
                         type="email" 
                         placeholder="EMAIL" 
-                        className="w-full bg-black bg-opacity-40 backdrop-blur-sm text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400"
+                        className="w-full bg-gray-800 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400 border border-gray-700"
                       />
                       
                       <input 
                         type="tel" 
                         placeholder="PHONE" 
-                        className="w-full bg-black bg-opacity-40 backdrop-blur-sm text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400"
+                        className="w-full bg-gray-800 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400 border border-gray-700"
                       />
                     </div>
                     
@@ -81,10 +83,8 @@ export default function HeroSection() {
                       </div>
                       
                       <div className="flex justify-center">
-                        <button className="shutter-button w-16 h-16 rounded-full shadow-xl relative bg-gradient-to-r from-[#0bfe88] to-[#0bfe88] hover:shadow-[0_0_15px_rgba(11,254,136,0.5)] transform hover:scale-[1.02] transition-all duration-300">
-                          <div className="absolute inset-2 rounded-full bg-black flex items-center justify-center">
-                            <span className="text-xs text-[#0bfe88] font-bold">REGISTER</span>
-                          </div>
+                        <button className="w-full bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold py-3 px-6 rounded-md uppercase hover:shadow-[0_0_15px_rgba(11,254,136,0.5)] transform hover:scale-[1.02] transition-all duration-300">
+                          SUBMIT
                         </button>
                       </div>
                     </div>
@@ -113,40 +113,40 @@ export default function HeroSection() {
                       <div className="w-1.5 h-1.5 bg-[#0bfe88] rounded-full recording-dot"></div>
                       <span className="text-white text-xs">LIVE</span>
                     </div>
-                    <div className="text-[#0bfe88] text-xs font-bold">SyncWorkflow</div>
+                    <div className="text-xs font-bold">
+                      <span className="text-white">Sync</span><span className="text-[#3777ff]">Workflow</span>
+                    </div>
                   </div>
                 </div>
                 
                 {/* Form UI */}
-                <div className="form-ui flex flex-col h-full justify-center items-center p-4 pt-16">
+                <div className="form-ui flex flex-col h-full justify-center items-center p-4 pt-16 relative z-30">
                   <div className="w-full space-y-5 max-w-[220px]">
                     <div className="text-white text-xs uppercase mb-2 opacity-70 text-center">Tradeshow Registration</div>
                     
                     <input 
                       type="text" 
                       placeholder="NAME" 
-                      className="w-full bg-black bg-opacity-40 backdrop-blur-sm text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400"
+                      className="w-full bg-gray-800 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400 border border-gray-700"
                     />
                     
                     <input 
                       type="email" 
                       placeholder="EMAIL" 
-                      className="w-full bg-black bg-opacity-40 backdrop-blur-sm text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400"
+                      className="w-full bg-gray-800 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400 border border-gray-700"
                     />
                     
                     <input 
                       type="tel" 
                       placeholder="PHONE" 
-                      className="w-full bg-black bg-opacity-40 backdrop-blur-sm text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400"
+                      className="w-full bg-gray-800 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0bfe88] placeholder:text-gray-400 border border-gray-700"
                     />
                     
                     {/* Bottom Controls */}
                     <div className="absolute bottom-12 left-0 right-0 z-40 pb-6 px-4">
-                      <div className="flex items-center justify-center">
-                        <button className="shutter-button w-14 h-14 rounded-full shadow-xl relative bg-gradient-to-r from-[#0bfe88] to-[#0bfe88] hover:shadow-[0_0_15px_rgba(11,254,136,0.5)] transform hover:scale-[1.02] transition-all duration-300">
-                          <div className="absolute inset-1.5 rounded-full bg-black flex items-center justify-center">
-                            <span className="text-xs text-[#0bfe88] font-bold">REGISTER</span>
-                          </div>
+                      <div className="flex items-center justify-center w-full px-4">
+                        <button className="w-full bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold py-3 px-6 rounded-md uppercase hover:shadow-[0_0_15px_rgba(11,254,136,0.5)] transform hover:scale-[1.02] transition-all duration-300">
+                          SUBMIT
                         </button>
                       </div>
                     </div>
