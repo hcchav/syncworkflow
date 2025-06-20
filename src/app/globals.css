@@ -158,6 +158,33 @@
 
 /* No hover effect - continuous scrolling */
 
+/* Phone mockup animations */
+.viewfinder-grid {
+  background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+  background-size: 33.33% 33.33%;
+  opacity: 0.3;
+}
+
+.recording-dot {
+  animation: recording-blink 1s ease-in-out infinite;
+}
+
+@keyframes recording-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+.camera-float {
+  animation: camera-hover 4s ease-in-out infinite;
+}
+
+@keyframes camera-hover {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+
 .scrolling-item {
   flex-shrink: 0;
 }
