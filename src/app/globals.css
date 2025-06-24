@@ -165,6 +165,14 @@
       linear-gradient(rgba(55, 119, 255, 0.2) 1px, transparent 1px),
       linear-gradient(90deg, rgba(55, 119, 255, 0.2) 1px, transparent 1px);
   background-size: 33.33% 33.33%;
+}
+
+.clip-path-triangle {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.duration-3000 {
+  transition-duration: 3000ms;
   opacity: 0.3;
 }
 
