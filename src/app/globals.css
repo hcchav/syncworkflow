@@ -48,6 +48,7 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --brand-green: #0bfe88;
+  --brand-blue: #3777ff;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -161,8 +162,8 @@
 /* Phone mockup animations */
 .viewfinder-grid {
   background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+      linear-gradient(rgba(55, 119, 255, 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(55, 119, 255, 0.2) 1px, transparent 1px);
   background-size: 33.33% 33.33%;
   opacity: 0.3;
 }

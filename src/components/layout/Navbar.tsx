@@ -28,22 +28,22 @@ export default function Navbar() {
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <span className={`text-2xl font-bold ${scrolled ? 'text-white' : 'text-black'}`}>Sync</span>
-              <span className={`text-2xl font-bold ${scrolled ? 'text-white' : 'text-[#3777ff]'}`}>Workflow</span>
+              <span className={`text-2xl font-bold ${scrolled ? 'text-white' : 'text-[var(--brand-blue)]'}`}>Workflow</span>
             </Link>
           </div>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-8">
-            <Link href="/services" className={`${scrolled ? 'text-white' : 'text-black'} hover:text-[#0bfe88] font-medium`}>
+            <Link href="/services" className={`${scrolled ? 'text-white' : 'text-black'} hover:text-[var(--brand-blue)] font-medium`}>
               Services
             </Link>
-            <Link href="/case-studies" className={`${scrolled ? 'text-white' : 'text-black'} hover:text-[#0bfe88] font-medium`}>
+            <Link href="/case-studies" className={`${scrolled ? 'text-white' : 'text-black'} hover:text-[var(--brand-blue)] font-medium`}>
               Case Studies
             </Link>
-            <Link href="/about" className={`${scrolled ? 'text-white' : 'text-black'} hover:text-[#0bfe88] font-medium`}>
+            <Link href="/about" className={`${scrolled ? 'text-white' : 'text-black'} hover:text-[var(--brand-blue)] font-medium`}>
               About Us
             </Link>
-            <Link href="/contact" className="bg-[#0bfe88] hover:bg-[#00e070] text-black px-4 py-2 rounded-md font-medium transition-colors">
+            <Link href="/contact" className="bg-[var(--brand-blue)] hover:bg-opacity-90 text-white px-4 py-2 rounded-md font-medium transition-colors">
               BOOK NOW
             </Link>
           </div>
@@ -73,16 +73,16 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className={`md:hidden ${scrolled ? 'bg-black' : 'bg-white'} shadow-lg`}>
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link href="/services" className={`block px-3 py-2 ${scrolled ? 'text-white hover:bg-gray-800' : 'text-black hover:bg-gray-100'} hover:text-[#0bfe88] font-medium`}>
+            <Link href="/services" className={`block px-3 py-2 ${scrolled ? 'text-white hover:bg-gray-800' : 'text-black hover:bg-gray-100'} hover:text-[var(--brand-blue)] font-medium`}>
               Services
             </Link>
-            <Link href="/case-studies" className={`block px-3 py-2 ${scrolled ? 'text-white hover:bg-gray-800' : 'text-black hover:bg-gray-100'} hover:text-[#0bfe88] font-medium`}>
+            <Link href="/case-studies" className={`block px-3 py-2 ${scrolled ? 'text-white hover:bg-gray-800' : 'text-black hover:bg-gray-100'} hover:text-[var(--brand-blue)] font-medium`}>
               Case Studies
             </Link>
-            <Link href="/about" className={`block px-3 py-2 ${scrolled ? 'text-white hover:bg-gray-800' : 'text-black hover:bg-gray-100'} hover:text-[#0bfe88] font-medium`}>
+            <Link href="/about" className={`block px-3 py-2 ${scrolled ? 'text-white hover:bg-gray-800' : 'text-black hover:bg-gray-100'} hover:text-[var(--brand-blue)] font-medium`}>
               About Us
             </Link>
-            <Link href="/contact" className="block px-3 py-2 bg-[#0bfe88] text-black hover:bg-[#00e070] rounded-md font-medium">
+            <Link href="/contact" className="block px-3 py-2 bg-[var(--brand-blue)] text-white hover:bg-opacity-90 rounded-md font-medium transition-colors">
               BOOK NOW
             </Link>
           </div>
