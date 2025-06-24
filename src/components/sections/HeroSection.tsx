@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Inter } from 'next/font/google';
 import { useState, useEffect, useRef } from 'react';
+import PrizeWheel from '../PrizeWheel';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -367,42 +368,23 @@ export default function HeroSection() {
                       </div>
                       
                       {/* Prize Wheel */}
-                      <div className="relative w-48 h-48 mx-auto my-2">
-                        {/* Wheel */}
-                        <div 
-                          className="absolute inset-0 rounded-full overflow-hidden transition-transform duration-3000 ease-out"
-                          style={{ transform: `rotate(${wheelRotation}deg)` }}
-                        >
-                          <svg viewBox="0 0 100 100" className="w-full h-full">
-                            {/* Prize segments */}
-                            <path d="M50,50 L50,0 A50,50 0 0,1 85.4,14.6 Z" fill="#FF5252" />
-                            <path d="M50,50 L85.4,14.6 A50,50 0 0,1 100,50 Z" fill="#4CAF50" />
-                            <path d="M50,50 L100,50 A50,50 0 0,1 85.4,85.4 Z" fill="#2196F3" />
-                            <path d="M50,50 L85.4,85.4 A50,50 0 0,1 50,100 Z" fill="#FFC107" />
-                            <path d="M50,50 L50,100 A50,50 0 0,1 14.6,85.4 Z" fill="#9C27B0" />
-                            <path d="M50,50 L14.6,85.4 A50,50 0 0,1 0,50 Z" fill="#FF9800" />
-                            <path d="M50,50 L0,50 A50,50 0 0,1 14.6,14.6 Z" fill="#00BCD4" />
-                            <path d="M50,50 L14.6,14.6 A50,50 0 0,1 50,0 Z" fill="#8BC34A" />
-                            
-                            {/* Prize labels */}
-                            <text x="67" y="25" fontSize="4" fill="white" textAnchor="middle" transform="rotate(45 50 50)">VIP Badge</text>
-                            <text x="75" y="50" fontSize="4" fill="white" textAnchor="middle" transform="rotate(90 50 50)">Gift Card</text>
-                            <text x="67" y="75" fontSize="4" fill="white" textAnchor="middle" transform="rotate(135 50 50)">T-Shirt</text>
-                            <text x="50" y="85" fontSize="4" fill="white" textAnchor="middle" transform="rotate(180 50 50)">Stickers</text>
-                            <text x="33" y="75" fontSize="4" fill="white" textAnchor="middle" transform="rotate(225 50 50)">Mug</text>
-                            <text x="25" y="50" fontSize="4" fill="white" textAnchor="middle" transform="rotate(270 50 50)">Discount</text>
-                            <text x="33" y="25" fontSize="4" fill="white" textAnchor="middle" transform="rotate(315 50 50)">Pen</text>
-                            <text x="50" y="15" fontSize="4" fill="white" textAnchor="middle" transform="rotate(360 50 50)">Notebook</text>
-                          </svg>
-                        </div>
-                        
-                        {/* Center pin */}
-                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 w-4 h-6 bg-white clip-path-triangle z-10"></div>
-                        
-                        {/* Center circle */}
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gray-900 border-2 border-white z-10 flex items-center justify-center">
-                          <div className="w-4 h-4 rounded-full bg-[var(--brand-blue)]"></div>
-                        </div>
+                      <div className="relative w-48 h-48 mx-auto my-2" style={{zIndex: 9999}}>
+                        <PrizeWheel
+                          segments={['Notebook', 'VIP Badge', 'Gift Card', 'T-Shirt', 'Stickers', 'Mug', 'Discount', 'Pen']}
+                          segColors={['#FF5252', '#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#FF9800', '#00BCD4', '#8BC34A']}
+                          size={192} // 48rem = 192px
+                          primaryColor="#333"
+                          contrastColor="white"
+                          buttonText="SPIN"
+                          upDuration={500}
+                          downDuration={3000}
+                          fontFamily="Arial"
+                          zIndex={9999}
+                          autoSpin={true}
+                          onFinished={(winner) => {
+                            setTimeout(() => setShowPrize(true), 1000);
+                          }}
+                        />
                       </div>
                       
                       <p className="text-gray-300 text-xs text-center mt-2">Spinning for your prize...</p>
