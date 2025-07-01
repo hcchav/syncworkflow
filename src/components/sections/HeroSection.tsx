@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { Wheel } from 'react-custom-roulette';
+import '@/styles/wheel.css';
 
 
 
@@ -367,7 +368,7 @@ export default function HeroSection() {
                       </div>
                       
                       {/* Prize Wheel */}
-                      <div className="relative w-48 h-48 mx-auto my-2" style={{zIndex: 9999}}>
+                      <div className="wheel-container">
                         <Wheel
                           mustStartSpinning={wheelRotation > 0}
                           prizeNumber={1} // Index 1 corresponds to VIP Badge
@@ -375,7 +376,7 @@ export default function HeroSection() {
                             { option: 'Notebook', style: { backgroundColor: '#FF5252', textColor: 'white' } },
                             { option: 'VIP Badge', style: { backgroundColor: '#4CAF50', textColor: 'white' } },
                             { option: 'Gift Card', style: { backgroundColor: '#2196F3', textColor: 'white' } },
-                            { option: 'T-Shirt', style: { backgroundColor: '#FFC107', textColor: 'black' } },
+                            { option: 'T-Shirt', style: { backgroundColor: '#FFC107', textColor: 'white' } },
                             { option: 'Stickers', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
                             { option: 'Mug', style: { backgroundColor: '#FF9800', textColor: 'white' } },
                             { option: 'Discount', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
@@ -383,14 +384,17 @@ export default function HeroSection() {
                           ]}
                           spinDuration={0.8}
                           outerBorderColor="#333"
-                          outerBorderWidth={2}
+                          outerBorderWidth={1}
                           innerBorderColor="#333"
-                          innerBorderWidth={5}
-                          innerRadius={20}
-                          radiusLineColor="#333"
+                          innerBorderWidth={3}
+                          innerRadius={15}
+                          radiusLineColor=""
                           radiusLineWidth={1}
-                          fontSize={12}
+                          fontSize={28}
                           textDistance={60}
+                          backgroundColors={['#ffffff']}
+                          perpendicularText={false}
+                          fontWeight={700}
                           onStopSpinning={() => {
                             setTimeout(() => setShowPrize(true), 1000);
                           }}
