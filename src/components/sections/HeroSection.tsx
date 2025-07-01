@@ -1,11 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { Inter } from 'next/font/google';
 import { useState, useEffect, useRef } from 'react';
 import PrizeWheel from '../PrizeWheel';
 
-const inter = Inter({ subsets: ['latin'] });
+
 
 export default function HeroSection() {
   // Animation state management
@@ -123,7 +122,7 @@ export default function HeroSection() {
   }, []);
   
   return (
-    <div className={`${inter.className} bg-white text-black`}>
+    <div className="bg-white text-black">
       {/* Main hero section */}
       <div className="max-w-7xl mx-auto py-16 px-8 sm:py-24 sm:px-12 lg:px-16">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">

@@ -14,6 +14,10 @@ interface PrizeWheelProps {
   winningSegment?: string;
   zIndex?: number;
   autoSpin?: boolean;
+  textRadius?: number; // How far from center the text should be (0-1, percentage of radius)
+  textRotation?: number; // Rotation of text in radians
+  fontSize?: number; // Font size in pixels
+  textAlign?: CanvasTextAlign; // Text alignment: 'left', 'right', 'center'
 }
 
 const PrizeWheel: React.FC<PrizeWheelProps> = ({
@@ -26,10 +30,14 @@ const PrizeWheel: React.FC<PrizeWheelProps> = ({
   size = 290,
   upDuration = 100,
   downDuration = 1000,
-  fontFamily = 'Arial',
+  fontFamily = 'Inter',
   winningSegment,
   zIndex = 9999,
-  autoSpin = false
+  autoSpin = false,
+  textRadius = 0.1, // Default: 75% of wheel radius
+  textRotation = Math.PI, // Default: 90 degrees
+  fontSize = 12, // Default: 12px
+  textAlign = 'center' // Default: right aligned
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -95,14 +103,14 @@ const PrizeWheel: React.FC<PrizeWheelProps> = ({
       ctx.translate(centerX, centerY);
       ctx.rotate(startAngle + segmentAngle / 2);
       
-      ctx.textAlign = 'right';
+      ctx.textAlign = textAlign;
       ctx.fillStyle = contrastColor;
-      ctx.font = `bold 12px ${fontFamily}`;
+      ctx.font = `bold ${fontSize}px ${fontFamily}`;
       
-      // Calculate text position (75% of radius)
-      const textRadius = radius * 0.75;
-      ctx.translate(textRadius, 0);
-      ctx.rotate(Math.PI / 2);
+      // Calculate text position based on textRadius prop
+      const actualTextRadius = radius * textRadius;
+      ctx.translate(actualTextRadius, 0);
+      ctx.rotate(textRotation);
       
       // Limit text length
       const maxLength = 12;
