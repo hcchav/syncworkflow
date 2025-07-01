@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import PrizeWheel from '../PrizeWheel';
+import { Wheel } from 'react-custom-roulette';
 
 
 
@@ -93,7 +93,7 @@ export default function HeroSection() {
     
     // Step 7: Spin the wheel
     const spinTimer = setTimeout(() => {
-      setWheelRotation(1800 + 45); // Spin 5 full rotations + 45 degrees to land on VIP Badge
+      setWheelRotation(1); // Set to 1 to trigger the wheel spin
     }, 12500);
     animationTimers.current.push(spinTimer);
     
@@ -368,19 +368,30 @@ export default function HeroSection() {
                       
                       {/* Prize Wheel */}
                       <div className="relative w-48 h-48 mx-auto my-2" style={{zIndex: 9999}}>
-                        <PrizeWheel
-                          segments={['Notebook', 'VIP Badge', 'Gift Card', 'T-Shirt', 'Stickers', 'Mug', 'Discount', 'Pen']}
-                          segColors={['#FF5252', '#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#FF9800', '#00BCD4', '#8BC34A']}
-                          size={192} // 48rem = 192px
-                          primaryColor="#333"
-                          contrastColor="white"
-                          buttonText="SPIN"
-                          upDuration={500}
-                          downDuration={3000}
-                          fontFamily="Arial"
-                          zIndex={9999}
-                          autoSpin={true}
-                          onFinished={(winner) => {
+                        <Wheel
+                          mustStartSpinning={wheelRotation > 0}
+                          prizeNumber={1} // Index 1 corresponds to VIP Badge
+                          data={[
+                            { option: 'Notebook', style: { backgroundColor: '#FF5252', textColor: 'white' } },
+                            { option: 'VIP Badge', style: { backgroundColor: '#4CAF50', textColor: 'white' } },
+                            { option: 'Gift Card', style: { backgroundColor: '#2196F3', textColor: 'white' } },
+                            { option: 'T-Shirt', style: { backgroundColor: '#FFC107', textColor: 'black' } },
+                            { option: 'Stickers', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
+                            { option: 'Mug', style: { backgroundColor: '#FF9800', textColor: 'white' } },
+                            { option: 'Discount', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
+                            { option: 'Pen', style: { backgroundColor: '#8BC34A', textColor: 'white' } }
+                          ]}
+                          spinDuration={0.8}
+                          outerBorderColor="#333"
+                          outerBorderWidth={2}
+                          innerBorderColor="#333"
+                          innerBorderWidth={5}
+                          innerRadius={20}
+                          radiusLineColor="#333"
+                          radiusLineWidth={1}
+                          fontSize={12}
+                          textDistance={60}
+                          onStopSpinning={() => {
                             setTimeout(() => setShowPrize(true), 1000);
                           }}
                         />
