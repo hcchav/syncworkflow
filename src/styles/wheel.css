@@ -4,7 +4,7 @@
   height: 280px;
   position: absolute;
   left: 50%;
-  top: 0;
+  top: -60px;
   transform: translateX(-50%) scale(0.9);
   transform-origin: center;
   display: flex;

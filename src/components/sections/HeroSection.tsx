@@ -362,13 +362,13 @@ export default function HeroSection() {
                     
                     {/* Step 3: Prize Wheel */}
                     <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
-                      <div className="mb-4 text-center">
+                      <div className="mb-2 text-center" style={{ marginTop: "-190px" }}>
                         <span className="text-white text-lg font-bold tracking-wider mb-1 block">SPIN TO WIN</span>
                         <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full"></div>
                       </div>
                       
                       {/* Prize Wheel */}
-                      <div className="wheel-container">
+                      <div className="wheel-container" style={{ marginTop: "-80px" }}>
                         <Wheel
                           mustStartSpinning={wheelRotation > 0}
                           prizeNumber={1} // Index 1 corresponds to VIP Badge
@@ -401,7 +401,17 @@ export default function HeroSection() {
                         />
                       </div>
                       
-                      <p className="text-gray-300 text-xs text-center mt-2">Spinning for your prize...</p>
+                      <div className="mt-40 flex justify-center">
+                        <button 
+                          onClick={() => wheelRotation === 0 && setWheelRotation(1)}
+                          disabled={wheelRotation > 0}
+                          className={`bg-[var(--brand-blue)] text-white font-bold py-2 px-8 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${wheelRotation > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(55,119,255,0.5)]'}`}
+                        >
+                          {wheelRotation > 0 ? 'SPINNING...' : 'SPIN'}
+                        </button>
+                      </div>
+                      
+                      <p className="text-gray-300 text-xs text-center mt-2">{wheelRotation > 0 ? 'Good luck!' : 'Click SPIN to try your luck!'}</p>
                     </div>
                     
                     {/* Step 4: Prize Reveal */}
