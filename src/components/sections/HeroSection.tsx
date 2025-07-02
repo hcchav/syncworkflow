@@ -363,7 +363,7 @@ export default function HeroSection() {
                     {/* Step 3: Prize Wheel */}
                     <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                       {/* Ultra-compact Prize Wheel Layout */}
-                      <div className="flex flex-col items-center" style={{ height: "480px", padding: "15px 0 0 0" }}>
+                      <div className="flex flex-col items-center mt-5" style={{ height: "350px", padding: "15px 0 0 0" }}>
                         {/* Title */}
                         <div className="text-center">
                           <span className="text-white text-lg font-bold tracking-wider block">SPIN TO WIN</span>
@@ -371,8 +371,8 @@ export default function HeroSection() {
                         </div>
                         
                         {/* Prize Wheel - Minimal spacing */}
-                        <div style={{ position: "relative", height: "350px", width: "100%" }}>
-                          <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.5)" }}>
+                        <div style={{ position: "relative", height: "300px", width: "100%" }}>
+                          <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.55)" }}>
                             <Wheel
                               mustStartSpinning={wheelRotation > 0}
                               prizeNumber={1} // Index 1 corresponds to VIP Badge
@@ -415,7 +415,6 @@ export default function HeroSection() {
                           >
                             {wheelRotation > 0 ? 'SPINNING...' : 'SPIN'}
                           </button>
-                          <p className="text-gray-300 text-xs text-center mt-0">{wheelRotation > 0 ? 'Good luck!' : 'Click SPIN to try your luck!'}</p>
                         </div>
                       </div>
                     </div>

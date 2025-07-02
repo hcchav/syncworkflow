@@ -22,7 +22,7 @@ export default function WheelTest() {
         </div>
         
         {/* Ultra-compact Prize Wheel Layout */}
-        <div className="flex flex-col items-center" style={{ height: "480px", padding: "15px 0 0 0" }}>
+        <div className="flex flex-col items-center mt-8" style={{ height: "400px", padding: "15px 0 0 0" }}>
           {/* Title */}
           <div className="text-center">
             <span className="text-white text-lg font-bold tracking-wider block">SPIN TO WIN</span>
@@ -31,7 +31,7 @@ export default function WheelTest() {
           
           {/* Prize Wheel - Minimal spacing */}
           <div style={{ position: "relative", height: "350px", width: "100%" }}>
-            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.5)" }}>
+            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.55)" }}>
               <Wheel
                 mustStartSpinning={wheelRotation > 0}
                 prizeNumber={1} // Index 1 corresponds to VIP Badge
@@ -70,11 +70,10 @@ export default function WheelTest() {
             <button 
               onClick={() => wheelRotation === 0 && setWheelRotation(1)}
               disabled={wheelRotation > 0}
-              className={`bg-[#3777FF] text-white font-bold py-1 px-6 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${wheelRotation > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(55,119,255,0.5)]'}`}
+              className={`mb-2 bg-[#3777FF] text-white font-bold py-1 px-6 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${wheelRotation > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(55,119,255,0.5)]'}`}
             >
               {wheelRotation > 0 ? 'SPINNING...' : 'SPIN'}
             </button>
-            <p className="text-gray-300 text-xs text-center mt-0">{wheelRotation > 0 ? 'Good luck!' : 'Click SPIN to try your luck!'}</p>
           </div>
         </div>
       </div>
