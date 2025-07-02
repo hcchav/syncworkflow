@@ -362,56 +362,62 @@ export default function HeroSection() {
                     
                     {/* Step 3: Prize Wheel */}
                     <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
-                      <div className="mb-2 text-center" style={{ marginTop: "-190px" }}>
-                        <span className="text-white text-lg font-bold tracking-wider mb-1 block">SPIN TO WIN</span>
-                        <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full"></div>
+                      {/* Ultra-compact Prize Wheel Layout */}
+                      <div className="flex flex-col items-center" style={{ height: "480px", padding: "15px 0 0 0" }}>
+                        {/* Title */}
+                        <div className="text-center">
+                          <span className="text-white text-lg font-bold tracking-wider block">SPIN TO WIN</span>
+                          <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full mb-2"></div>
+                        </div>
+                        
+                        {/* Prize Wheel - Minimal spacing */}
+                        <div style={{ position: "relative", height: "350px", width: "100%" }}>
+                          <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.5)" }}>
+                            <Wheel
+                              mustStartSpinning={wheelRotation > 0}
+                              prizeNumber={1} // Index 1 corresponds to VIP Badge
+                              data={[
+                                { option: 'Notebook', style: { backgroundColor: '#FF5252', textColor: 'white' } },
+                                { option: 'VIP Badge', style: { backgroundColor: '#4CAF50', textColor: 'white' } },
+                                { option: 'Gift Card', style: { backgroundColor: '#2196F3', textColor: 'white' } },
+                                { option: 'T-Shirt', style: { backgroundColor: '#FFC107', textColor: 'white' } },
+                                { option: 'Stickers', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
+                                { option: 'Mug', style: { backgroundColor: '#FF9800', textColor: 'white' } },
+                                { option: 'Discount', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
+                                { option: 'Pen', style: { backgroundColor: '#8BC34A', textColor: 'white' } }
+                              ]}
+                              spinDuration={0.8}
+                              outerBorderColor="#333"
+                              outerBorderWidth={1}
+                              innerBorderColor="#333"
+                              innerBorderWidth={3}
+                              innerRadius={15}
+                              radiusLineColor=""
+                              radiusLineWidth={1}
+                              fontSize={28}
+                              textDistance={60}
+                              backgroundColors={['#ffffff']}
+                              perpendicularText={false}
+                              fontWeight={700}
+                              onStopSpinning={() => {
+                                setTimeout(() => setShowPrize(true), 1000);
+                              }}
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Button at bottom - no margin */}
+                        <div className="text-center mt-0">
+                          <button 
+                            onClick={() => wheelRotation === 0 && setWheelRotation(1)}
+                            disabled={wheelRotation > 0}
+                            className={`bg-[var(--brand-blue)] text-white font-bold py-1 px-6 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${wheelRotation > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(55,119,255,0.5)]'}`}
+                          >
+                            {wheelRotation > 0 ? 'SPINNING...' : 'SPIN'}
+                          </button>
+                          <p className="text-gray-300 text-xs text-center mt-0">{wheelRotation > 0 ? 'Good luck!' : 'Click SPIN to try your luck!'}</p>
+                        </div>
                       </div>
-                      
-                      {/* Prize Wheel */}
-                      <div className="wheel-container" style={{ marginTop: "-80px" }}>
-                        <Wheel
-                          mustStartSpinning={wheelRotation > 0}
-                          prizeNumber={1} // Index 1 corresponds to VIP Badge
-                          data={[
-                            { option: 'Notebook', style: { backgroundColor: '#FF5252', textColor: 'white' } },
-                            { option: 'VIP Badge', style: { backgroundColor: '#4CAF50', textColor: 'white' } },
-                            { option: 'Gift Card', style: { backgroundColor: '#2196F3', textColor: 'white' } },
-                            { option: 'T-Shirt', style: { backgroundColor: '#FFC107', textColor: 'white' } },
-                            { option: 'Stickers', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
-                            { option: 'Mug', style: { backgroundColor: '#FF9800', textColor: 'white' } },
-                            { option: 'Discount', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
-                            { option: 'Pen', style: { backgroundColor: '#8BC34A', textColor: 'white' } }
-                          ]}
-                          spinDuration={0.8}
-                          outerBorderColor="#333"
-                          outerBorderWidth={1}
-                          innerBorderColor="#333"
-                          innerBorderWidth={3}
-                          innerRadius={15}
-                          radiusLineColor=""
-                          radiusLineWidth={1}
-                          fontSize={28}
-                          textDistance={60}
-                          backgroundColors={['#ffffff']}
-                          perpendicularText={false}
-                          fontWeight={700}
-                          onStopSpinning={() => {
-                            setTimeout(() => setShowPrize(true), 1000);
-                          }}
-                        />
-                      </div>
-                      
-                      <div className="mt-40 flex justify-center">
-                        <button 
-                          onClick={() => wheelRotation === 0 && setWheelRotation(1)}
-                          disabled={wheelRotation > 0}
-                          className={`bg-[var(--brand-blue)] text-white font-bold py-2 px-8 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${wheelRotation > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(55,119,255,0.5)]'}`}
-                        >
-                          {wheelRotation > 0 ? 'SPINNING...' : 'SPIN'}
-                        </button>
-                      </div>
-                      
-                      <p className="text-gray-300 text-xs text-center mt-2">{wheelRotation > 0 ? 'Good luck!' : 'Click SPIN to try your luck!'}</p>
                     </div>
                     
                     {/* Step 4: Prize Reveal */}
