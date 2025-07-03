@@ -130,50 +130,45 @@ export default function HeroSection() {
           {/* Left side - Headline and pain points */}
           <div className="w-full lg:w-2/5 lg:pr-8">
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 uppercase">
-              Maximize Your Trade Show ROI
+              Capture & Qualify Leads at Your Booth — Easily
             </h1>
             <p className="text-lg text-gray-600 mb-6">
-              Boost brand visibility, drive booth traffic, and capture high-quality leads with engaging, 
-              on-brand registration forms designed for contests, giveaways, and raffles.
+              Custom-branded lead forms with real-time scoring and seamless prize entry — proven to drive up to 3× higher conversions for exhibitors.
             </p>
             
             {/* Pain points and solutions */}
             <div className="space-y-4 mt-8">
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 text-[var(--brand-blue)] mr-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  ✅
                 </div>
-                <p className="text-gray-700"><span className="font-semibold">Drive booth traffic</span> - Attract more visitors with engaging prize entry forms</p>
+                <p className="text-gray-700">Lead validation & scoring (cold • warm • hot)</p>
               </div>
               
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 text-[var(--brand-blue)] mr-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  🏆
                 </div>
-                <p className="text-gray-700"><span className="font-semibold">Capture quality leads</span> - Collect valuable prospect data with custom fields</p>
+                <p className="text-gray-700">Built-in prize & raffle management</p>
               </div>
               
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 text-[var(--brand-blue)] mr-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  📤
                 </div>
-                <p className="text-gray-700"><span className="font-semibold">Measure ROI</span> - Track entries, conversions, and engagement metrics in real-time</p>
+                <p className="text-gray-700">One-click export to Excel or CRM</p>
               </div>
             </div>
             
             <div className="mt-8">
-              <Link href="/contact" className="bg-transparent hover:bg-[var(--brand-blue)] border-2 border-[var(--brand-blue)] hover:border-transparent text-[var(--brand-blue)] hover:text-white font-bold py-3 px-8 rounded-md inline-flex items-center transition-all duration-300">
-                GET STARTED
+              <Link href="/contact" className="bg-[var(--brand-blue)] hover:bg-opacity-90 text-white font-bold py-3 px-8 rounded-md inline-flex items-center transition-all duration-300">
+                Start Free Trial
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </Link>
+              <p className="text-sm text-gray-500 mt-2">no credit card required</p>
+              <p className="text-sm text-gray-600 mt-4">Trusted by trade show teams like yours — boosters of booth ROI.</p>
             </div>
           </div>
           
