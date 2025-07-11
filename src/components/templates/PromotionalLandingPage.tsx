@@ -9,7 +9,7 @@ export default function PromotionalLandingPage() {
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
-  const [spotsLeft, setSpotsLeft] = useState(10); // Track spots remaining
+  const [spotsLeft, setSpotsLeft] = useState(9); // Track spots remaining
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,51 +31,30 @@ export default function PromotionalLandingPage() {
       
       {/* Hero Section with Limited Time Offer */}
       <section className="flex-grow flex flex-col items-center justify-center text-center px-4 py-16 md:py-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="inline-block bg-[#0bfe88] text-black font-bold px-4 py-2 rounded-full mb-6 animate-pulse">
-            LIMITED TIME OFFER • ONLY {spotsLeft} SPOTS LEFT
+        <div className="max-w-3xl mx-auto">
+          <div className="inline-block bg-white text-black font-bold px-4 py-2 rounded-full mb-6">
+            <span className="text-red-500">LIMITED TIME OFFER</span> • ONLY {spotsLeft} SPOTS LEFT
           </div>
           
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6">
             BOOTH LEAD CAPTURE
-            <span className="block text-[#0bfe88] mt-2">THAT ACTUALLY WORKS</span>
+            <span className="block text-white mt-2">THAT ACTUALLY WORKS</span>
           </h1>
-          
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-            First 10 clients get custom branded forms and $500 setup fee waived
+            First 10 signups get custom branded forms and $500 setup fee waived
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
             <a 
               href="#claim-offer" 
-              className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-8 py-4 rounded-lg transition-all transform hover:scale-105"
+              className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-8 py-5 rounded-lg transition-all transform hover:scale-105 flex flex-col items-center"
             >
-              CLAIM YOUR SPOT NOW
-            </a>
-            <a 
-              href="#learn-more" 
-              className="bg-transparent border-2 border-white hover:bg-white hover:text-[#3777ff] font-bold text-lg px-8 py-4 rounded-lg transition-all"
-            >
-              LEARN MORE
+              <span className="text-[28px] font-[700]  ">CLAIM YOUR SPOT NOW</span>
+              {/* <span className="text-sm mt-1">Free custom branded forms + $500 setup fee waived</span> */}
             </a>
           </div>
           
-          {/* Countdown Timer */}
-          <div className="mb-8">
-            <p className="text-lg mb-2">Limited time offer ends in:</p>
-            <div className="flex justify-center gap-4">
-              {['36', '12', '01', '07'].map((num, i) => (
-                <div key={i} className="flex flex-col items-center">
-                  <div className="bg-white text-indigo-900 font-bold text-2xl w-16 h-16 rounded-lg flex items-center justify-center">
-                    {num}
-                  </div>
-                  <span className="text-xs mt-1">
-                    {['DAYS', 'HOURS', 'MINUTES', 'SECONDS'][i]}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+        
           
           {/* Social Proof */}
           <div className="flex justify-center items-center mb-4">
@@ -94,12 +73,12 @@ export default function PromotionalLandingPage() {
 
       {/* Features Section */}
       <section id="learn-more" className="bg-white text-gray-900 py-16">
-        <div className="max-w-6xl mx-auto px-4 text-center">
+        <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-12">
             EVERYTHING YOU NEED FOR SUCCESSFUL LEAD CAPTURE
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="flex flex-col md:flex-row gap-6 mb-16 max-w-5xl mx-auto">
             {[
               {
                 title: "Smart Forms",
@@ -129,14 +108,120 @@ export default function PromotionalLandingPage() {
                 description: "Manage booth prizes and automatically enter qualified leads"
               }
             ].map((feature, index) => (
-              <div key={index} className="bg-gray-50 p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-                <div className="mb-4">
-                  {feature.icon}
+              <div key={index} className="bg-gray-50 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow flex-1">
+                <div className="text-center">
+                  <div className="mb-4">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                  <p className="text-gray-600 text-sm">{feature.description}</p>
                 </div>
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
               </div>
             ))}
+          </div>
+          
+          {/* Phone Mockups Row */}
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-16 max-w-5xl mx-auto">
+            {/* Phone Mockup 1 */}
+            <div className="device-mockup phone transform hover:-translate-y-2 transition-transform duration-500 ease-in-out">
+              <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)] bg-[#1a1a1a] p-2 w-[220px] h-[440px] relative">
+                {/* Phone notch */}
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[100px] h-[20px] bg-black rounded-b-[12px] z-50"></div>
+                
+                <div className="bg-black rounded-[32px] w-full h-full overflow-hidden relative">
+                  {/* Background gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#3777ff]/5 via-black to-[#3777ff]/10">
+                    <div className="absolute inset-0"></div>
+                  </div>
+                  
+                  {/* Form Content */}
+                  <div className="absolute inset-0 flex flex-col items-center pt-10 px-4">
+                    <div className="w-16 h-16 mb-4">
+                      <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <h3 className="text-white text-lg font-bold mb-2 text-center">Lead Registration</h3>
+                    <p className="text-white text-xs mb-4 text-center">Enter visitor information</p>
+                    
+                    <div className="w-full space-y-3">
+                      <div className="bg-white/10 rounded-md p-2 text-white text-xs">
+                        First Name
+                      </div>
+                      <div className="bg-white/10 rounded-md p-2 text-white text-xs">
+                        Last Name
+                      </div>
+                      <div className="bg-white/10 rounded-md p-2 text-white text-xs">
+                        Company Name
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Phone Mockup 2 */}
+            <div className="device-mockup phone transform hover:-translate-y-2 transition-transform duration-500 ease-in-out">
+              <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)] bg-[#1a1a1a] p-2 w-[220px] h-[440px] relative">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[100px] h-[20px] bg-black rounded-b-[12px] z-50"></div>
+                
+                <div className="bg-black rounded-[32px] w-full h-full overflow-hidden relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#3777ff]/5 via-black to-[#3777ff]/10">
+                    <div className="absolute inset-0"></div>
+                  </div>
+                  
+                  <div className="absolute inset-0 flex flex-col items-center pt-10 px-4">
+                    <div className="w-16 h-16 mb-4">
+                      <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <h3 className="text-white text-lg font-bold mb-2 text-center">Verification</h3>
+                    <p className="text-white text-xs mb-4 text-center">Check your email for the code</p>
+                    
+                    <div className="w-full text-center mt-4">
+                      <p className="text-white text-sm mb-2">Your OTP Code:</p>
+                      <div className="flex justify-center gap-2 mb-4">
+                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
+                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
+                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
+                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
+                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Phone Mockup 3 */}
+            <div className="device-mockup phone transform hover:-translate-y-2 transition-transform duration-500 ease-in-out">
+              <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)] bg-[#1a1a1a] p-2 w-[220px] h-[440px] relative">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[100px] h-[20px] bg-black rounded-b-[12px] z-50"></div>
+                
+                <div className="bg-black rounded-[32px] w-full h-full overflow-hidden relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#3777ff]/5 via-black to-[#3777ff]/10">
+                    <div className="absolute inset-0"></div>
+                  </div>
+                  
+                  <div className="absolute inset-0 flex flex-col items-center pt-10 px-4">
+                    <div className="w-16 h-16 mb-4">
+                      <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <h3 className="text-white text-lg font-bold mb-2 text-center">Confirmation</h3>
+                    <p className="text-white text-xs mb-4 text-center">Enter the verification code</p>
+                    
+                    <div className="w-full bg-white/5 rounded-lg p-3 mb-4">
+                      <div className="text-xs text-white/70 mb-1">5-digit code</div>
+                      <div className="bg-white/10 rounded-md p-2 text-white text-xs h-8"></div>
+                    </div>
+                    
+                    <button className="w-full bg-[#3777ff] text-white py-2 rounded-md text-sm font-medium">
+                      Verify
+                    </button>
+                    <button className="w-full text-[#3777ff] py-2 text-sm">
+                      Resend Code
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           
           <div className="bg-[#f0f7ff] p-8 rounded-xl">
@@ -164,7 +249,7 @@ export default function PromotionalLandingPage() {
       
       {/* Claim Offer Form Section */}
       <section id="claim-offer" className="py-16 bg-[#3777ff]">
-        <div className="max-w-3xl mx-auto px-4 text-center">
+        <div className="max-w-2xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-2">CLAIM YOUR SPOT NOW</h2>
           <p className="text-xl mb-8">Only {spotsLeft} spots remaining at this special price!</p>
           
@@ -236,7 +321,7 @@ export default function PromotionalLandingPage() {
       
       {/* Testimonials */}
       <section className="py-16 bg-gray-900">
-        <div className="max-w-6xl mx-auto px-4 text-center">
+        <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-12">WHAT OUR CLIENTS SAY</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -276,25 +361,24 @@ export default function PromotionalLandingPage() {
       
       {/* Final CTA */}
       <section className="py-16 bg-[#3777ff]">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
             DON'T MISS THIS LIMITED TIME OFFER
           </h2>
-          <p className="text-xl mb-8">
-            First 10 clients get custom branded forms and $500 setup fee waived
-          </p>
           <a 
             href="#claim-offer" 
-            className="inline-block bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-8 py-4 rounded-lg transition-all transform hover:scale-105"
+            className="inline-block bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold px-10 py-5 rounded-lg transition-all transform hover:scale-105 flex flex-col items-center"
           >
-            CLAIM YOUR SPOT NOW • ONLY {spotsLeft} REMAINING
+            <span className="text-xl">CLAIM YOUR SPOT NOW</span>
+            <span className="text-sm mt-1">Free custom branded forms + $500 setup fee waived</span>
+            <span className="text-sm mt-1">ONLY {spotsLeft} SPOTS REMAINING</span>
           </a>
         </div>
       </section>
       
       {/* Footer */}
       <footer className="bg-gray-900 py-8">
-        <div className="max-w-6xl mx-auto px-4 text-center text-sm text-gray-400">
+        <div className="max-w-3xl mx-auto px-4 text-center text-sm text-gray-400">
           <p className="mb-4"> {new Date().getFullYear()} SyncWorkflow. All rights reserved.</p>
           <div className="flex justify-center space-x-4">
             <Link href="/terms" className="hover:text-white">Terms & Conditions</Link>
