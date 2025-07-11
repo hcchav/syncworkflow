@@ -149,7 +149,7 @@ export default function PromotionalLandingPage() {
                         </div>
                         <div className="text-white">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                            <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.533 1.533 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                           </svg>
                         </div>
                       </div>
@@ -199,6 +199,9 @@ export default function PromotionalLandingPage() {
             {/* Additional Phone Mockup Images */}
             <div className="flex flex-col md:flex-row gap-4 mt-8 md:mt-0">
               <div className="transform hover:-translate-y-1 transition-transform duration-300">
+                <div className="text-center mb-2">
+                  <h4 className="font-bold text-base bg-[#3777ff]/10 text-[#3777ff] py-1 px-2 rounded-md inline-block">Custom Sign Up Form</h4>
+                </div>
                 <img 
                   src="/images/phone-mockup-1.png" 
                   alt="Lead Registration" 
@@ -206,6 +209,9 @@ export default function PromotionalLandingPage() {
                 />
               </div>
               <div className="transform hover:-translate-y-1 transition-transform duration-300">
+                <div className="text-center mb-2">
+                  <h4 className="font-bold text-base bg-[#3777ff]/10 text-[#3777ff] py-1 px-2 rounded-md inline-block">Send Verification Code</h4>
+                </div>
                 <img 
                   src="/images/phone-mockup-2.png" 
                   alt="Verification" 
@@ -213,6 +219,9 @@ export default function PromotionalLandingPage() {
                 />
               </div>
               <div className="transform hover:-translate-y-1 transition-transform duration-300">
+                <div className="text-center mb-2">
+                  <h4 className="font-bold text-base bg-[#3777ff]/10 text-[#3777ff] py-1 px-2 rounded-md inline-block">Code Entry Screen</h4>
+                </div>
                 <img 
                   src="/images/phone-mockup-3.png" 
                   alt="Confirmation" 
