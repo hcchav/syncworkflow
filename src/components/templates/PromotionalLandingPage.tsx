@@ -174,7 +174,7 @@ export default function PromotionalLandingPage() {
                           <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-[#3777ff]"></div>
                           
                           {/* Scanning animation */}
-                          <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#3777ff] animate-scan"></div>
+                          <div className="scanning-line"></div>
                         </div>
                         
                         {/* Instructions text */}
@@ -186,8 +186,8 @@ export default function PromotionalLandingPage() {
                       
                       {/* Bottom controls */}
                       <div className="w-full py-6 flex justify-center">
-                        <div className="w-16 h-16 rounded-full border-4 border-white flex items-center justify-center">
-                          <div className="w-12 h-12 bg-white rounded-full"></div>
+                        <div className="w-12 h-12 rounded-full border-3 border-white flex items-center justify-center">
+                          <div className="w-9 h-9 bg-white rounded-full"></div>
                         </div>
                       </div>
                     </div>

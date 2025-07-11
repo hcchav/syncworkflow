@@ -205,6 +205,34 @@
   flex-shrink: 0;
 }
 
+.scanning-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #3777ff;
+  animation: scanMove 5s ease-in-out infinite 5s;
+}
+
+@keyframes scanMove {
+  0% {
+    top: 0;
+    opacity: 0.8;
+  }
+  50% {
+    top: calc(100% - 2px);
+    opacity: 0.5;
+  }
+  50.1% {
+    top: 0;
+    opacity: 0;
+  }
+  100% {
+    top: 0;
+    opacity: 0.8;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
