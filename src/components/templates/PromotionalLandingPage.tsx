@@ -120,69 +120,75 @@ export default function PromotionalLandingPage() {
             ))}
           </div>
           
-          {/* Phone Mockups Row */}
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-16 max-w-5xl mx-auto">
-            {/* Phone Mockup 1 */}
+          {/* Lead Capture Process Section Title */}
+          <div className="text-center mb-10 max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Seamless Lead Verification</h2>
+            <p className="text-gray-600 text-lg">
+              Our verified lead capture system ensures quality leads through a simple three-step process. 
+              Attendees scan your QR code, complete a custom form, and verify their contact information with a unique code.
+            </p>
+          </div>
+          
+          {/* Phone Mockup Row */}
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-16 max-w-6xl mx-auto">
+            {/* Phone Mockup with Camera */}
             <div className="device-mockup phone transform hover:-translate-y-2 transition-transform duration-500 ease-in-out">
               <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)] bg-[#1a1a1a] p-2 w-[220px] h-[440px] relative">
                 {/* Phone notch */}
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[100px] h-[20px] bg-black rounded-b-[12px] z-50"></div>
                 
                 <div className="bg-black rounded-[32px] w-full h-full overflow-hidden relative">
-                  {/* Background gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#3777ff]/5 via-black to-[#3777ff]/10">
-                    <div className="absolute inset-0"></div>
-                  </div>
-                  
-                  {/* Form Content */}
-                  <div className="absolute inset-0 flex flex-col items-center pt-10 px-4">
-                    <div className="w-16 h-16 mb-4">
-                      <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
-                    </div>
-                    <h3 className="text-white text-lg font-bold mb-2 text-center">Lead Registration</h3>
-                    <p className="text-white text-xs mb-4 text-center">Enter visitor information</p>
-                    
-                    <div className="w-full space-y-3">
-                      <div className="bg-white/10 rounded-md p-2 text-white text-xs">
-                        First Name
+                  {/* Camera Interface */}
+                  <div className="absolute inset-0 bg-black">
+                    {/* Camera viewfinder */}
+                    <div className="absolute inset-0 flex flex-col items-center">
+                      {/* App header */}
+                      <div className="w-full bg-black py-3 px-4 flex items-center justify-between">
+                        <div className="text-white text-sm font-medium">
+                          <span className="text-white font-bold">Sync<span className="text-[#3777ff]">Workflow</span></span>
+                        </div>
+                        <div className="text-white">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                          </svg>
+                        </div>
                       </div>
-                      <div className="bg-white/10 rounded-md p-2 text-white text-xs">
-                        Last Name
+                      
+                      {/* Camera viewfinder area */}
+                      <div className="flex-1 w-full flex flex-col items-center justify-center px-6 relative">
+                        {/* QR code scanning frame */}
+                        <div className="w-48 h-48 border-2 border-white/50 rounded-lg relative">
+                          {/* QR Code Image */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <img 
+                              src="/images/qr_code.png" 
+                              alt="QR Code" 
+                              className="w-36 h-36 object-contain"
+                            />
+                          </div>
+                          
+                          {/* Corner markers */}
+                          <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-[#3777ff]"></div>
+                          <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-[#3777ff]"></div>
+                          <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-[#3777ff]"></div>
+                          <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-[#3777ff]"></div>
+                          
+                          {/* Scanning animation */}
+                          <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#3777ff] animate-scan"></div>
+                        </div>
+                        
+                        {/* Instructions text */}
+                        <div className="mt-6 text-center">
+                          <h3 className="text-white text-lg font-bold">Scan QR Code</h3>
+                          <p className="text-white/70 text-xs mt-2">Point your camera at the booth QR code to register</p>
+                        </div>
                       </div>
-                      <div className="bg-white/10 rounded-md p-2 text-white text-xs">
-                        Company Name
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Phone Mockup 2 */}
-            <div className="device-mockup phone transform hover:-translate-y-2 transition-transform duration-500 ease-in-out">
-              <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)] bg-[#1a1a1a] p-2 w-[220px] h-[440px] relative">
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[100px] h-[20px] bg-black rounded-b-[12px] z-50"></div>
-                
-                <div className="bg-black rounded-[32px] w-full h-full overflow-hidden relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#3777ff]/5 via-black to-[#3777ff]/10">
-                    <div className="absolute inset-0"></div>
-                  </div>
-                  
-                  <div className="absolute inset-0 flex flex-col items-center pt-10 px-4">
-                    <div className="w-16 h-16 mb-4">
-                      <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
-                    </div>
-                    <h3 className="text-white text-lg font-bold mb-2 text-center">Verification</h3>
-                    <p className="text-white text-xs mb-4 text-center">Check your email for the code</p>
-                    
-                    <div className="w-full text-center mt-4">
-                      <p className="text-white text-sm mb-2">Your OTP Code:</p>
-                      <div className="flex justify-center gap-2 mb-4">
-                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
-                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
-                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
-                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
-                        <div className="w-6 h-8 bg-white/10 rounded flex items-center justify-center text-white">#</div>
+                      
+                      {/* Bottom controls */}
+                      <div className="w-full py-6 flex justify-center">
+                        <div className="w-16 h-16 rounded-full border-4 border-white flex items-center justify-center">
+                          <div className="w-12 h-12 bg-white rounded-full"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -190,36 +196,28 @@ export default function PromotionalLandingPage() {
               </div>
             </div>
             
-            {/* Phone Mockup 3 */}
-            <div className="device-mockup phone transform hover:-translate-y-2 transition-transform duration-500 ease-in-out">
-              <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)] bg-[#1a1a1a] p-2 w-[220px] h-[440px] relative">
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[100px] h-[20px] bg-black rounded-b-[12px] z-50"></div>
-                
-                <div className="bg-black rounded-[32px] w-full h-full overflow-hidden relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#3777ff]/5 via-black to-[#3777ff]/10">
-                    <div className="absolute inset-0"></div>
-                  </div>
-                  
-                  <div className="absolute inset-0 flex flex-col items-center pt-10 px-4">
-                    <div className="w-16 h-16 mb-4">
-                      <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
-                    </div>
-                    <h3 className="text-white text-lg font-bold mb-2 text-center">Confirmation</h3>
-                    <p className="text-white text-xs mb-4 text-center">Enter the verification code</p>
-                    
-                    <div className="w-full bg-white/5 rounded-lg p-3 mb-4">
-                      <div className="text-xs text-white/70 mb-1">5-digit code</div>
-                      <div className="bg-white/10 rounded-md p-2 text-white text-xs h-8"></div>
-                    </div>
-                    
-                    <button className="w-full bg-[#3777ff] text-white py-2 rounded-md text-sm font-medium">
-                      Verify
-                    </button>
-                    <button className="w-full text-[#3777ff] py-2 text-sm">
-                      Resend Code
-                    </button>
-                  </div>
-                </div>
+            {/* Additional Phone Mockup Images */}
+            <div className="flex flex-col md:flex-row gap-4 mt-8 md:mt-0">
+              <div className="transform hover:-translate-y-1 transition-transform duration-300">
+                <img 
+                  src="/images/phone-mockup-1.png" 
+                  alt="Lead Registration" 
+                  className="w-[180px] h-auto rounded-lg shadow-lg"
+                />
+              </div>
+              <div className="transform hover:-translate-y-1 transition-transform duration-300">
+                <img 
+                  src="/images/phone-mockup-2.png" 
+                  alt="Verification" 
+                  className="w-[180px] h-auto rounded-lg shadow-lg"
+                />
+              </div>
+              <div className="transform hover:-translate-y-1 transition-transform duration-300">
+                <img 
+                  src="/images/phone-mockup-3.png" 
+                  alt="Confirmation" 
+                  className="w-[180px] h-auto rounded-lg shadow-lg"
+                />
               </div>
             </div>
           </div>
