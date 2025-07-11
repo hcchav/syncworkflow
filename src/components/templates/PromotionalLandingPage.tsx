@@ -10,6 +10,7 @@ export default function PromotionalLandingPage() {
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
   const [spotsLeft, setSpotsLeft] = useState(9); // Track spots remaining
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,10 +20,21 @@ export default function PromotionalLandingPage() {
     setName('');
     setCompany('');
     setPhone('');
+    setIsModalOpen(false); // Close modal after submission
     // In a real app, this would connect to your backend
     if (spotsLeft > 0) {
       setSpotsLeft(spotsLeft - 1);
     }
+  };
+
+  // Function to open the modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -47,6 +59,7 @@ export default function PromotionalLandingPage() {
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
             <a 
               href="#claim-offer" 
+              onClick={openModal}
               className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-8 py-5 rounded-lg transition-all transform hover:scale-105 flex flex-col items-center"
             >
               <span className="text-[28px] font-[700]  ">CLAIM YOUR SPOT NOW</span>
@@ -255,76 +268,88 @@ export default function PromotionalLandingPage() {
       </section>
       
       {/* Claim Offer Form Section */}
-      <section id="claim-offer" className="py-16 bg-[#3777ff]">
-        <div className="max-w-2xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">CLAIM YOUR SPOT NOW</h2>
-          <p className="text-xl mb-8">Only {spotsLeft} spots remaining at this special price!</p>
-          
-          <form onSubmit={handleSubmit} className="bg-white text-gray-900 p-8 rounded-lg shadow-lg">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="text-left">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
-                <input
-                  id="name"
-                  type="text"
-                  placeholder="Your name"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="text-left">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="you@company.com"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="text-left">
-                <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company*</label>
-                <input
-                  id="company"
-                  type="text"
-                  placeholder="Your company"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
-                  value={company}
-                  onChange={(e) => setCompany(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="text-left">
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
-                <input
-                  id="phone"
-                  type="tel"
-                  placeholder="(555) 123-4567"
-                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            
-            <button
-              type="submit"
-              className="w-full bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-8 py-4 rounded-lg transition-all transform hover:scale-105"
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+          <div className="bg-white text-gray-900 p-8 rounded-lg shadow-lg w-[500px] relative">
+            <button 
+              className="absolute -top-3 -right-3 bg-white hover:bg-gray-100 text-gray-800 hover:text-black rounded-full p-1.5 shadow-md transition-colors"
+              onClick={closeModal}
+              aria-label="Close modal"
             >
-              SECURE YOUR SPOT NOW
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
             </button>
             
-            <p className="mt-4 text-sm text-gray-500">
-              By submitting this form, you agree to our terms and conditions. We'll contact you within 24 hours to discuss your needs.
-            </p>
-          </form>
+            <h2 className="text-3xl md:text-4xl font-bold mb-2">CLAIM YOUR SPOT NOW</h2>
+            <p className="text-xl mb-8">Only {spotsLeft} spots remaining at this special price!</p>
+            
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="text-left">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="Your name"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="text-left">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="you@company.com"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="text-left">
+                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company*</label>
+                  <input
+                    id="company"
+                    type="text"
+                    placeholder="Your company"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="text-left">
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
+                  <input
+                    id="phone"
+                    type="tel"
+                    placeholder="(555) 123-4567"
+                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+              
+              <button
+                type="submit"
+                className="w-full bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-8 py-4 rounded-lg transition-all transform hover:scale-105"
+              >
+                SECURE YOUR SPOT NOW
+              </button>
+              
+              <p className="mt-4 text-sm text-gray-500">
+                By submitting this form, you agree to our terms and conditions. We'll contact you within 24 hours to discuss your needs.
+              </p>
+            </form>
+          </div>
         </div>
-      </section>
+      )}
       
       {/* Testimonials */}
       <section className="py-16 bg-gray-900">
@@ -374,6 +399,7 @@ export default function PromotionalLandingPage() {
           </h2>
           <a 
             href="#claim-offer" 
+            onClick={openModal}
             className="inline-block bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold px-10 py-5 rounded-lg transition-all transform hover:scale-105 flex flex-col items-center"
           >
             <span className="text-xl">CLAIM YOUR SPOT NOW</span>
