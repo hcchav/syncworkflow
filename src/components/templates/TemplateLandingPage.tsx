@@ -20,8 +20,8 @@ export default function TemplateLandingPage() {
 
     <div className="min-h-screen bg-white">
       <LandingNavbar />
-      {/* Hero Section - with padding to account for navbar + announcement bar in new order */}
-      <section className="relative bg-gradient-to-r from-blue-600 to-indigo-700 text-white pt-36">
+      {/* Hero Section - with padding to account for navbar only */}
+      <section className="relative bg-gradient-to-r from-blue-600 to-indigo-700 text-white pt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="md:w-1/2 mb-10 md:mb-0">
@@ -213,7 +213,7 @@ export default function TemplateLandingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 md:py-24 bg-white">
+      {/* <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
@@ -237,7 +237,7 @@ export default function TemplateLandingPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-blue-600 text-white">

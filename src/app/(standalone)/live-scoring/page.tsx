@@ -1,10 +1,10 @@
 // This is a special standalone page that doesn't use the global navigation and footer
 'use client';
 
-import LeadCaptureLandingPage from '@/components/templates/LeadCaptureLandingPage';
+import LiveScoringPage from '@/components/templates/LiveScoringPage';
 import { useEffect } from 'react';
 
-export default function Template() {
+export default function LiveScoring() {
   // Use CSS to hide the default navigation and footer elements but keep LandingNavbar visible
   useEffect(() => {
     // Hide default navigation, footer, and announcement bar
@@ -27,11 +27,6 @@ export default function Template() {
       body > div:first-child {
         min-height: 100vh;
       }
-      
-      /* Suppress broken image icons */
-      img[src^="/images/app-screen-"] {
-        display: none;
-      }
     `;
     document.head.appendChild(style);
     
@@ -41,5 +36,5 @@ export default function Template() {
     };
   }, []);
 
-  return <LeadCaptureLandingPage />;
+  return <LiveScoringPage />;
 }

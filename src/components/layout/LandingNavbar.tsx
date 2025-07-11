@@ -36,12 +36,7 @@ export default function LandingNavbar() {
               </Link>
             </div>
             
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex md:items-center md:space-x-8">
-              <Link href="/contact" className="bg-[var(--brand-blue)] hover:bg-opacity-90 text-white px-4 py-2 rounded-md font-medium transition-colors">
-                BOOK NOW
-              </Link>
-            </div>
+     
             
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center">
