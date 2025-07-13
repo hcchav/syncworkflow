@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LandingNavbar from '../layout/LandingNavbar';
 import Link from 'next/link';
+import { Wheel } from 'react-custom-roulette';
+import '../../styles/wheel.css';
 
 export default function PromotionalLandingPage() {
   const [email, setEmail] = useState('');
@@ -11,6 +13,34 @@ export default function PromotionalLandingPage() {
   const [phone, setPhone] = useState('');
   const [spotsLeft, setSpotsLeft] = useState(9); // Track spots remaining
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  
+  // Animation state management
+  const [animationStep, setAnimationStep] = useState(0);
+  const [qrScanned, setQrScanned] = useState(false);
+  const [nameValue, setNameValue] = useState('');
+  const [emailValue, setEmailValue] = useState('');
+  const [phoneValue, setPhoneValue] = useState('');
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
+  const [wheelRotation, setWheelRotation] = useState(0);
+  const [showPrize, setShowPrize] = useState(false);
+  
+  // Animation timers reference
+  const animationTimers = useRef<NodeJS.Timeout[]>([]);
+  
+  // Reset and restart animation
+  const resetAnimation = () => {
+    animationTimers.current.forEach(timer => clearTimeout(timer));
+    animationTimers.current = [];
+    setAnimationStep(0);
+    setQrScanned(false);
+    setNameValue('');
+    setEmailValue('');
+    setPhoneValue('');
+    setVerificationCode(['', '', '', '', '', '']);
+    setWheelRotation(0);
+    setShowPrize(false);
+    startAnimation();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +66,116 @@ export default function PromotionalLandingPage() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  
+  // Start animation sequence
+  const startAnimation = () => {
+    // Clear any existing timers
+    animationTimers.current.forEach(timer => clearTimeout(timer));
+    animationTimers.current = [];
+    
+    // Reset animation states
+    setQrScanned(false);
+    setAnimationStep(0);
+    setNameValue('');
+    setEmailValue('');
+    setPhoneValue('');
+    setVerificationCode(['', '', '', '', '', '']);
+    setWheelRotation(0);
+    setShowPrize(false);
+    
+    // Step 1: Show QR scanning animation
+    const qrScanTimer = setTimeout(() => {
+      setQrScanned(true);
+    }, 2000); // Simulate QR scanning for 2 seconds
+    animationTimers.current.push(qrScanTimer);
+    
+    // Step 2: Move to form after QR scan
+    const moveToFormTimer = setTimeout(() => {
+      setAnimationStep(1); // Move to form step
+    }, 3000);
+    animationTimers.current.push(moveToFormTimer);
+    
+    // Step 3: Type name (John Doe)
+    const nameToType = 'John Doe';
+    for (let i = 0; i < nameToType.length; i++) {
+      const timer = setTimeout(() => {
+        setNameValue(nameToType.substring(0, i + 1));
+      }, 100 * i + 4000); // Start after 4s, type each character with 100ms delay
+      animationTimers.current.push(timer);
+    }
+    
+    // Step 4: Type email (john.doe@example.com)
+    const emailToType = 'john.doe@example.com';
+    for (let i = 0; i < emailToType.length; i++) {
+      const timer = setTimeout(() => {
+        setEmailValue(emailToType.substring(0, i + 1));
+      }, 100 * i + 6000); // Start after 6s
+      animationTimers.current.push(timer);
+    }
+    
+    // Step 5: Type phone (555-123-4567)
+    const phoneToType = '555-123-4567';
+    for (let i = 0; i < phoneToType.length; i++) {
+      const timer = setTimeout(() => {
+        setPhoneValue(phoneToType.substring(0, i + 1));
+      }, 100 * i + 8000); // Start after 8s
+      animationTimers.current.push(timer);
+    }
+    
+    // Step 6: Submit form
+    const submitTimer = setTimeout(() => {
+      setAnimationStep(2); // Move to verification step
+    }, 10000);
+    animationTimers.current.push(submitTimer);
+    
+    // Step 7: Fill verification code
+    const verificationDigits = ['1', '2', '3', '4', '5', '6'];
+    for (let i = 0; i < verificationDigits.length; i++) {
+      const timer = setTimeout(() => {
+        setVerificationCode(prev => {
+          const newCode = [...prev];
+          newCode[i] = verificationDigits[i];
+          return newCode;
+        });
+      }, 500 * i + 11000); // Start after 11s, fill each digit with 500ms delay
+      animationTimers.current.push(timer);
+    }
+    
+    // Step 8: Move to wheel step
+    const moveToWheelTimer = setTimeout(() => {
+      setAnimationStep(3); // Move to wheel step
+    }, 15000);
+    animationTimers.current.push(moveToWheelTimer);
+    
+    // Step 9: Spin the wheel
+    const spinWheelTimer = setTimeout(() => {
+      setWheelRotation(1); // Set to 1 to trigger wheel spinning
+    }, 16000);
+    animationTimers.current.push(spinWheelTimer);
+    
+    // Step 10: Show prize
+    const showPrizeTimer = setTimeout(() => {
+      setAnimationStep(4); // Move to prize step
+      setShowPrize(true);
+    }, 19000);
+    animationTimers.current.push(showPrizeTimer);
+    
+    // Reset animation after full cycle
+    const resetTimer = setTimeout(() => {
+      resetAnimation(); // Restart the animation
+    }, 25000);
+    animationTimers.current.push(resetTimer);
+  };
+  
+  // Start animation on component mount
+  useEffect(() => {
+    startAnimation();
+    
+    // Clean up timers on unmount
+    return () => {
+      animationTimers.current.forEach(timer => clearTimeout(timer));
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#3777ff] to-[#1a4dc9] text-white">
@@ -119,9 +259,9 @@ export default function PromotionalLandingPage() {
             </div>
             
             {/* Visual: QR Scan + Prize Assignment */}
-            <div className="md:w-1/2 flex justify-center md:justify-end">
+            <div className="md:w-1/2 flex justify-center">
               {/* Phone Device Mockup with Animation */}
-              <div className="device-mockup phone camera-float relative z-20 md:mr-0 md:ml-auto">
+              <div className="device-mockup phone relative z-20 mx-auto">
                 <div className="rounded-[54px] border border-gray-700 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] bg-[#1a1a1a] p-2 w-[280px] h-[580px] relative">
                   {/* Phone notch */}
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120px] h-[24px] bg-black rounded-b-[12px] z-50"></div>
@@ -134,62 +274,194 @@ export default function PromotionalLandingPage() {
                     
                     {/* Top UI */}
                     <div className="absolute top-0 left-0 right-0 z-40 pt-8 pb-4 px-4">
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2 bg-black/50 backdrop-blur-md rounded-full px-2 py-1">
-                          <div className="w-1.5 h-1.5 bg-[#3777ff] rounded-full recording-dot"></div>
-                          <span className="text-white text-xs">LIVE</span>
-                        </div>
+                      <div className="flex justify-end items-center">
                         <div className="text-xs font-bold">
                           <span className="text-white">Sync</span><span className="text-[#3777ff]">Workflow</span>
                         </div>
                       </div>
                     </div>
                     
-                    {/* QR Code Scanning Interface */}
-                    <div className="flex flex-col h-full justify-center items-center p-4 pt-16 relative z-30">
+                    {/* Phone UI Content */}
+                    <div className="form-ui flex flex-col h-full justify-center items-center p-4 pt-16 relative z-30">
                       <div className="w-full space-y-5 max-w-[220px] relative">
-                        <div className="mb-6 text-center">
-                          <span className="text-white text-lg font-bold tracking-wider mb-1 block">SCAN TO SIGN UP</span>
-                          <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full"></div>
+                        
+                        {/* Step 1: QR Code Scanning */}
+                        <div className={`transition-all duration-500 ${animationStep === 0 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="mb-6 text-center">
+                            <span className="text-white text-lg font-bold tracking-wider mb-1 block">SCAN QR CODE</span>
+                            <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full"></div>
+                          </div>
+                          
+                          <div className="flex flex-col items-center justify-center mt-4">
+                            {/* QR Code scanning frame */}
+                            <div className="relative w-48 h-48 border-2 border-dashed border-[#3777ff] rounded-lg flex items-center justify-center">
+                              {/* Corner markers */}
+                              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#3777ff]"></div>
+                              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#3777ff]"></div>
+                              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#3777ff]"></div>
+                              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#3777ff]"></div>
+                              
+                              {/* Scanning animation */}
+                              <div className="absolute top-0 left-0 right-0 h-1 bg-[#3777ff] opacity-80 scan-line"></div>
+                              
+                              {/* QR Code image */}
+                              <div className={`transition-opacity duration-500 ${qrScanned ? 'opacity-40' : 'opacity-100'}`}>
+                                <img src="/images/qr_code.png" alt="QR Code" className="w-36 h-36" />
+                              </div>
+                              
+                              {/* Success checkmark when scanned */}
+                              <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${qrScanned ? 'opacity-100' : 'opacity-0'}`}>
+                                <div className="text-[#3777ff] text-5xl">✓</div>
+                              </div>
+                            </div>
+                            
+                            <p className="text-gray-400 text-sm mt-4 text-center">
+                              {qrScanned ? 'QR Code Scanned Successfully!' : 'Position QR Code in Frame'}
+                            </p>
+                          </div>
                         </div>
                         
-                        {/* QR Code Display */}
-                        <div className="bg-white p-4 rounded-lg mx-auto w-48 h-48 relative">
-                          <img 
-                            src="/images/qr_code.png" 
-                            alt="QR Code" 
-                            className="w-full h-full" 
-                            onError={(e) => {
-                              // Remove the image and replace with a simple QR code representation
-                              const parent = e.currentTarget.parentNode;
-                              if (parent) {
-                                // Remove the image
-                                e.currentTarget.style.display = 'none';
-                                
-                                // Create a simple QR code representation
-                                const qrFallback = document.createElement('div');
-                                qrFallback.className = 'w-full h-full bg-gray-200 flex items-center justify-center';
-                                qrFallback.innerHTML = '<div class="text-gray-600 text-sm font-medium">QR Code</div>';
-                                parent.appendChild(qrFallback);
-                              }
-                            }}
-                          />
-                          {/* Scanning animation */}
-                          <div className="scanning-line"></div>
+                        {/* Step 2: Registration Form */}
+                        <div className={`transition-all duration-500 ${animationStep === 1 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="mb-6 text-center">
+                            <span className="text-white text-lg font-bold tracking-wider mb-1 block">REGISTER</span>
+                            <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full"></div>
+                          </div>
+                          
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <label className="text-white text-xs block">Full Name</label>
+                              <div className="bg-white/10 rounded-md p-2 border border-white/20">
+                                <p className="text-white text-sm">{nameValue || '|'}</p>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <label className="text-white text-xs block">Email Address</label>
+                              <div className="bg-white/10 rounded-md p-2 border border-white/20">
+                                <p className="text-white text-sm">{emailValue || '|'}</p>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-2">
+                              <label className="text-white text-xs block">Phone Number</label>
+                              <div className="bg-white/10 rounded-md p-2 border border-white/20">
+                                <p className="text-white text-sm">{phoneValue || '|'}</p>
+                              </div>
+                            </div>
+                            
+                            <button className="w-full bg-[#3777ff] text-white py-2 rounded-md mt-4 font-medium">
+                              Submit
+                            </button>
+                          </div>
                         </div>
                         
-                        <p className="text-white text-center mt-4">Scan with your phone camera</p>
+                        {/* Step 3: Verification Code */}
+                        <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="mb-6 text-center">
+                            <span className="text-white text-lg font-bold tracking-wider mb-1 block">VERIFY</span>
+                            <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full"></div>
+                          </div>
+                          
+                          <div className="space-y-4">
+                            <p className="text-white/80 text-sm text-center">Enter the 6-digit code sent to your phone</p>
+                            
+                            <div className="flex justify-between gap-1">
+                              {verificationCode.map((digit, index) => (
+                                <div key={index} className="w-8 h-10 bg-white/10 rounded-md flex items-center justify-center border border-white/20">
+                                  <span className="text-white font-medium">{digit}</span>
+                                </div>
+                              ))}
+                            </div>
+                            
+                            <button className="w-full bg-[#3777ff] text-white py-2 rounded-md mt-4 font-medium">
+                              Verify
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {/* Step 4: Prize Wheel */}
+                        <div className={`transition-all duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          {/* Ultra-compact Prize Wheel Layout */}
+                          <div className="flex flex-col items-center mt-5" style={{ height: "350px", padding: "15px 0 0 0" }}>
+                            {/* Title */}
+                            <div className="text-center">
+                              <span className="text-white text-lg font-bold tracking-wider block">SPIN TO WIN</span>
+                              <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full mb-2"></div>
+                            </div>
+                            
+                            {/* Prize Wheel - Minimal spacing */}
+                            <div style={{ position: "relative", height: "300px", width: "100%" }}>
+                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.55)" }}>
+                                <Wheel
+                                  mustStartSpinning={wheelRotation > 0}
+                                  prizeNumber={1} // Index 1 corresponds to VIP Badge
+                                  data={[
+                                    { option: 'Notebook', style: { backgroundColor: '#FF5252', textColor: 'white' } },
+                                    { option: 'VIP Badge', style: { backgroundColor: '#4CAF50', textColor: 'white' } },
+                                    { option: 'Gift Card', style: { backgroundColor: '#2196F3', textColor: 'white' } },
+                                    { option: 'T-Shirt', style: { backgroundColor: '#FFC107', textColor: 'white' } },
+                                    { option: 'Stickers', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
+                                    { option: 'Mug', style: { backgroundColor: '#FF9800', textColor: 'white' } },
+                                    { option: 'Discount', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
+                                    { option: 'Pen', style: { backgroundColor: '#8BC34A', textColor: 'white' } }
+                                  ]}
+                                  spinDuration={0.8}
+                                  outerBorderColor="#333"
+                                  outerBorderWidth={1}
+                                  innerBorderColor="#333"
+                                  innerBorderWidth={3}
+                                  innerRadius={15}
+                                  radiusLineColor=""
+                                  radiusLineWidth={1}
+                                  fontSize={28}
+                                  textDistance={60}
+                                  backgroundColors={['#ffffff']}
+                                  perpendicularText={false}
+                                  fontWeight={700}
+                                  onStopSpinning={() => {
+                                    setTimeout(() => setShowPrize(true), 1000);
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            
+                            {/* Button at bottom - no margin */}
+                            <div className="text-center mt-0">
+                              <button 
+                                onClick={() => wheelRotation === 0 && setWheelRotation(1)}
+                                disabled={wheelRotation > 0}
+                                className={`bg-[var(--brand-blue)] text-white font-bold py-1 px-6 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${wheelRotation > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(55,119,255,0.5)]'}`}
+                              >
+                                SPIN
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Step 5: Prize Reveal */}
+                        <div className={`transition-all duration-500 ${animationStep === 4 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="text-center py-4">
+                            <div className="text-4xl mb-2">🎉</div>
+                            <h3 className="text-white text-xl font-bold mb-2">Congratulations!</h3>
+                            <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full mb-4"></div>
+                            
+                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 mb-4 border border-gray-700">
+                              <p className="text-white font-bold mb-1">You won a</p>
+                              <p className="text-[var(--brand-blue)] text-xl font-bold mb-2">FREE TRIAL</p>
+                              <div className="text-3xl mb-1">🏆</div>
+                              <p className="text-gray-400 text-xs">Check your email for details</p>
+                            </div>
+                            
+                            <button className="w-full bg-[var(--brand-blue)] hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-md uppercase hover:shadow-[0_0_15px_rgba(55,119,255,0.5)] transform hover:scale-[1.02] transition-all duration-300">
+                              CLAIM NOW
+                            </button>
+                          </div>
+                        </div>
                         
                         {/* Process steps indicator */}
-                        <div className="mt-6">
-                          <div className="flex items-center justify-center space-x-2">
-                            <div className="w-3 h-3 rounded-full bg-[#3777ff]"></div>
-                            <div className="w-12 h-1 bg-[#3777ff]/30"></div>
-                            <div className="w-3 h-3 rounded-full bg-[#3777ff]/30"></div>
-                            <div className="w-12 h-1 bg-[#3777ff]/30"></div>
-                            <div className="w-3 h-3 rounded-full bg-[#3777ff]/30"></div>
-                          </div>
-                          <p className="text-xs text-white/70 text-center mt-2">Scan → Verify → Win</p>
+                        <div className="mt-16 text-center">
+                          <p className="text-xs text-white/70 text-center">Scan → Submit → Verify → Win</p>
                         </div>
                       </div>
                     </div>

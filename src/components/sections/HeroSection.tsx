@@ -10,6 +10,7 @@ import '@/styles/wheel.css';
 export default function HeroSection() {
   // Animation state management
   const [animationStep, setAnimationStep] = useState(0);
+  const [qrScanned, setQrScanned] = useState(false);
   const [nameValue, setNameValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [phoneValue, setPhoneValue] = useState('');
@@ -25,6 +26,7 @@ export default function HeroSection() {
     animationTimers.current.forEach(timer => clearTimeout(timer));
     animationTimers.current = [];
     setAnimationStep(0);
+    setQrScanned(false);
     setNameValue('');
     setEmailValue('');
     setPhoneValue('');
@@ -36,7 +38,19 @@ export default function HeroSection() {
   
   // Start the animation sequence
   const startAnimation = () => {
-    // Step 1: Type name (John Doe)
+    // Step 1: Show QR scanning animation
+    const qrScanTimer = setTimeout(() => {
+      setQrScanned(true);
+    }, 2000); // Simulate QR scanning for 2 seconds
+    animationTimers.current.push(qrScanTimer);
+    
+    // Step 2: Move to form after QR scan
+    const moveToFormTimer = setTimeout(() => {
+      setAnimationStep(1); // Move to form step
+    }, 3000);
+    animationTimers.current.push(moveToFormTimer);
+    
+    // Step 3: Type name (John Doe)
     const nameToType = 'John Doe';
     let currentPos = 0;
     
@@ -45,35 +59,35 @@ export default function HeroSection() {
       const timer = setTimeout(() => {
         setNameValue(nameToType.substring(0, i + 1));
         currentPos = i + 1;
-      }, 100 * i + 1000); // Start after 1s, type each character with 100ms delay
+      }, 100 * i + 4000); // Start after 4s, type each character with 100ms delay
       animationTimers.current.push(timer);
     }
     
-    // Step 2: Type email (john.doe@example.com)
+    // Step 4: Type email (john.doe@example.com)
     const emailToType = 'john.doe@example.com';
     for (let i = 0; i < emailToType.length; i++) {
       const timer = setTimeout(() => {
         setEmailValue(emailToType.substring(0, i + 1));
-      }, 100 * i + 3000); // Start after 3s
+      }, 100 * i + 6000); // Start after 6s
       animationTimers.current.push(timer);
     }
     
-    // Step 3: Type phone (555-123-4567)
+    // Step 5: Type phone (555-123-4567)
     const phoneToType = '555-123-4567';
     for (let i = 0; i < phoneToType.length; i++) {
       const timer = setTimeout(() => {
         setPhoneValue(phoneToType.substring(0, i + 1));
-      }, 100 * i + 5000); // Start after 5s
+      }, 100 * i + 8000); // Start after 8s
       animationTimers.current.push(timer);
     }
     
-    // Step 4: Submit form
+    // Step 6: Submit form
     const submitTimer = setTimeout(() => {
-      setAnimationStep(1); // Move to verification step
-    }, 7000);
+      setAnimationStep(2); // Move to verification step
+    }, 10000);
     animationTimers.current.push(submitTimer);
     
-    // Step 5: Fill verification code
+    // Step 7: Fill verification code
     const verificationDigits = ['1', '2', '3', '4', '5', '6'];
     for (let i = 0; i < verificationDigits.length; i++) {
       const timer = setTimeout(() => {
@@ -82,33 +96,33 @@ export default function HeroSection() {
           newCode[i] = verificationDigits[i];
           return newCode;
         });
-      }, 500 * i + 8000); // Start after 8s, fill each digit with 500ms delay
+      }, 500 * i + 11000); // Start after 11s, fill each digit with 500ms delay
       animationTimers.current.push(timer);
     }
     
-    // Step 6: Submit verification
+    // Step 8: Submit verification
     const verifyTimer = setTimeout(() => {
-      setAnimationStep(2); // Move to prize wheel step
-    }, 11500);
+      setAnimationStep(3); // Move to prize wheel step
+    }, 14500);
     animationTimers.current.push(verifyTimer);
     
-    // Step 7: Spin the wheel
+    // Step 9: Spin the wheel
     const spinTimer = setTimeout(() => {
       setWheelRotation(1); // Set to 1 to trigger the wheel spin
-    }, 12500);
+    }, 15500);
     animationTimers.current.push(spinTimer);
     
-    // Step 8: Show prize
+    // Step 10: Show prize
     const prizeTimer = setTimeout(() => {
-      setAnimationStep(3); // Move to prize reveal step
+      setAnimationStep(4); // Move to prize reveal step
       setShowPrize(true);
-    }, 16000);
+    }, 19000);
     animationTimers.current.push(prizeTimer);
     
-    // Step 9: Reset animation after completion
+    // Step 11: Reset animation after completion
     const resetTimer = setTimeout(() => {
       resetAnimation();
-    }, 22000); // Reset after 22 seconds total
+    }, 25000); // Reset after 25 seconds total
     animationTimers.current.push(resetTimer);
   };
   
@@ -276,8 +290,44 @@ export default function HeroSection() {
                 {/* Animated Form UI */}
                 <div className="form-ui flex flex-col h-full justify-center items-center p-4 pt-16 relative z-30">
                   <div className="w-full space-y-5 max-w-[220px] relative">
-                    {/* Step 1: Registration Form */}
+                    {/* Step 1: QR Code Scanning */}
                     <div className={`transition-all duration-500 ${animationStep === 0 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                      <div className="mb-6 text-center">
+                        <span className="text-white text-lg font-bold tracking-wider mb-1 block">SCAN QR CODE</span>
+                        <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full"></div>
+                      </div>
+                      
+                      <div className="flex flex-col items-center justify-center mt-4">
+                        {/* QR Code scanning frame */}
+                        <div className="relative w-48 h-48 border-2 border-dashed border-[var(--brand-blue)] rounded-lg flex items-center justify-center">
+                          {/* Corner markers */}
+                          <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[var(--brand-blue)]"></div>
+                          <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[var(--brand-blue)]"></div>
+                          <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[var(--brand-blue)]"></div>
+                          <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[var(--brand-blue)]"></div>
+                          
+                          {/* Scanning animation */}
+                          <div className="absolute top-0 left-0 right-0 h-1 bg-[var(--brand-blue)] opacity-80 scan-line"></div>
+                          
+                          {/* QR Code image */}
+                          <div className={`transition-opacity duration-500 ${qrScanned ? 'opacity-40' : 'opacity-100'}`}>
+                            <img src="/images/qr_code.png" alt="QR Code" className="w-36 h-36" />
+                          </div>
+                          
+                          {/* Success checkmark when scanned */}
+                          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${qrScanned ? 'opacity-100' : 'opacity-0'}`}>
+                            <div className="text-[var(--brand-blue)] text-5xl">✓</div>
+                          </div>
+                        </div>
+                        
+                        <p className="text-gray-400 text-sm mt-4 text-center">
+                          {qrScanned ? 'QR Code Scanned Successfully!' : 'Position QR Code in Frame'}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {/* Step 2: Registration Form */}
+                    <div className={`transition-all duration-500 ${animationStep === 1 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                       <div className="mb-6 text-center">
                         <span className="text-white text-lg font-bold tracking-wider mb-1 block">PRIZE ENTRY FORM</span>
                         <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full"></div>
@@ -328,8 +378,8 @@ export default function HeroSection() {
                       </div>
                     </div>
                     
-                    {/* Step 2: Verification Code */}
-                    <div className={`transition-all duration-500 ${animationStep === 1 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                    {/* Step 3: Verification Code */}
+                    <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                       <div className="mb-6 text-center">
                         <span className="text-white text-lg font-bold tracking-wider mb-1 block">VERIFY YOUR PHONE</span>
                         <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full"></div>
@@ -355,8 +405,8 @@ export default function HeroSection() {
                       </button>
                     </div>
                     
-                    {/* Step 3: Prize Wheel */}
-                    <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                    {/* Step 4: Prize Wheel */}
+                    <div className={`transition-all duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                       {/* Ultra-compact Prize Wheel Layout */}
                       <div className="flex flex-col items-center mt-5" style={{ height: "350px", padding: "15px 0 0 0" }}>
                         {/* Title */}
@@ -414,8 +464,8 @@ export default function HeroSection() {
                       </div>
                     </div>
                     
-                    {/* Step 4: Prize Reveal */}
-                    <div className={`transition-all duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                    {/* Step 5: Prize Reveal */}
+                    <div className={`transition-all duration-500 ${animationStep === 4 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                       <div className="text-center py-4">
                         <div className="text-4xl mb-2">🎉</div>
                         <h3 className="text-white text-xl font-bold mb-2">Congratulations!</h3>

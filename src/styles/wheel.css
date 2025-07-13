@@ -51,6 +51,45 @@
   }
 }
 
+/* QR Code scanning animation */
+@keyframes scanAnimation {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: calc(100% - 2px);
+  }
+  100% {
+    top: 0;
+  }
+}
+
+.scan-line {
+  animation: scanAnimation 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(55, 119, 255, 0.8);
+}
+
+/* Recording dot animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.recording-dot {
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+/* Phone rotation animation */
+@keyframes phoneRotate {
+  0% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+  100% { transform: rotate(-3deg); }
+}
+
+.phone-rotate {
+  animation: phoneRotate 8s ease-in-out infinite;
+}
+
 /* Standard mobile devices */
 @media (max-width: 420px) and (min-width: 380px) {
   .wheel-container {
