@@ -11,6 +11,9 @@ export default function PromotionalLandingPage() {
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
+  const [isNameValid, setIsNameValid] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [spotsLeft, setSpotsLeft] = useState(9); // Track spots remaining
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   
@@ -20,6 +23,9 @@ export default function PromotionalLandingPage() {
   const [nameValue, setNameValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
   const [phoneValue, setPhoneValue] = useState('');
+  const [nameCompleted, setNameCompleted] = useState(false);
+  const [emailCompleted, setEmailCompleted] = useState(false);
+  const [phoneCompleted, setPhoneCompleted] = useState(false);
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [showPrize, setShowPrize] = useState(false);
@@ -42,12 +48,36 @@ export default function PromotionalLandingPage() {
     startAnimation();
   };
 
+  // Validation functions
+  const validateName = (value: string) => {
+    const isValid = value.trim().length >= 2; // At least 2 characters
+    setIsNameValid(isValid);
+    return isValid;
+  };
+
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValid = emailRegex.test(value);
+    setIsEmailValid(isValid);
+    return isValid;
+  };
+
+  const validatePhone = (value: string) => {
+    const phoneRegex = /^[\d\s\-()+]{7,}$/; // At least 7 digits, allowing spaces, dashes, parentheses
+    const isValid = phoneRegex.test(value);
+    setIsPhoneValid(isValid);
+    return isValid;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Submitted:', { email, name, company, phone });
     alert('Thank you for your interest! We\'ll be in touch soon to secure your spot.');
     setEmail('');
     setName('');
+    setIsNameValid(false);
+    setIsEmailValid(false);
+    setIsPhoneValid(false);
     setCompany('');
     setPhone('');
     setIsModalOpen(false); // Close modal after submission
@@ -79,6 +109,9 @@ export default function PromotionalLandingPage() {
     setNameValue('');
     setEmailValue('');
     setPhoneValue('');
+    setNameCompleted(false);
+    setEmailCompleted(false);
+    setPhoneCompleted(false);
     setVerificationCode(['', '', '', '', '', '']);
     setWheelRotation(0);
     setShowPrize(false);
@@ -100,6 +133,10 @@ export default function PromotionalLandingPage() {
     for (let i = 0; i < nameToType.length; i++) {
       const timer = setTimeout(() => {
         setNameValue(nameToType.substring(0, i + 1));
+        // Set name as completed when typing is finished
+        if (i === nameToType.length - 1) {
+          setTimeout(() => setNameCompleted(true), 300); // Show check mark after a slight delay
+        }
       }, 100 * i + 4000); // Start after 4s, type each character with 100ms delay
       animationTimers.current.push(timer);
     }
@@ -109,6 +146,10 @@ export default function PromotionalLandingPage() {
     for (let i = 0; i < emailToType.length; i++) {
       const timer = setTimeout(() => {
         setEmailValue(emailToType.substring(0, i + 1));
+        // Set email as completed when typing is finished
+        if (i === emailToType.length - 1) {
+          setTimeout(() => setEmailCompleted(true), 300); // Show check mark after a slight delay
+        }
       }, 100 * i + 6000); // Start after 6s
       animationTimers.current.push(timer);
     }
@@ -118,6 +159,10 @@ export default function PromotionalLandingPage() {
     for (let i = 0; i < phoneToType.length; i++) {
       const timer = setTimeout(() => {
         setPhoneValue(phoneToType.substring(0, i + 1));
+        // Set phone as completed when typing is finished
+        if (i === phoneToType.length - 1) {
+          setTimeout(() => setPhoneCompleted(true), 300); // Show check mark after a slight delay
+        }
       }, 100 * i + 8000); // Start after 8s
       animationTimers.current.push(timer);
     }
@@ -331,22 +376,43 @@ export default function PromotionalLandingPage() {
                           <div className="space-y-4">
                             <div className="space-y-2">
                               <label className="text-white text-xs block">Full Name</label>
-                              <div className="bg-white/10 rounded-md p-2 border border-white/20">
+                              <div className="bg-white/10 rounded-md p-2 border border-white/20 relative">
                                 <p className="text-white text-sm">{nameValue || '|'}</p>
+                                {nameCompleted && (
+                                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 transition-opacity duration-300 opacity-100">
+                                    <svg className="h-4 w-4 text-[#0bfe88]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                  </div>
+                                )}
                               </div>
                             </div>
                             
                             <div className="space-y-2">
                               <label className="text-white text-xs block">Email Address</label>
-                              <div className="bg-white/10 rounded-md p-2 border border-white/20">
+                              <div className="bg-white/10 rounded-md p-2 border border-white/20 relative">
                                 <p className="text-white text-sm">{emailValue || '|'}</p>
+                                {emailCompleted && (
+                                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 transition-opacity duration-300 opacity-100">
+                                    <svg className="h-4 w-4 text-[#0bfe88]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                  </div>
+                                )}
                               </div>
                             </div>
                             
                             <div className="space-y-2">
                               <label className="text-white text-xs block">Phone Number</label>
-                              <div className="bg-white/10 rounded-md p-2 border border-white/20">
+                              <div className="bg-white/10 rounded-md p-2 border border-white/20 relative">
                                 <p className="text-white text-sm">{phoneValue || '|'}</p>
+                                {phoneCompleted && (
+                                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 transition-opacity duration-300 opacity-100">
+                                    <svg className="h-4 w-4 text-[#0bfe88]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                  </div>
+                                )}
                               </div>
                             </div>
                             
@@ -819,8 +885,8 @@ export default function PromotionalLandingPage() {
       
       {/* Claim Offer Form Section */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-          <div className="bg-white text-gray-900 p-8 rounded-lg shadow-lg w-[500px] relative">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+          <div className="bg-white text-gray-900 p-8 rounded-lg shadow-lg w-[500px] relative z-[100]">
             <button 
               className="absolute -top-3 -right-3 bg-white hover:bg-gray-100 text-gray-800 hover:text-black rounded-full p-1.5 shadow-md transition-colors"
               onClick={closeModal}
@@ -836,29 +902,53 @@ export default function PromotionalLandingPage() {
             
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div className="text-left">
+                <div className="text-left relative">
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
-                  <input
-                    id="name"
-                    type="text"
-                    placeholder="Your name"
-                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      id="name"
+                      type="text"
+                      placeholder="Your name"
+                      className={`w-full px-4 py-3 rounded-md border ${isNameValid ? 'border-green-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900 pr-10`}
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        validateName(e.target.value);
+                      }}
+                      required
+                    />
+                    {isNameValid && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="text-left">
+                <div className="text-left relative">
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="you@company.com"
-                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      id="email"
+                      type="email"
+                      placeholder="you@company.com"
+                      className={`w-full px-4 py-3 rounded-md border ${isEmailValid ? 'border-green-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900 pr-10`}
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        validateEmail(e.target.value);
+                      }}
+                      required
+                    />
+                    {isEmailValid && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="text-left">
                   <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company*</label>
@@ -872,17 +962,29 @@ export default function PromotionalLandingPage() {
                     required
                   />
                 </div>
-                <div className="text-left">
+                <div className="text-left relative">
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
-                  <input
-                    id="phone"
-                    type="tel"
-                    placeholder="(555) 123-4567"
-                    className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      id="phone"
+                      type="tel"
+                      placeholder="(555) 123-4567"
+                      className={`w-full px-4 py-3 rounded-md border ${isPhoneValid ? 'border-green-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900 pr-10`}
+                      value={phone}
+                      onChange={(e) => {
+                        setPhone(e.target.value);
+                        validatePhone(e.target.value);
+                      }}
+                      required
+                    />
+                    {isPhoneValid && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               
