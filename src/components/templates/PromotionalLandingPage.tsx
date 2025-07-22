@@ -223,7 +223,7 @@ export default function PromotionalLandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#3777ff] to-[#1a4dc9] text-white">
+    <div className="min-h-screen flex flex-col bg-white text-gray-900">
       {/* Limited-Time Offer - Full Width Black Banner at Top */}
       <div className="w-full bg-black text-white py-2.5 px-4 flex justify-center items-center">
         <span className="mx-1">Get</span>
@@ -234,14 +234,14 @@ export default function PromotionalLandingPage() {
       {/* Removed navigation menu for ONE clear goal with no distractions */}
       
       {/* Hero Section */}
-      <section className="flex-grow flex flex-col items-center justify-center text-center px-2 pt-8 pb-16 md:pt-10 md:pb-16">
+      <section className="flex-grow flex flex-col items-center justify-center text-center px-2 pt-8 pb-16 md:pt-10 md:pb-16 bg-white">
         <div className="max-w-6xl w-full mx-auto">
           
           <div className="md:flex md:items-center md:text-left">
             <div className="md:w-1/2 md:pr-8">
               {/* Main Headline */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4">
-                Capture & Qualify Leads at <span className="text-[#2e2f31]">Your Booth</span> — Easily
+              <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold mb-4">
+                Attract more leads at <span className="font-semibold">Your Booth</span> — Easily
               </h1>
               
               {/* Subheadline with value proposition */}
@@ -290,17 +290,17 @@ export default function PromotionalLandingPage() {
                   onClick={openModal}
                   className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-10 py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center w-full md:w-auto shadow-lg"
                 >
-                  <span className="text-2xl font-bold">Start Free Trial</span>
+                  <span className="text-2xl font-bold">I want more leads at my booth</span>
                 </a>
-                <div className="mt-3 flex items-center">
-                  <span className="text-sm text-white/90">no credit card required</span>
-                </div>
+                {/* <div className="mt-3 flex items-center">
+                  <span className="text-sm text-gray-600">no credit card required</span>
+                </div> */}
               </div>
               
-              {/* Trust Statement */}
-              <p className="text-sm text-white/80 mt-4">
+              {/* Trust Statement
+              <p className="text-sm text-gray-600 mt-4">
                 Trusted by trade show teams like yours — boosters of booth ROI.
-              </p>
+              </p> */}
             </div>
             
             {/* Visual: QR Scan + Prize Assignment */}
@@ -541,58 +541,7 @@ export default function PromotionalLandingPage() {
       
     
 
-      {/* How It Works Section */}
-      <section className="bg-gray-50 py-16">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-gray-900">
-            How It Works <span className="text-[#3777ff]">(3 Easy Steps)</span>
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Step 1 */}
-            <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow relative">
-              <div className="absolute -top-5 -left-5 w-12 h-12 rounded-full bg-[#3777ff] text-white flex items-center justify-center text-xl font-bold">
-                1
-              </div>
-              <div className="mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-[#3777ff] mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">We build your custom setup</h3>
-              <p className="text-gray-600">Branded forms, automated emails, and prize tools tailored to your event needs</p>
-            </div>
-            
-            {/* Step 2 */}
-            <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow relative">
-              <div className="absolute -top-5 -left-5 w-12 h-12 rounded-full bg-[#3777ff] text-white flex items-center justify-center text-xl font-bold">
-                2
-              </div>
-              <div className="mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-[#3777ff] mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">You share the sign-up link</h3>
-              <p className="text-gray-600">Display QR codes at your booth for easy attendee registration</p>
-            </div>
-            
-            {/* Step 3 */}
-            <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow relative">
-              <div className="absolute -top-5 -left-5 w-12 h-12 rounded-full bg-[#3777ff] text-white flex items-center justify-center text-xl font-bold">
-                3
-              </div>
-              <div className="mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-[#3777ff] mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">We help you maximize ROI</h3>
-              <p className="text-gray-600">Get insights and support to convert leads into customers</p>
-            </div>
-          </div>
-        </div>
-      </section>
+     
 
       {/* Features Section */}
       <section id="learn-more" className="bg-white text-gray-900 py-16">
@@ -676,9 +625,6 @@ export default function PromotionalLandingPage() {
             {/* Additional Phone Mockup Images */}
             <div className="flex flex-col md:flex-row gap-4 mt-8 md:mt-0">
               <div className="transform hover:-translate-y-1 transition-transform duration-300">
-                <div className="text-center mb-2">
-                  <h4 className="font-bold text-base bg-[#3777ff]/10 text-[#3777ff] py-1 px-2 rounded-md inline-block">Custom Sign Up Form</h4>
-                </div>
                 <img 
                   src="/images/phone-mockup-1.png" 
                   alt="Lead Registration" 
@@ -686,9 +632,6 @@ export default function PromotionalLandingPage() {
                 />
               </div>
               <div className="transform hover:-translate-y-1 transition-transform duration-300">
-                <div className="text-center mb-2">
-                  <h4 className="font-bold text-base bg-[#3777ff]/10 text-[#3777ff] py-1 px-2 rounded-md inline-block">Send Verification Code</h4>
-                </div>
                 <img 
                   src="/images/phone-mockup-2.png" 
                   alt="Verification" 
@@ -696,9 +639,6 @@ export default function PromotionalLandingPage() {
                 />
               </div>
               <div className="transform hover:-translate-y-1 transition-transform duration-300">
-                <div className="text-center mb-2">
-                  <h4 className="font-bold text-base bg-[#3777ff]/10 text-[#3777ff] py-1 px-2 rounded-md inline-block">Code Entry Screen</h4>
-                </div>
                 <img 
                   src="/images/phone-mockup-3.png" 
                   alt="Confirmation" 
@@ -708,51 +648,17 @@ export default function PromotionalLandingPage() {
             </div>
           </div>
           
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">
-            EVERYTHING YOU NEED FOR SUCCESSFUL LEAD CAPTURE
-          </h2>
+    
+        {/* Create Excitement and Boost Interaction */}
+        <div className="text-center mb-10 max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Create Excitement and Boost Interaction</h2>
+          <p className="text-gray-600 text-lg">
+            Draw crowds and spark engagement with an interactive prize wheel experience. Once attendees complete your branded sign-up, they’ll spin a digital wheel for a chance to win — turning casual visitors into excited, qualified leads.
+          </p>
+      </div>
+
           
-          <div className="flex flex-col md:flex-row gap-6 mb-16 max-w-5xl mx-auto">
-            {[
-              {
-                title: "Smart Forms",
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-[#3777ff] mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                ),
-                description: "Custom branded forms that capture exactly what you need from each lead"
-              },
-              {
-                title: "Live Scoring",
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-[#3777ff] mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
-                ),
-                description: "Instantly identify your hottest leads based on their responses"
-              },
-              {
-                title: "Giveaway Tracker",
-                icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-[#3777ff] mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-                  </svg>
-                ),
-                description: "Manage booth prizes and automatically enter qualified leads"
-              }
-            ].map((feature, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow flex-1">
-                <div className="text-center">
-                  <div className="mb-4">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm">{feature.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          
           
 
           
@@ -1054,9 +960,9 @@ export default function PromotionalLandingPage() {
             onClick={openModal}
             className="inline-block bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold px-10 py-5 rounded-lg transition-all transform hover:scale-105 flex flex-col items-center"
           >
-            <span className="text-xl">CLAIM YOUR SPOT NOW</span>
-            <span className="text-sm mt-1">Free custom branded forms + $500 setup fee waived</span>
-            <span className="text-sm mt-1">ONLY {spotsLeft} SPOTS REMAINING</span>
+            <span className="text-2xl">I want more leads at my booth</span>
+            <p className="text-sm mt-1"> + Free custom branded forms + No setup fees</p>
+            <p className="text-sm mt-1">ONLY {spotsLeft} SPOTS REMAINING</p>
           </a>
         </div>
       </section>
