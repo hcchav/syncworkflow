@@ -69,19 +69,19 @@ export default function CustomWheelPage() {
           
           {/* Prize Wheel */}
           <div style={{ position: "relative", height: "350px", width: "100%" }}>
-            <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }}>
+            <div className="wheel-glow-wrapper" style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }}>
               <Wheel
                 mustStartSpinning={wheelRotation > 0}
                 prizeNumber={prizeNumber}
                 data={prizes}
                 spinDuration={0.8}
-                outerBorderColor="#333"
-                outerBorderWidth={1}
-                innerBorderColor="#333"
-                innerBorderWidth={3}
+                outerBorderColor="#222222" /* Blue brand border */
+                outerBorderWidth={5} /* Thicker border */
+                innerBorderColor="#222222" /* Offset black inner border for depth */
+                innerBorderWidth={5} /* Add inner border */
                 innerRadius={15}
-                radiusLineColor=""
-                radiusLineWidth={1}
+                radiusLineColor="#333" /* Added visible radius lines */
+                radiusLineWidth={2} /* Thicker radius lines */
                 fontSize={28}
                 textDistance={60}
                 backgroundColors={['#ffffff']}

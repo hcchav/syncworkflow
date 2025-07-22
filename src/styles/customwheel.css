@@ -118,6 +118,28 @@
   transform: scale(1.5) !important;
 }
 
+Wheel glow effect
+.wheel-glow-wrapper {
+  position: relative;
+}
+
+.wheel-glow-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: 50%;
+  background: transparent;
+  /* Bright white glow */
+  /* Secondary white glow */
+  box-shadow: 0 0 40px 1px rgba(255, 255, 255, 0.9), 
+              0 0 70px 1px rgba(255, 255, 255, 0.7); 
+  z-index: -1;
+  pointer-events: none;
+}
+
 /* Fade-in animation for prize overlay */
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.9); }
