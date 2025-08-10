@@ -1,0 +1,104 @@
+.monitor-mockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.mockup-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  color: #333;
+}
+
+.monitor-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.monitor-screen {
+  background-color: #222;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.monitor-content {
+  background-color: white;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.monitor-stand {
+  width: 30px;
+  height: 40px;
+  background-color: #444;
+  margin-top: -5px;
+}
+
+.monitor-base {
+  width: 120px;
+  height: 20px;
+  background-color: #333;
+  border-radius: 50%;
+  margin-top: -5px;
+}
+
+/* Landscape orientation */
+.monitor-mockup.landscape .monitor-screen {
+  width: 800px;
+  height: 450px;
+}
+
+.monitor-mockup.landscape .monitor-content {
+  width: 780px;
+  height: 430px;
+}
+
+/* Portrait orientation */
+.monitor-mockup.portrait .monitor-screen {
+  width: 450px;
+  height: 800px;
+}
+
+.monitor-mockup.portrait .monitor-content {
+  width: 430px;
+  height: 780px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .monitor-mockup.landscape .monitor-screen {
+    width: 90vw;
+    height: calc(90vw * 9 / 16);
+  }
+  
+  .monitor-mockup.landscape .monitor-content {
+    width: calc(90vw - 20px);
+    height: calc(90vw * 9 / 16 - 20px);
+  }
+}
+
+@media (max-width: 500px) {
+  .monitor-mockup.portrait .monitor-screen {
+    width: 90vw;
+    height: calc(90vw * 16 / 9);
+  }
+  
+  .monitor-mockup.portrait .monitor-content {
+    width: calc(90vw - 20px);
+    height: calc(90vw * 16 / 9 - 20px);
+  }
+}
+
+/* Scale content inside mockup */
+.monitor-mockup .wheel-container {
+  transform: scale(0.8);
+  transform-origin: center center;
+}
