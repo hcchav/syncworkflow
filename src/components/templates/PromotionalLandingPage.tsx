@@ -655,7 +655,89 @@ export default function PromotionalLandingPage() {
           <p className="text-gray-600 text-lg">
             Draw crowds and spark engagement with an interactive prize wheel experience. Once attendees complete your branded sign-up, they’ll spin a digital wheel for a chance to win — turning casual visitors into excited, qualified leads.
           </p>
-      </div>
+        </div>
+
+        {/* Real Customer Examples */}
+        <div className="max-w-7xl mx-auto mb-16">
+          {/* Hero Video Section */}
+          <div className="text-center mb-12">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Watch Real Customers in Action</h3>
+            <div className="max-w-md mx-auto rounded-2xl shadow-2xl overflow-hidden transform hover:scale-105 transition-all duration-500">
+              <video 
+                src="/videos/customer_prize_wheel_vertical.mp4" 
+                className="w-full h-auto"
+                controls
+                muted
+                playsInline
+                loop
+                autoPlay
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <p className="text-gray-600 mt-4 text-lg">Live customer scanning QR code and winning prizes</p>
+          </div>
+
+          {/* Supporting Evidence Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            {/* Customer Photo */}
+            <div className="text-center">
+              <h4 className="text-xl font-semibold text-gray-900 mb-4">📱 Instant Engagement</h4>
+              <div className="rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <img 
+                  src="/images/customer-qr-code.PNG" 
+                  alt="Real customer scanning QR code at booth" 
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+              <p className="text-gray-600 mt-3">Customers love the interactive experience</p>
+            </div>
+
+            {/* Social Proof */}
+            <div className="text-center">
+              <h4 className="text-xl font-semibold text-gray-900 mb-4">💬 Social Buzz</h4>
+              <div className="rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <img 
+                  src="/images/instagram-comment.png" 
+                  alt="Customer feedback on social media" 
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+              <p className="text-gray-600 mt-3">Customers share their excitement online</p>
+            </div>
+
+            {/* Tradeshow Social Proof */}
+            <div className="text-center">
+              <h4 className="text-xl font-semibold text-gray-900 mb-4">🏢 Tag the Tradeshow</h4>
+              <div className="rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                <img 
+                  src="/images/tradeshow-social-proof.png" 
+                  alt="Pet industry tradeshow social media post about SuperZoo booth experience" 
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+              <p className="text-gray-600 mt-3">Tag the tradeshow on social media to drive traffic</p>
+            </div>
+          </div>
+
+          {/* Results Stats */}
+          <div className="mt-16 bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+              <div>
+                <div className="text-4xl font-bold text-[#3777ff] mb-2">3x</div>
+                <div className="text-gray-700 font-medium">Higher Conversion Rate</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-[#0bfe88] mb-2">85%</div>
+                <div className="text-gray-700 font-medium">Complete Registration</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-[#ff6b35] mb-2">92%</div>
+                <div className="text-gray-700 font-medium">Customer Satisfaction</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
           
           
