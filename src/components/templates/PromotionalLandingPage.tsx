@@ -473,16 +473,18 @@ export default function PromotionalLandingPage() {
                                   ]}
                                   spinDuration={0.8}
                                   outerBorderColor="#333"
-                                  outerBorderWidth={1}
+                                  outerBorderWidth={2}
                                   innerBorderColor="#333"
                                   innerBorderWidth={3}
                                   innerRadius={15}
-                                  radiusLineColor=""
-                                  radiusLineWidth={1}
-                                  wheelRadius={120}
-                                  fontSize={20}
-                                  textDistance={85}
+                                  radiusLineColor="#ffffff"
+                                  radiusLineWidth={1.5}
+                                  wheelRadius={130}
+                                  fontSize={22}
+                                  textDistance={92}
                                   fontWeight={700}
+                                  keepUpright
+                                  maxLabelLength={16}
                                   onStopSpinning={() => {
                                     setTimeout(() => setShowPrize(true), 1000);
                                   }}

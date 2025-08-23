@@ -28,7 +28,9 @@ interface CustomWheelProps {
   backgroundColors?: string[];
   perpendicularText?: boolean;
   fontWeight?: number;
-  wheelRadius?: number;
+  wheelRadius?: number; // controls rendered wheel size
+  keepUpright?: boolean; // ensure labels are always upright
+  maxLabelLength?: number; // NEW: limit label length
 }
 
 export const CustomWheel: React.FC<CustomWheelProps> = ({
@@ -48,6 +50,8 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
   radiusLineWidth = 1,
   fontWeight = 400,
   wheelRadius = 150,
+  keepUpright = true,
+  maxLabelLength = 14,
 }) => {
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -100,6 +104,81 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
     return { x, y, angle: angle * (180 / Math.PI) };
   };
 
+  const getDisplayAngle = (baseAngleDeg: number) => {
+    if (!keepUpright) return baseAngleDeg;
+    // Flip text on left side so it stays upright
+    return baseAngleDeg > 90 && baseAngleDeg < 270 ? baseAngleDeg + 180 : baseAngleDeg;
+  };
+
+  const getStrokeForText = (textColor: string) => {
+    // If text is light, use dark stroke; if dark, use light stroke
+    const color = textColor.toLowerCase();
+    const isLight = color === '#fff' || color === 'white' || color === 'rgb(255,255,255)';
+    return isLight ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)';
+  };
+
+  const shorten = (label: string) => {
+    if (label.length <= maxLabelLength) return label;
+    return label.slice(0, Math.max(0, maxLabelLength - 1)) + '…';
+  };
+
+  // Estimate text width using a simple heuristic: ~0.6em per character
+  const estimateWidth = (text: string, fs: number) => text.length * fs * 0.6;
+
+  // Try to split into two lines at a space near the middle when long
+  const splitTwoLines = (text: string): string[] | null => {
+    const trimmed = text.trim();
+    if (!trimmed.includes(' ')) return null;
+    const mid = Math.floor(trimmed.length / 2);
+    // find nearest space to middle
+    let splitIdx = -1;
+    let left = mid, right = mid + 1;
+    while (left >= 0 || right < trimmed.length) {
+      if (left >= 0 && trimmed[left] === ' ') { splitIdx = left; break; }
+      if (right < trimmed.length && trimmed[right] === ' ') { splitIdx = right; break; }
+      left--; right++;
+    }
+    if (splitIdx === -1) return null;
+    const first = trimmed.slice(0, splitIdx).trim();
+    const second = trimmed.slice(splitIdx + 1).trim();
+    if (!first || !second) return null;
+    return [first, second];
+  };
+
+  // Compute per-label layout: lines and fontScale so the widest line fits available arc width
+  const computeLayout = (label: string, baseFont: number) => {
+    const thetaRad = (segmentAngle * Math.PI) / 180;
+    const available = Math.max(8, textDistance * thetaRad * 0.85); // conservative available arc width
+
+    // Try two-line split FIRST (more natural fit on arcs)
+    const twoFirst = splitTwoLines(label);
+    let lines: string[];
+    if (twoFirst) {
+      // Soft-limit each line length before measuring
+      lines = twoFirst.map(l => (l.length > maxLabelLength ? l.slice(0, maxLabelLength - 1) + '…' : l));
+    } else {
+      lines = [shorten(label)];
+    }
+
+    // If still too wide, compare with single-line shortened as fallback
+    const widths = (fs: number, arr: string[]) => arr.map(l => estimateWidth(l, fs));
+    const maxLine = Math.max(...widths(baseFont, lines));
+    let candidateLines = lines;
+    let candidateMax = maxLine;
+
+    if (twoFirst) {
+      const single = [shorten(label)];
+      const singleMax = Math.max(...widths(baseFont, single));
+      if (singleMax < candidateMax * 0.92) {
+        candidateLines = single;
+        candidateMax = singleMax;
+      }
+    }
+
+    const scale = Math.max(0.6, Math.min(1, available / candidateMax));
+    return { lines: candidateLines, scale, available };
+  };
+
   return (
     <div className="relative inline-block">
       <svg width={radius * 2} height={radius * 2} className="drop-shadow-lg">
@@ -110,31 +189,63 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
             transition: isSpinning ? `transform ${spinDuration}s cubic-bezier(0.23, 1, 0.32, 1)` : 'none',
           }}
         >
-          {data.map((segment, index) => (
-            <g key={index}>
-              <path
-                d={createSegmentPath(index)}
-                fill={segment.style.backgroundColor}
-                stroke={radiusLineColor}
-                strokeWidth={radiusLineWidth}
-              />
-              <text
-                x={getTextPosition(index).x}
-                y={getTextPosition(index).y}
-                fill={segment.style.textColor}
-                fontSize={fontSize}
-                fontWeight={fontWeight}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                transform={`rotate(${getTextPosition(index).angle}, ${getTextPosition(index).x}, ${getTextPosition(index).y})`}
-                stroke="#000"            
-                strokeWidth={Math.max(1.5, Math.floor(fontSize / 10))}
-                paintOrder="stroke fill"   
-              >
-                {segment.option}
-              </text>
-            </g>
-          ))}
+          {data.map((segment, index) => {
+            const pos = getTextPosition(index);
+            const displayAngle = getDisplayAngle(pos.angle);
+            const stroke = getStrokeForText(segment.style.textColor);
+            const { lines, scale, available } = computeLayout(segment.option, fontSize);
+            const fs = fontSize * scale;
+            const strokeW = Math.max(1.1, Math.floor(fs / 10));
+            const lineHeight = fs * 0.95;
+            const needFit = scale < 0.95; // use textLength to fine-tune if scaled down
+            return (
+              <g key={index}>
+                <path
+                  d={createSegmentPath(index)}
+                  fill={segment.style.backgroundColor}
+                  stroke={radiusLineColor}
+                  strokeWidth={radiusLineWidth}
+                />
+                {lines.length === 1 ? (
+                  <text
+                    x={pos.x}
+                    y={pos.y}
+                    fill={segment.style.textColor}
+                    fontSize={fs}
+                    fontWeight={fontWeight}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    transform={`rotate(${displayAngle}, ${pos.x}, ${pos.y})`}
+                    stroke={stroke}
+                    strokeWidth={strokeW}
+                    paintOrder="stroke fill"
+                    style={{ letterSpacing: '0.25px' }}
+                    {...(needFit ? { textLength: available * 0.98, lengthAdjust: 'spacingAndGlyphs' } as any : {})}
+                  >
+                    {lines[0]}
+                  </text>
+                ) : (
+                  <text
+                    x={pos.x}
+                    y={pos.y}
+                    fill={segment.style.textColor}
+                    fontSize={fs}
+                    fontWeight={fontWeight}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    transform={`rotate(${displayAngle}, ${pos.x}, ${pos.y})`}
+                    stroke={stroke}
+                    strokeWidth={strokeW}
+                    paintOrder="stroke fill"
+                    style={{ letterSpacing: '0.2px' }}
+                  >
+                    <tspan x={pos.x} dy={-lineHeight / 2} {...(needFit ? { textLength: available * 0.95, lengthAdjust: 'spacingAndGlyphs' } as any : {})}>{lines[0]}</tspan>
+                    <tspan x={pos.x} dy={lineHeight} {...(needFit ? { textLength: available * 0.95, lengthAdjust: 'spacingAndGlyphs' } as any : {})}>{lines[1]}</tspan>
+                  </text>
+                )}
+              </g>
+            );
+          })}
           
           {/* Inner circle */}
           <circle
@@ -164,11 +275,11 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
         style={{ zIndex: 10 }}
       >
         <div
-          className="w-0 h-0 border-l-4 border-r-4 border-b-8"
+          className="w-0 h-0 border-l-6 border-r-6 border-b-10"
           style={{
             borderLeftColor: 'transparent',
             borderRightColor: 'transparent',
-            borderBottomColor: '#333',
+            borderBottomColor: '#3777ff',
           }}
         />
       </div>
