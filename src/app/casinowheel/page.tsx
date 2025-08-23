@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, Fragment } from 'react';
+import { useState, Fragment } from 'react';
+import Link from 'next/link';
 import '../../styles/casinowheel.css';
 
 export default function CasinoWheelPage() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [showPrize, setShowPrize] = useState(false);
   const [prize, setPrize] = useState('');
-  const [spinAngle, setSpinAngle] = useState(0);
   
   // Define the wheel sectors
   const sectors = [
@@ -56,7 +56,6 @@ export default function CasinoWheelPage() {
     
     // Set the CSS variable for the spin animation
     document.documentElement.style.setProperty('--spin-angle', `${targetAngle}deg`);
-    setSpinAngle(targetAngle);
     
     // Set the prize
     setPrize(sectors[randomSector].value);
@@ -178,9 +177,9 @@ export default function CasinoWheelPage() {
       
 
       
-      <a href="/" className="back-link">
+      <Link href="/" className="back-link">
         ← Back to Main Page
-      </a>
+      </Link>
       
       {showPrize && (
         <div className="prize-overlay">

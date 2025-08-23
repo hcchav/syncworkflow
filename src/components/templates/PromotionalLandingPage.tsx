@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import LandingNavbar from '../layout/LandingNavbar';
 import Link from 'next/link';
-import { Wheel } from 'react-custom-roulette';
+import { CustomWheel } from '../ui/CustomWheel';
 import '../../styles/wheel.css';
 
 export default function PromotionalLandingPage() {
@@ -72,7 +71,7 @@ export default function PromotionalLandingPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Submitted:', { email, name, company, phone });
-    alert('Thank you for your interest! We\'ll be in touch soon to secure your spot.');
+    alert('Thank you for your interest! We&apos;ll be in touch soon to secure your spot.');
     setEmail('');
     setName('');
     setIsNameValid(false);
@@ -459,7 +458,7 @@ export default function PromotionalLandingPage() {
                             {/* Prize Wheel - Minimal spacing */}
                             <div style={{ position: "relative", height: "300px", width: "100%" }}>
                               <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.55)" }}>
-                                <Wheel
+                                <CustomWheel
                                   mustStartSpinning={wheelRotation > 0}
                                   prizeNumber={1} // Index 1 corresponds to VIP Badge
                                   data={[
@@ -482,8 +481,6 @@ export default function PromotionalLandingPage() {
                                   radiusLineWidth={1}
                                   fontSize={28}
                                   textDistance={60}
-                                  backgroundColors={['#ffffff']}
-                                  perpendicularText={false}
                                   fontWeight={700}
                                   onStopSpinning={() => {
                                     setTimeout(() => setShowPrize(true), 1000);

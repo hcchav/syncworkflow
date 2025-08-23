@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Wheel } from 'react-custom-roulette';
+import { useState } from 'react';
+import { CustomWheel } from '../../components/ui/CustomWheel';
 import '../../styles/wheel.css';
 
 export default function WheelTest() {
@@ -32,7 +32,7 @@ export default function WheelTest() {
           {/* Prize Wheel - Minimal spacing */}
           <div style={{ position: "relative", height: "350px", width: "100%" }}>
             <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.55)" }}>
-              <Wheel
+              <CustomWheel
                 mustStartSpinning={wheelRotation > 0}
                 prizeNumber={1} // Index 1 corresponds to VIP Badge
                 data={[

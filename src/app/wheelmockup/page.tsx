@@ -1,27 +1,26 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Wheel } from 'react-custom-roulette';
+import { CustomWheel } from '../../components/ui/CustomWheel';
 import MonitorMockup from '@/components/MonitorMockup';
 import '../../styles/customwheel.css';
 import '../../styles/monitormockup.css';
 
 export default function WheelMockupPage() {
-  const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [showPrize, setShowPrize] = useState(false);
   const [winningPrize, setWinningPrize] = useState('');
 
   const prizes = [
-    { option: 'FREE SWAG', style: { fontSize: 20 } },
-    { option: '10% OFF', style: { fontSize: 20 } },
-    { option: 'FREE TRIAL', style: { fontSize: 18 } },
-    { option: 'NO PRIZE', style: { fontSize: 20 } },
-    { option: '$100 CREDIT', style: { fontSize: 18 } },
-    { option: 'FREE DEMO', style: { fontSize: 20 } },
-    { option: '25% OFF', style: { fontSize: 20 } },
-    { option: 'MYSTERY GIFT', style: { fontSize: 16 } },
+    { option: 'FREE SWAG', style: { backgroundColor: '#FF5252', textColor: 'white' } },
+    { option: '10% OFF', style: { backgroundColor: '#4CAF50', textColor: 'white' } },
+    { option: 'FREE TRIAL', style: { backgroundColor: '#2196F3', textColor: 'white' } },
+    { option: 'NO PRIZE', style: { backgroundColor: '#FFC107', textColor: 'white' } },
+    { option: '$100 CREDIT', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
+    { option: 'FREE DEMO', style: { backgroundColor: '#FF9800', textColor: 'white' } },
+    { option: '25% OFF', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
+    { option: 'MYSTERY GIFT', style: { backgroundColor: '#8BC34A', textColor: 'white' } },
   ];
 
   const handleSpinClick = () => {
@@ -33,7 +32,6 @@ export default function WheelMockupPage() {
     
     // Start spinning
     setWheelRotation(prev => prev + 1);
-    setMustSpin(true);
     setShowPrize(false);
   };
 
@@ -44,7 +42,7 @@ export default function WheelMockupPage() {
       <div className="wheel-container">
         <div style={{ position: "relative", height: "350px", width: "100%" }}>
           <div className="wheel-glow-wrapper" style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }}>
-            <Wheel
+            <CustomWheel
               mustStartSpinning={wheelRotation > 0}
               prizeNumber={prizeNumber}
               data={prizes}

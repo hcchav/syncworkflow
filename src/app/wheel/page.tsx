@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Wheel } from 'react-custom-roulette';
+import { useState } from 'react';
+import Link from 'next/link';
+import { CustomWheel } from '../../components/ui/CustomWheel';
 import '../../styles/wheel.css';
 
 export default function WheelPage() {
@@ -70,7 +71,7 @@ export default function WheelPage() {
           {/* Prize Wheel */}
           <div style={{ position: "relative", height: "350px", width: "100%" }}>
             <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }}>
-              <Wheel
+              <CustomWheel
                 mustStartSpinning={wheelRotation > 0}
                 prizeNumber={prizeNumber}
                 data={prizes}
@@ -84,8 +85,6 @@ export default function WheelPage() {
                 radiusLineWidth={1}
                 fontSize={28}
                 textDistance={60}
-                backgroundColors={['#ffffff']}
-                perpendicularText={false}
                 fontWeight={700}
                 onStopSpinning={() => {
                   setWinningPrize(prizes[prizeNumber].option);
@@ -133,12 +132,12 @@ export default function WheelPage() {
       
       {/* Back to promotional page link */}
       <div className="mt-8 text-center">
-        <a 
+        <Link 
           href="/"
           className="text-[#3777FF] hover:text-[#0bfe88] transition-colors duration-300"
         >
           ← Back to main page
-        </a>
+        </Link>
       </div>
     </div>
   );

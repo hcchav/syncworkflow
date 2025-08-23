@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Wheel } from 'react-custom-roulette';
+import { useState } from 'react';
+import Link from 'next/link';
+import { CustomWheel } from '../../components/ui/CustomWheel';
 import '../../styles/customwheel.css';
 
 export default function CustomWheelPage() {
@@ -70,22 +71,20 @@ export default function CustomWheelPage() {
           {/* Prize Wheel */}
           <div style={{ position: "relative", height: "350px", width: "100%" }}>
             <div className="wheel-glow-wrapper" style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }}>
-              <Wheel
+              <CustomWheel
                 mustStartSpinning={wheelRotation > 0}
                 prizeNumber={prizeNumber}
                 data={prizes}
                 spinDuration={0.8}
-                outerBorderColor="#222222" /* Blue brand border */
-                outerBorderWidth={5} /* Thicker border */
-                innerBorderColor="#222222" /* Offset black inner border for depth */
-                innerBorderWidth={5} /* Add inner border */
+                outerBorderColor="#222222"
+                outerBorderWidth={5}
+                innerBorderColor="#222222"
+                innerBorderWidth={5}
                 innerRadius={15}
-                radiusLineColor="#333" /* Added visible radius lines */
-                radiusLineWidth={2} /* Thicker radius lines */
+                radiusLineColor="#333"
+                radiusLineWidth={2}
                 fontSize={28}
                 textDistance={60}
-                backgroundColors={['#ffffff']}
-                perpendicularText={false}
                 fontWeight={700}
                 onStopSpinning={() => {
                   setWinningPrize(prizes[prizeNumber].option);
@@ -133,12 +132,12 @@ export default function CustomWheelPage() {
       
       {/* Back to promotional page link */}
       <div className="mt-8 text-center">
-        <a 
+        <Link 
           href="/"
           className="text-[#3777FF] hover:text-[#0bfe88] transition-colors duration-300"
         >
           ← Back to main page
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import { Wheel } from 'react-custom-roulette';
+import { CustomWheel } from '../ui/CustomWheel';
 import '@/styles/wheel.css';
 
 
@@ -418,7 +418,7 @@ export default function HeroSection() {
                         {/* Prize Wheel - Minimal spacing */}
                         <div style={{ position: "relative", height: "300px", width: "100%" }}>
                           <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.55)" }}>
-                            <Wheel
+                            <CustomWheel
                               mustStartSpinning={wheelRotation > 0}
                               prizeNumber={1} // Index 1 corresponds to VIP Badge
                               data={[
@@ -441,8 +441,6 @@ export default function HeroSection() {
                               radiusLineWidth={1}
                               fontSize={28}
                               textDistance={60}
-                              backgroundColors={['#ffffff']}
-                              perpendicularText={false}
                               fontWeight={700}
                               onStopSpinning={() => {
                                 setTimeout(() => setShowPrize(true), 1000);
