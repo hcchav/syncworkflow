@@ -20,7 +20,7 @@ This is a Next.js 15 application for SyncWorkflow, a tradeshow registration syst
 - **Authentication**: Supabase (configured in `/src/lib/supabase.ts`)
 - **Styling**: Tailwind CSS with custom CSS variables
 - **Animations**: Custom CSS animations for prize wheels and hero sections
-- **Prize Wheels**: Two implementations - custom PrizeWheel component and react-custom-roulette
+- **Prize Wheels**: Custom `PrizeWheel` component
 
 ### Project Structure
 - `/src/app/` - App Router pages (layout.tsx contains global layout with Navbar, AnnouncementBar, Footer)
@@ -38,7 +38,7 @@ This is a Next.js 15 application for SyncWorkflow, a tradeshow registration syst
 - Complex animated demo showing form completion, verification, and prize wheel
 - Uses useEffect with setTimeout arrays for sequential animations
 - Features both tablet and phone device mockups
-- Includes interactive prize wheel with react-custom-roulette
+- Includes interactive prize wheel using the custom `PrizeWheel` component
 
 **PrizeWheel** (`/src/components/PrizeWheel.tsx`):
 - Custom canvas-based prize wheel implementation

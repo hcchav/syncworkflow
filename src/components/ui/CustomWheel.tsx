@@ -28,6 +28,7 @@ interface CustomWheelProps {
   backgroundColors?: string[];
   perpendicularText?: boolean;
   fontWeight?: number;
+  wheelRadius?: number;
 }
 
 export const CustomWheel: React.FC<CustomWheelProps> = ({
@@ -46,12 +47,13 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
   radiusLineColor = '#333',
   radiusLineWidth = 1,
   fontWeight = 400,
+  wheelRadius = 150,
 }) => {
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
 
   const segmentAngle = 360 / data.length;
-  const radius = 150;
+  const radius = wheelRadius;
 
   useEffect(() => {
     if (mustStartSpinning && !isSpinning) {
@@ -125,6 +127,9 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
                 textAnchor="middle"
                 dominantBaseline="middle"
                 transform={`rotate(${getTextPosition(index).angle}, ${getTextPosition(index).x}, ${getTextPosition(index).y})`}
+                stroke="#000"            
+                strokeWidth={Math.max(1.5, Math.floor(fontSize / 10))}
+                paintOrder="stroke fill"   
               >
                 {segment.option}
               </text>

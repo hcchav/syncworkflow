@@ -20,6 +20,37 @@ interface PrizeWheelProps {
   textAlign?: CanvasTextAlign; // Text alignment: 'left', 'right', 'center'
 }
 
+// Helper: choose black/white text based on background color
+function getContrastTextColor(bg: string, fallback: string = '#fff') {
+  try {
+    // Normalize hex like #RRGGBB or rgb(a)
+    let r = 0, g = 0, b = 0;
+    if (bg.startsWith('#')) {
+      const hex = bg.replace('#', '');
+      const full = hex.length === 3
+        ? hex.split('').map(h => h + h).join('')
+        : hex;
+      r = parseInt(full.slice(0, 2), 16);
+      g = parseInt(full.slice(2, 4), 16);
+      b = parseInt(full.slice(4, 6), 16);
+    } else if (bg.startsWith('rgb')) {
+      const nums = bg.match(/\d+\.?\d*/g);
+      if (nums && nums.length >= 3) {
+        r = Number(nums[0]); g = Number(nums[1]); b = Number(nums[2]);
+      }
+    }
+    // Relative luminance
+    const [R, G, B] = [r, g, b].map(v => {
+      const s = v / 255;
+      return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+    });
+    const L = 0.2126 * R + 0.7152 * G + 0.0722 * B; // 0=black, 1=white
+    return L > 0.5 ? '#000' : '#fff';
+  } catch {
+    return fallback;
+  }
+}
+
 const PrizeWheel: React.FC<PrizeWheelProps> = ({
   segments,
   segColors,
@@ -34,10 +65,10 @@ const PrizeWheel: React.FC<PrizeWheelProps> = ({
   winningSegment,
   zIndex = 9999,
   autoSpin = false,
-  textRadius = 0.1, // Default: 75% of wheel radius
-  textRotation = Math.PI, // Default: 90 degrees
-  fontSize = 12, // Default: 12px
-  textAlign = 'center' // Default: right aligned
+  textRadius = 0.7, // Place text ~70% of the radius from center
+  textRotation = 0, // Keep text upright
+  fontSize = 14, // Slightly larger default for readability
+  textAlign = 'center' // Center-align text within segment
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -104,20 +135,31 @@ const PrizeWheel: React.FC<PrizeWheelProps> = ({
       ctx.rotate(startAngle + segmentAngle / 2);
       
       ctx.textAlign = textAlign;
-      ctx.fillStyle = contrastColor;
+      ctx.textBaseline = 'middle';
       ctx.font = `bold ${fontSize}px ${fontFamily}`;
-      
+
+      // Decide text color for this segment for best contrast
+      const perSegmentTextColor = getContrastTextColor(
+        segColors[i % segColors.length],
+        contrastColor
+      );
+      ctx.fillStyle = perSegmentTextColor;
+
       // Calculate text position based on textRadius prop
       const actualTextRadius = radius * textRadius;
       ctx.translate(actualTextRadius, 0);
       ctx.rotate(textRotation);
       
       // Limit text length
-      const maxLength = 12;
+      const maxLength = 16;
       const text = segments[i].length > maxLength ? 
         segments[i].substring(0, maxLength) + '...' : 
         segments[i];
       
+      // Add subtle stroke for legibility
+      ctx.lineWidth = Math.max(2, Math.floor(fontSize / 7));
+      ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+      ctx.strokeText(text, 0, 0);
       ctx.fillText(text, 0, 0);
       ctx.restore();
     }

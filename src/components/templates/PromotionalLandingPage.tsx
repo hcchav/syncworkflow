@@ -457,7 +457,7 @@ export default function PromotionalLandingPage() {
                             
                             {/* Prize Wheel - Minimal spacing */}
                             <div style={{ position: "relative", height: "300px", width: "100%" }}>
-                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.55)" }}>
+                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
                                 <CustomWheel
                                   mustStartSpinning={wheelRotation > 0}
                                   prizeNumber={1} // Index 1 corresponds to VIP Badge
@@ -479,8 +479,9 @@ export default function PromotionalLandingPage() {
                                   innerRadius={15}
                                   radiusLineColor=""
                                   radiusLineWidth={1}
-                                  fontSize={28}
-                                  textDistance={60}
+                                  wheelRadius={120}
+                                  fontSize={20}
+                                  textDistance={85}
                                   fontWeight={700}
                                   onStopSpinning={() => {
                                     setTimeout(() => setShowPrize(true), 1000);
