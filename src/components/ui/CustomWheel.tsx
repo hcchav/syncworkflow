@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface WheelSegment {
   option: string;
@@ -55,28 +55,43 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
 }) => {
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
+  const prevStartRef = useRef(false);
 
   const segmentAngle = 360 / data.length;
   const radius = wheelRadius;
 
   useEffect(() => {
-    if (mustStartSpinning && !isSpinning) {
+    // Rising-edge trigger: only spin when mustStartSpinning transitions false -> true
+    if (mustStartSpinning && !prevStartRef.current && !isSpinning) {
+      prevStartRef.current = true;
       setIsSpinning(true);
-      
+
       // Calculate final rotation to land on the prize
       const targetAngle = 360 - (prizeNumber * segmentAngle) - (segmentAngle / 2);
       const spins = 5; // Number of full rotations
       const finalRotation = targetAngle + (spins * 360);
-      
-      setRotation(finalRotation);
-      
-      // Stop spinning after duration
+
+      // Ensure transition is applied before updating transform
       setTimeout(() => {
+        setRotation(prev => {
+          // Start from current visual rotation to ensure smoothness
+          const base = typeof prev === 'number' ? prev : 0;
+          return base + finalRotation;
+        });
+      }, 20);
+
+      // Stop spinning after duration
+      const stopTimer = setTimeout(() => {
         setIsSpinning(false);
-        if (onStopSpinning) {
-          onStopSpinning();
-        }
-      }, spinDuration * 1000);
+        if (onStopSpinning) onStopSpinning();
+      }, spinDuration * 1000 + 30);
+
+      return () => clearTimeout(stopTimer);
+    }
+
+    // Reset edge detector when parent resets trigger
+    if (!mustStartSpinning) {
+      prevStartRef.current = false;
     }
   }, [mustStartSpinning, isSpinning, prizeNumber, segmentAngle, spinDuration, onStopSpinning]);
 

@@ -15,6 +15,8 @@ export default function PromotionalLandingPage() {
   const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [spotsLeft, setSpotsLeft] = useState(9); // Track spots remaining
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [consent, setConsent] = useState(false); // Consent for contact
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false); // For inline errors
   
   // Animation state management
   const [animationStep, setAnimationStep] = useState(0);
@@ -28,6 +30,11 @@ export default function PromotionalLandingPage() {
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [showPrize, setShowPrize] = useState(false);
+  // Video state
+  const [isVideoMuted, setIsVideoMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  // Pricing reveal state
+  const [showAllPlans, setShowAllPlans] = useState(false);
   
   // Animation timers reference
   const animationTimers = useRef<NodeJS.Timeout[]>([]);
@@ -70,8 +77,18 @@ export default function PromotionalLandingPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitted:', { email, name, company, phone });
-    alert('Thank you for your interest! We&apos;ll be in touch soon to secure your spot.');
+    setAttemptedSubmit(true);
+    const nameOk = validateName(name);
+    const emailOk = validateEmail(email);
+    const phoneOk = phone.trim() === '' ? true : validatePhone(phone);
+    const consentOk = consent;
+
+    if (!(nameOk && emailOk && phoneOk && consentOk)) {
+      return; // show inline errors
+    }
+
+    console.log('Submitted:', { email, name, company, phone, consent });
+    alert('Thank you for your interest! We\'ll be in touch soon to secure your spot.');
     setEmail('');
     setName('');
     setIsNameValid(false);
@@ -79,6 +96,8 @@ export default function PromotionalLandingPage() {
     setIsPhoneValid(false);
     setCompany('');
     setPhone('');
+    setConsent(false);
+    setAttemptedSubmit(false);
     setIsModalOpen(false); // Close modal after submission
     // In a real app, this would connect to your backend
     if (spotsLeft > 0) {
@@ -229,6 +248,37 @@ export default function PromotionalLandingPage() {
         <span className="font-bold">Free custom branded forms</span>
         <span className="mx-2 font-bold">$1,500 value</span>
       </div>
+      {/* Global lightweight animations for floating cards and gradient blobs */}
+      <style jsx global>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0) translateX(0); }
+          50% { transform: translateY(-12px) translateX(4px); }
+        }
+        @keyframes float-rev {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(10px); }
+        }
+        .anim-float { animation: float 6s ease-in-out infinite; }
+        .anim-float-slow { animation: float-slow 9s ease-in-out infinite; }
+        .anim-float-rev { animation: float-rev 7s ease-in-out infinite; }
+        .glass-card {
+          backdrop-filter: blur(8px);
+          background: rgba(255,255,255,0.75);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        .dark-glass {
+          backdrop-filter: blur(8px);
+          background: rgba(17,17,17,0.6);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+        }
+        .radial-blob {
+          background: radial-gradient(800px 300px at 20% 10%, rgba(55,121,255,0.12) 0%, rgba(11,254,136,0.08) 40%, rgba(255,255,255,0) 70%);
+        }
+      `}</style>
       
       {/* Removed navigation menu for ONE clear goal with no distractions */}
       
@@ -236,8 +286,10 @@ export default function PromotionalLandingPage() {
       <section className="flex-grow flex flex-col items-center justify-center text-center px-2 pt-8 pb-16 md:pt-10 md:pb-16 bg-white">
         <div className="max-w-6xl w-full mx-auto">
           
-          <div className="md:flex md:items-center md:text-left">
-            <div className="md:w-1/2 md:pr-8">
+          <div className="relative flex flex-col md:flex-row md:items-center md:text-left">
+            {/* Soft ambient gradient background */}
+            <div className="pointer-events-none absolute inset-0 radial-blob" />
+            <div className="md:w-1/2 md:pr-8 order-1 md:order-1">
               {/* Main Headline */}
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold mb-4">
                 Attract more leads at <span className="font-semibold">Your Booth</span> — Easily
@@ -291,6 +343,44 @@ export default function PromotionalLandingPage() {
                 >
                   <span className="text-2xl font-bold">I want more leads at my booth</span>
                 </a>
+                {/* Secondary CTA: scroll to verification section */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.querySelector('#learn-more');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className="mt-3 text-sm text-[#3777ff] hover:underline"
+                  aria-label="See how it works"
+                >
+                  See how it works
+                </button>
+                {/* Scarcity microcopy */}
+                <div className="mt-3 text-sm text-gray-600 flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#ff6b35]"></span>
+                  <span>Only <span className="font-semibold">{spotsLeft}</span> spots left this month — updated in real time.</span>
+                </div>
+                {/* Trust bar */}
+                <div className="mt-4 w-full md:w-auto">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-700">
+                    <div className="flex items-center gap-1">
+                      <span className="text-yellow-500">★★★★★</span>
+                      <span className="font-medium">4.9/5</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#3777ff]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l7 4v6c0 5-3.5 9.74-7 10-3.5-.26-7-5-7-10V6l7-4z"/></svg>
+                      <span>2,500+ scans</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#0bfe88]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-8.5L2 8h7z"/></svg>
+                      <span>12+ shows</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-800" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9 9 0 100 18 9 9 0 000-18zm-1 13l-4-4 1.41-1.41L11 11.17l4.59-4.58L17 8l-6 7z"/></svg>
+                      <span>Secure & compliant</span>
+                    </div>
+                  </div>
+                </div>
                 {/* <div className="mt-3 flex items-center">
                   <span className="text-sm text-gray-600">no credit card required</span>
                 </div> */}
@@ -302,8 +392,8 @@ export default function PromotionalLandingPage() {
               </p> */}
             </div>
             
-            {/* Visual: QR Scan + Prize Assignment */}
-            <div className="md:w-1/2 flex justify-center">
+            {/* Visual: QR Scan + Prize Assignment + floating social proof */}
+            <div className="md:w-1/2 flex justify-center relative order-2 md:order-2">
               {/* Phone Device Mockup with Animation */}
               <div className="device-mockup phone relative z-20 mx-auto">
                 <div className="rounded-[54px] border border-gray-700 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] bg-[#1a1a1a] p-2 w-[280px] h-[580px] relative">
@@ -486,6 +576,8 @@ export default function PromotionalLandingPage() {
                                   keepUpright
                                   maxLabelLength={16}
                                   onStopSpinning={() => {
+                                    // Allow re-spins by resetting trigger to 0 after spin ends
+                                    setWheelRotation(0);
                                     setTimeout(() => setShowPrize(true), 1000);
                                   }}
                                 />
@@ -495,7 +587,11 @@ export default function PromotionalLandingPage() {
                             {/* Button at bottom - no margin */}
                             <div className="text-center mt-0">
                               <button 
-                                onClick={() => wheelRotation === 0 && setWheelRotation(1)}
+                                onClick={() => {
+                                  // Force rising edge: 0 -> 1
+                                  setWheelRotation(0);
+                                  setTimeout(() => setWheelRotation(1), 20);
+                                }}
                                 disabled={wheelRotation > 0}
                                 className={`bg-[var(--brand-blue)] text-white font-bold py-1 px-6 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${wheelRotation > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(55,119,255,0.5)]'}`}
                               >
@@ -527,10 +623,45 @@ export default function PromotionalLandingPage() {
                         
                         {/* Process steps indicator */}
                         <div className="mt-16 text-center">
-                          <p className="text-xs text-white/70 text-center">Scan → Submit → Verify → Win</p>
+                          <p className="text-xs text-white/70 text-center">Scan → Register → Verify → Win</p>
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Social Proof chips around the phone */}
+              <div className="hidden md:block">
+                {/* Top-left rating card */}
+                <div className="absolute -top-6 -left-4 anim-float z-30">
+                  <div className="glass-card rounded-2xl px-4 py-3 shadow-xl border border-white/50">
+                    <div className="flex items-center gap-2 text-base">
+                      <span className="text-yellow-500 text-lg">★★★★★</span>
+                      <span className="font-semibold text-gray-900">4.9/5</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">from live booth attendees</p>
+                  </div>
+                </div>
+
+                {/* Right badge */}
+                <div className="absolute -right-8 top-8 anim-float-rev z-30">
+                  <div className="glass-card rounded-full px-5 py-3 shadow-xl border border-white/50 flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-[#0bfe88]"></span>
+                    <span className="text-sm font-semibold text-gray-800">3× higher conversions</span>
+                  </div>
+                </div>
+
+                {/* Bottom-left avatars */}
+                <div className="absolute -left-10 bottom-8 anim-float-slow z-30">
+                  <div className="glass-card rounded-xl px-4 py-3 shadow-xl border border-white/50">
+                    <div className="flex -space-x-2">
+                      <img src="https://i.pravatar.cc/32?img=1" alt="" className="w-8 h-8 rounded-full border border-white" />
+                      <img src="https://i.pravatar.cc/32?img=2" alt="" className="w-8 h-8 rounded-full border border-white" />
+                      <img src="https://i.pravatar.cc/32?img=3" alt="" className="w-8 h-8 rounded-full border border-white" />
+                      <img src="https://i.pravatar.cc/32?img=4" alt="" className="w-8 h-8 rounded-full border border-white" />
+                    </div>
+                    <p className="text-sm text-gray-700 mt-1">2,500+ scans last month</p>
                   </div>
                 </div>
               </div>
@@ -651,76 +782,121 @@ export default function PromotionalLandingPage() {
     
         {/* Create Excitement and Boost Interaction */}
         <div className="text-center mb-10 max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Create Excitement and Boost Interaction</h2>
-          <p className="text-gray-600 text-lg">
-            Draw crowds and spark engagement with an interactive prize wheel experience. Once attendees complete your branded sign-up, they’ll spin a digital wheel for a chance to win — turning casual visitors into excited, qualified leads.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-3">Create Excitement and Boost Interaction</h2>
+          <p className="text-gray-600 text-lg">Turn casual visitors into excited, qualified leads with a gamified, share-worthy experience.</p>
         </div>
 
-        {/* Real Customer Examples */}
-        <div className="max-w-7xl mx-auto mb-16">
-          {/* Hero Video Section */}
-          <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Watch Real Customers in Action</h3>
-            <div className="max-w-md mx-auto rounded-2xl shadow-2xl overflow-hidden transform hover:scale-105 transition-all duration-500">
-              <video 
-                src="/videos/customer_prize_wheel_vertical.mp4" 
-                className="w-full h-auto"
-                controls
-                muted
-                playsInline
-                loop
-                autoPlay
-              >
-                Your browser does not support the video tag.
-              </video>
-            </div>
-            <p className="text-gray-600 mt-4 text-lg">Live customer scanning QR code and winning prizes</p>
-          </div>
-
-          {/* Supporting Evidence Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            {/* Customer Photo */}
-            <div className="text-center">
-              <h4 className="text-xl font-semibold text-gray-900 mb-4">📱 Instant Engagement</h4>
-              <div className="rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <img 
-                  src="/images/customer-qr-code.PNG" 
-                  alt="Real customer scanning QR code at booth" 
-                  className="w-full h-auto object-contain"
-                />
-              </div>
-              <p className="text-gray-600 mt-3">Customers love the interactive experience</p>
+        {/* Video + Collage Split */}
+        <div className="max-w-7xl mx-auto mb-16 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          {/* Row 1: Image (left) */}
+          <div className="relative order-1 lg:order-1">
+            {/* Primary image */}
+            <div className="rounded-2xl overflow-hidden shadow-xl transform hover:-translate-y-1 transition duration-300">
+              <img
+                src="/images/customer-qr-code.PNG"
+                alt="Attendee scanning QR code at the booth"
+                className="w-full h-auto object-cover"
+              />
             </div>
 
-            {/* Social Proof */}
-            <div className="text-center">
-              <h4 className="text-xl font-semibold text-gray-900 mb-4">💬 Social Buzz</h4>
-              <div className="rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <img 
-                  src="/images/instagram-comment.png" 
-                  alt="Customer feedback on social media" 
-                  className="w-full h-auto object-contain"
+            {/* Floating card: Social Buzz */}
+            <div className="hidden md:block absolute -right-6 top-6 anim-float z-10">
+              <div className="glass-card rounded-xl border border-white/50 shadow-lg w-[280px] overflow-hidden">
+                <img
+                  src="/images/instagram-comment.png"
+                  alt="Customer feedback on social media"
+                  className="w-full h-auto object-cover"
                 />
+                <div className="px-3 py-2 text-[12px] text-gray-700">Customers share their excitement online</div>
               </div>
-              <p className="text-gray-600 mt-3">Customers share their excitement online</p>
             </div>
 
-            {/* Tradeshow Social Proof */}
-            <div className="text-center">
-              <h4 className="text-xl font-semibold text-gray-900 mb-4">🏢 Tag the Tradeshow</h4>
-              <div className="rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <img 
-                  src="/images/tradeshow-social-proof.png" 
-                  alt="Pet industry tradeshow social media post about SuperZoo booth experience" 
-                  className="w-full h-auto object-contain"
+            {/* Floating card: Tag the Tradeshow */}
+            <div className="hidden md:block absolute -left-6 -bottom-8 anim-float-rev z-10">
+              <div className="glass-card rounded-xl border border-white/50 shadow-lg w-[280px] overflow-hidden">
+                <img
+                  src="/images/tradeshow-social-proof.png"
+                  alt="Tradeshow social proof post"
+                  className="w-full h-auto object-cover"
                 />
+                <div className="px-3 py-2 text-[12px] text-gray-700">Tag the tradeshow to drive traffic</div>
               </div>
-              <p className="text-gray-600 mt-3">Tag the tradeshow on social media to drive traffic</p>
             </div>
           </div>
 
-          {/* Results Stats */}
+          {/* Row 1: Text to the right of the image */}
+          <div className="order-2 lg:order-2 self-center">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Create Social Buzz</h3>
+            <ul className="text-gray-700 space-y-3 text-base">
+              <li className="flex items-start gap-2"><span className="text-[#0bfe88] mt-0.5">✓</span><span>Tag the tradeshow to drive foot traffic to your booth</span></li>
+              <li className="flex items-start gap-2"><span className="text-[#0bfe88] mt-0.5">✓</span><span>Showcase winners and comments to build momentum</span></li>
+              <li className="flex items-start gap-2"><span className="text-[#0bfe88] mt-0.5">✓</span><span>Encourage attendees to post and mention your handle</span></li>
+            </ul>
+          </div>
+
+          {/* Row 2: Text to the left of the video */}
+          <div className="order-3 lg:order-3 self-center">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">See The Flow In Action</h3>
+            <ul className="text-gray-700 space-y-3 text-base">
+              <li className="flex items-start gap-2"><span className="text-[#3777ff] mt-0.5">▶</span><span>Attendee scans, fills out the form, and verifies</span></li>
+              <li className="flex items-start gap-2"><span className="text-[#3777ff] mt-0.5">▶</span><span>Prize wheel triggers instant rewards to drive buzz</span></li>
+              <li className="flex items-start gap-2"><span className="text-[#3777ff] mt-0.5">▶</span><span>Qualified contacts sync to your CRM automatically</span></li>
+            </ul>
+          </div>
+
+          {/* Row 2: Video (right) */}
+          <div className="order-4 lg:order-4">
+            <div className="rounded-2xl shadow-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-500">
+              <div className="relative">
+                <video
+                  ref={videoRef}
+                  src="/videos/customer_prize_wheel_vertical.mp4"
+                  className="w-full h-auto"
+                  muted={isVideoMuted}
+                  playsInline
+                  loop
+                  autoPlay
+                  preload="metadata"
+                  poster="/images/customer-qr-code.PNG"
+                  onClick={() => {
+                    if (isVideoMuted) {
+                      setIsVideoMuted(false);
+                      if (videoRef.current) {
+                        try { videoRef.current.muted = false; videoRef.current.play(); } catch {}
+                      }
+                    }
+                  }}
+                />
+                {isVideoMuted && (
+                  <button
+                    aria-label="Unmute video"
+                    onClick={() => {
+                      setIsVideoMuted(false);
+                      if (videoRef.current) {
+                        try { videoRef.current.muted = false; videoRef.current.play(); } catch {}
+                      }
+                    }}
+                    className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-sm font-medium"
+                  >
+                    <span className="flex items-center gap-2 bg-black/60 px-4 py-2 rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"/></svg>
+                      Tap to unmute
+                    </span>
+                  </button>
+                )}
+              </div>
+            </div>
+            <p className="text-gray-600 mt-3 text-center lg:text-left text-sm">Live customer scanning QR code and winning prizes</p>
+
+            {/* Benefit chips */}
+            <div className="mt-5 flex flex-wrap gap-2 justify-center lg:justify-start">
+              <span className="glass-card px-3 py-1.5 rounded-full text-sm font-medium">3× higher conversions</span>
+              <span className="glass-card px-3 py-1.5 rounded-full text-sm font-medium">85% completion</span>
+              <span className="glass-card px-3 py-1.5 rounded-full text-sm font-medium">92% satisfaction</span>
+            </div>
+          </div>
+        </div>
+    {/* Results Stats */}
           <div className="mt-16 bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div>
@@ -744,131 +920,122 @@ export default function PromotionalLandingPage() {
           
 
           
-          <div className="bg-[#f0f7ff] p-8 rounded-xl max-w-5xl mx-auto">
-            <h3 className="text-2xl font-bold text-[#3777ff] mb-4">PRICING PLANS</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Basic Plan */}
-              <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#3777ff] hover:shadow-xl transition-shadow duration-300">
-                <div className="text-2xl font-bold text-[#3777ff] mb-2">Basic</div>
-                <div className="flex items-center mb-4">
-                  <span className="text-gray-400 line-through mr-2">$700</span>
-                  <span className="text-2xl font-bold">$400</span>
-                  <span className="text-gray-600 ml-1">setup</span>
+          <div className="bg-[#f0f7ff] p-8 rounded-xl max-w-5xl mx-auto" id="pricing">
+            <h3 className="text-2xl font-bold text-[#3777ff] mb-1">Simple, transparent pricing</h3>
+            <p className="text-gray-700 text-sm">Starter is ideal for first-time exhibitors to validate at your next show.</p>
+            <div className="mt-8 bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8 transition-all duration-300">
+            {/* Simplified pricing for cold traffic */}
+            {!showAllPlans ? (
+              <div className="max-w-3xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                  {/* Starter card */}
+                  <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#3777ff] hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="text-2xl font-bold text-[#3777ff] mb-2">Starter</div>
+                    <div className="flex items-center mb-4">
+                      <span className="text-gray-400 line-through mr-2">$700</span>
+                      <span className="text-2xl font-bold">$400</span>
+                      <span className="text-gray-600 ml-1">setup</span>
+                    </div>
+                    <div className="bg-red-100 text-red-600 text-sm font-bold py-1 px-2 rounded mb-3 inline-block">
+                      $300 OFF for New Clients!
+                    </div>
+                    <ul className="mb-6 space-y-2">
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Branded QR forms</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>SMS & Email notifications</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Secure hosting</span></li>
+                    </ul>
+                    <div className="text-lg font-bold text-[#3777ff] mt-auto">
+                      $5 <span className="text-sm font-normal">per attendee</span>
+                    </div>
+                    <button onClick={openModal} className="w-full mt-4 bg-[#3777ff] hover:bg-[#2855c5] text-white py-2 px-4 rounded-lg transition-colors duration-300">
+                      Claim Offer
+                    </button>
+                  </div>
+                  {/* Persuasion */}
+                  <div className="text-left">
+                    <h4 className="text-xl font-bold mb-2 text-[#3777ff]">Designed for first-time trials</h4>
+                    <p className="text-gray-700 mb-3">Most exhibitors start with Starter to validate at their next show, then upgrade.</p>
+                    <button
+                      onClick={() => setShowAllPlans(true)}
+                      className="text-sm text-[#3777ff] hover:underline inline-flex items-center gap-1"
+                      aria-label="Compare all pricing plans"
+                      aria-expanded={showAllPlans}
+                      title="Compare all plans"
+                    >
+                      Compare all plans
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L12 7.414V17a1 1 0 11-2 0V7.414L5.707 9.707A1 1 0 114.293 8.293l5-5z" clipRule="evenodd" /></svg>
+                    </button>
+                  </div>
                 </div>
-                <div className="bg-red-100 text-red-600 text-sm font-bold py-1 px-2 rounded mb-3 inline-block">
-                  $300 OFF for New Clients!
-                </div>
-                <div className="text-lg font-semibold mb-2">Includes:</div>
-                <ul className="mb-6 space-y-2">
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>SMS & Email Notifications</span>
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>Secure Hosting</span>
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>Basic Branding</span>
-                  </li>
-                </ul>
-                <div className="text-lg font-bold text-[#3777ff] mt-auto">
-                  $5 <span className="text-sm font-normal">per attendee</span>
-                </div>
-                <button onClick={openModal} className="w-full mt-4 bg-[#3777ff] hover:bg-[#2855c5] text-white py-2 px-4 rounded-lg transition-colors duration-300">
-                  Claim Offer
-                </button>
               </div>
-              
-              {/* Pro Plan */}
-              <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#0bfe88] transform scale-105 hover:shadow-xl transition-shadow duration-300">
-                <div className="absolute -top-3 right-4 bg-[#0bfe88] text-xs text-gray-900 font-bold py-1 px-2 rounded-full">POPULAR</div>
-                <div className="text-2xl font-bold text-[#3777ff] mb-2">Pro</div>
-                <div className="flex items-center mb-4">
-                  <span className="text-gray-400 line-through mr-2">$900</span>
-                  <span className="text-2xl font-bold">$600</span>
-                  <span className="text-gray-600 ml-1">setup</span>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Basic Plan */}
+                  <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#3777ff] hover:shadow-xl transition-shadow duration-300">
+                    <div className="text-2xl font-bold text-[#3777ff] mb-2">Basic</div>
+                    <div className="flex items-center mb-4">
+                      <span className="text-gray-400 line-through mr-2">$700</span>
+                      <span className="text-2xl font-bold">$400</span>
+                      <span className="text-gray-600 ml-1">setup</span>
+                    </div>
+                    <div className="bg-red-100 text-red-600 text-sm font-bold py-1 px-2 rounded mb-3 inline-block">
+                      $300 OFF for New Clients!
+                    </div>
+                    <div className="text-lg font-semibold mb-2">Includes:</div>
+                    <ul className="mb-6 space-y-2">
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>SMS & Email Notifications</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Secure Hosting</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Basic Branding</span></li>
+                    </ul>
+                    <div className="text-lg font-bold text-[#3777ff] mt-auto">
+                      $5 <span className="text-sm font-normal">per attendee</span>
+                    </div>
+                    <button onClick={openModal} className="w-full mt-4 bg-[#3777ff] hover:bg-[#2855c5] text-white py-2 px-4 rounded-lg transition-colors duration-300">Claim Offer</button>
+                  </div>
+                  
+                  {/* Pro Plan */}
+                  <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#0bfe88] transform md:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="absolute -top-3 right-4 bg-[#0bfe88] text-xs text-gray-900 font-bold py-1 px-2 rounded-full">POPULAR</div>
+                    <div className="text-2xl font-bold text-[#3777ff] mb-2">Pro</div>
+                    <div className="flex items-center mb-4">
+                      <span className="text-gray-400 line-through mr-2">$900</span>
+                      <span className="text-2xl font-bold">$600</span>
+                      <span className="text-gray-600 ml-1">setup</span>
+                    </div>
+                    <div className="bg-red-100 text-red-600 text-sm font-bold py-1 px-2 rounded mb-3 inline-block">$300 OFF for New Clients!</div>
+                    <div className="text-lg font-semibold mb-2">Everything in Basic plus:</div>
+                    <ul className="mb-6 space-y-2">
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Custom Domain</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Prize Tool</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Lead Scoring</span></li>
+                    </ul>
+                    <div className="text-lg font-bold text-[#3777ff] mt-auto">$4 <span className="text-sm font-normal">per attendee</span></div>
+                    <button onClick={openModal} className="w-full mt-4 bg-[#0bfe88] hover:bg-[#09d973] text-gray-900 py-2 px-4 rounded-lg transition-colors duration-300">Claim Offer</button>
+                  </div>
+                  
+                  {/* Custom Plan */}
+                  <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-gray-800 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="text-2xl font-bold text-[#3777ff] mb-2">Custom</div>
+                    <div className="flex items-center mb-4"><span className="text-2xl font-bold">Custom</span><span className="text-gray-600 ml-1">quote</span></div>
+                    <div className="text-lg font-semibold mb-2">Tailored solution with:</div>
+                    <ul className="mb-6 space-y-2">
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Custom Features</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>API Integrations</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Priority Support</span></li>
+                    </ul>
+                    <div className="text-lg font-bold text-[#3777ff] mt-auto">Custom <span className="text-sm font-normal">pricing</span></div>
+                    <button onClick={openModal} className="w-full mt-4 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition-colors duration-300">Contact Us</button>
+                  </div>
                 </div>
-                <div className="bg-red-100 text-red-600 text-sm font-bold py-1 px-2 rounded mb-3 inline-block">
-                  $300 OFF for New Clients!
+                <div className="text-center mt-4">
+                  <button onClick={() => setShowAllPlans(false)} className="text-sm text-[#3777ff] hover:underline" aria-label="Back to Starter plan" aria-expanded={showAllPlans}>Back to Starter</button>
                 </div>
-                <div className="text-lg font-semibold mb-2">Everything in Basic plus:</div>
-                <ul className="mb-6 space-y-2">
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>Custom Domain</span>
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>Prize Tool</span>
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>Lead Scoring</span>
-                  </li>
-                </ul>
-                <div className="text-lg font-bold text-[#3777ff] mt-auto">
-                  $4 <span className="text-sm font-normal">per attendee</span>
-                </div>
-                <button onClick={openModal} className="w-full mt-4 bg-[#0bfe88] hover:bg-[#09d973] text-gray-900 py-2 px-4 rounded-lg transition-colors duration-300">
-                  Claim Offer
-                </button>
-              </div>
-              
-              {/* Custom Plan */}
-              <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-gray-800 hover:shadow-xl transition-shadow duration-300">
-                <div className="text-2xl font-bold text-[#3777ff] mb-2">Custom</div>
-                <div className="flex items-center mb-4">
-                  <span className="text-2xl font-bold">Custom</span>
-                  <span className="text-gray-600 ml-1">quote</span>
-                </div>
-                <div className="text-lg font-semibold mb-2">Tailored solution with:</div>
-                <ul className="mb-6 space-y-2">
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>Custom Features</span>
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>API Integrations</span>
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span>Priority Support</span>
-                  </li>
-                </ul>
-                <div className="text-lg font-bold text-[#3777ff] mt-auto">
-                  Custom <span className="text-sm font-normal">pricing</span>
-                </div>
-                <button onClick={openModal} className="w-full mt-4 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition-colors duration-300">
-                  Contact Us
-                </button>
-              </div>
-            </div>
-            <div className="mt-6 text-sm text-[#3777ff] text-center">
-              *Limited to the first {spotsLeft} spots remaining. Offer valid until July 31, 2025.
-            </div>
+              </>
+            )}
+            <div className="mt-6 text-sm text-[#3777ff] text-center">*Limited to the first {spotsLeft} spots remaining. Offer valid until July 31, 2025.</div>
           </div>
-        </div>
+          </div>
       </section>
       
       {/* Claim Offer Form Section */}
@@ -913,6 +1080,9 @@ export default function PromotionalLandingPage() {
                       </div>
                     )}
                   </div>
+                  {attemptedSubmit && !isNameValid && (
+                    <p className="mt-1 text-xs text-red-600">Please enter your full name (2+ characters).</p>
+                  )}
                 </div>
                 <div className="text-left relative">
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
@@ -937,9 +1107,12 @@ export default function PromotionalLandingPage() {
                       </div>
                     )}
                   </div>
+                  {attemptedSubmit && !isEmailValid && (
+                    <p className="mt-1 text-xs text-red-600">Please enter a valid email address.</p>
+                  )}
                 </div>
                 <div className="text-left">
-                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company*</label>
+                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company (optional)</label>
                   <input
                     id="company"
                     type="text"
@@ -947,11 +1120,10 @@ export default function PromotionalLandingPage() {
                     className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#3777ff] text-gray-900"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
-                    required
                   />
                 </div>
                 <div className="text-left relative">
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone (optional)</label>
                   <div className="relative">
                     <input
                       id="phone"
@@ -963,7 +1135,6 @@ export default function PromotionalLandingPage() {
                         setPhone(e.target.value);
                         validatePhone(e.target.value);
                       }}
-                      required
                     />
                     {isPhoneValid && (
                       <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
@@ -973,8 +1144,27 @@ export default function PromotionalLandingPage() {
                       </div>
                     )}
                   </div>
+                  {attemptedSubmit && phone.trim() !== '' && !isPhoneValid && (
+                    <p className="mt-1 text-xs text-red-600">Please enter a valid phone number (digits, spaces, dashes, parentheses).</p>
+                  )}
                 </div>
               </div>
+
+              <div className="flex items-start space-x-2 mb-4 text-left">
+                <input
+                  id="consent"
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 text-[#3777ff] border-gray-300 rounded"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                />
+                <label htmlFor="consent" className="text-sm text-gray-700">
+                  I agree to be contacted about this offer and understand I can opt out anytime.
+                </label>
+              </div>
+              {attemptedSubmit && !consent && (
+                <p className="-mt-3 mb-3 text-xs text-red-600 text-left">Please provide consent to be contacted.</p>
+              )}
               
               <button
                 type="submit"
@@ -984,7 +1174,7 @@ export default function PromotionalLandingPage() {
               </button>
               
               <p className="mt-4 text-sm text-gray-500">
-                By submitting this form, you agree to our terms and conditions. We'll contact you within 24 hours to discuss your needs.
+                We’ll never share your information. Secure & compliant. By submitting, you agree to our terms and privacy policy.
               </p>
             </form>
           </div>
