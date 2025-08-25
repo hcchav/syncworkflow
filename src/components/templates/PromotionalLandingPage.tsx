@@ -242,12 +242,6 @@ export default function PromotionalLandingPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
-      {/* Limited-Time Offer - Full Width Black Banner at Top */}
-      <div className="w-full bg-black text-white py-2.5 px-4 flex justify-center items-center">
-        <span className="mx-1">Get</span>
-        <span className="font-bold">Free custom branded forms</span>
-        <span className="mx-2 font-bold">$1,500 value</span>
-      </div>
       {/* Global lightweight animations for floating cards and gradient blobs */}
       <style jsx global>{`
         @keyframes float {
@@ -290,59 +284,76 @@ export default function PromotionalLandingPage() {
             {/* Soft ambient gradient background */}
             <div className="pointer-events-none absolute inset-0 radial-blob" />
             <div className="md:w-1/2 md:pr-8 order-1 md:order-1">
+              {/* Mini Tagline */}
+              <p className="text-sm md:text-base text-gray-600 mb-3 font-medium">
+                Engage, Capture & Reward Attendees Instantly
+              </p>
+              
               {/* Main Headline */}
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold mb-4">
-                Attract more leads at <span className="font-semibold">Your Booth</span> — Easily
+                Your First 100 Tradeshow Leads <span className="font-semibold">Free</span>
               </h1>
               
               {/* Subheadline with value proposition */}
               <p className="text-xl md:text-2xl mb-8">
-                3× higher conversions for exhibitors.
+                Capture verified leads in seconds with QR codes + SMS/Email, and keep attendees excited with instant prize wheel rewards. Your first 100 leads are free — then just $2 per verified lead.
               </p>
               
-              {/* Feature Bullet Points */}
+              {/* 3 Key Benefits */}
               <div className="text-left mb-8 space-y-4">
-              <div className="flex items-start">
+                <h3 className="text-lg font-bold mb-4">✅ 3 Key Benefits</h3>
+                
+                <div className="flex items-start">
                   <span className="text-[#0bfe88] text-xl mr-3">🎯</span>
                   <div>
-                  <p>
-                    <span className="font-bold">Increase sign-ups</span>
-                    <span> with instant QR forms</span>
-                  </p>
+                    <p>
+                      <span className="font-bold">Engage Visitors</span>
+                      <span> — Prize wheel keeps attendees excited, stopping at your booth and creating social buzz.</span>
+                    </p>
                   </div>
                 </div>           
                 
                 <div className="flex items-start">
-                  <span className="text-[#0bfe88] text-xl mr-3">🏆</span>
+                  <span className="text-[#0bfe88] text-xl mr-3">📲</span>
                   <div>
-                  <p>
-                    <span className="font-bold">Boost booth engagement</span>
-                    <span> with automatic instant prizes</span>
-                  </p>
+                    <p>
+                      <span className="font-bold">Capture & Verify</span>
+                      <span> — QR code + SMS/Email verification ensures every lead is instantly stored and accurate — no fake info, no lost cards.</span>
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-start">
-                  <span className="text-[#0bfe88] text-xl mr-3">✅</span>
+                  <span className="text-[#0bfe88] text-xl mr-3">💼</span>
                   <div>
-                  <p>
-                    <span className="font-bold">Follow up faster</span>
-                    <span> with auto-qualified leads (cold • warm • hot)</span>
-                  </p>
+                    <p>
+                      <span className="font-bold">Convert to Business</span>
+                      <span> — Leads flow directly into your CRM for faster follow-up and higher ROI from every event.</span>
+                    </p>
                   </div>
                 </div>
-            
               </div>
               
-              {/* CTA Button */}
+              {/* CTA Buttons */}
               <div className="flex flex-col items-start mb-6">
+                {/* Primary CTA - Version A (Urgency) */}
                 <a 
                   href="#claim-offer" 
                   onClick={openModal}
-                  className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-10 py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center w-full md:w-auto shadow-lg"
+                  className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-10 py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center w-full md:w-auto shadow-lg mb-3"
                 >
-                  <span className="text-2xl font-bold">I want more leads at my booth</span>
+                  <span className="text-xl font-bold">👉 Start Free — Claim 100 Leads Now</span>
                 </a>
+                
+                {/* Alternative CTA - Version B (Simplicity) - commented out for A/B testing */}
+                {/* <a 
+                  href="#claim-offer" 
+                  onClick={openModal}
+                  className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-10 py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center w-full md:w-auto shadow-lg mb-3"
+                >
+                  <span className="text-xl font-bold">👉 Get My 100 Free Leads Today</span>
+                </a> */}
+                
                 {/* Secondary CTA: scroll to verification section */}
                 <button
                   type="button"
@@ -355,31 +366,12 @@ export default function PromotionalLandingPage() {
                 >
                   See how it works
                 </button>
-                {/* Scarcity microcopy */}
-                <div className="mt-3 text-sm text-gray-600 flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 rounded-full bg-[#ff6b35]"></span>
-                  <span>Only <span className="font-semibold">{spotsLeft}</span> spots left this month — updated in real time.</span>
-                </div>
-                {/* Trust bar */}
-                <div className="mt-4 w-full md:w-auto">
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-700">
-                    <div className="flex items-center gap-1">
-                      <span className="text-yellow-500">★★★★★</span>
-                      <span className="font-medium">4.9/5</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#3777ff]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l7 4v6c0 5-3.5 9.74-7 10-3.5-.26-7-5-7-10V6l7-4z"/></svg>
-                      <span>2,500+ scans</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#0bfe88]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-8.5L2 8h7z"/></svg>
-                      <span>12+ shows</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-800" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a9 9 0 100 18 9 9 0 000-18zm-1 13l-4-4 1.41-1.41L11 11.17l4.59-4.58L17 8l-6 7z"/></svg>
-                      <span>Secure & compliant</span>
-                    </div>
-                  </div>
+                {/* Trust & Scarcity Line (refined) */}
+                <div className="mt-3 text-sm text-gray-600">
+                  <p className="mb-2">
+                    Only <span className="font-semibold text-[#ff6b35]">{spotsLeft} spots left this month</span> — updated in real time. 
+                    Trusted by exhibitors with <span className="font-semibold">3× higher conversions</span>, and rated <span className="text-yellow-500">⭐ 4.9/5</span> by attendees.
+                  </p>
                 </div>
                 {/* <div className="mt-3 flex items-center">
                   <span className="text-sm text-gray-600">no credit card required</span>
@@ -610,14 +602,11 @@ export default function PromotionalLandingPage() {
                             
                             <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 mb-4 border border-gray-700">
                               <p className="text-white font-bold mb-1">You won a</p>
-                              <p className="text-[var(--brand-blue)] text-xl font-bold mb-2">FREE TRIAL</p>
+                              <p className="text-[var(--brand-blue)] text-xl font-bold mb-2">100 Free Leads</p>
                               <div className="text-3xl mb-1">🏆</div>
                               <p className="text-gray-400 text-xs">Check your email for details</p>
                             </div>
                             
-                            <button className="w-full bg-[var(--brand-blue)] hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-md uppercase hover:shadow-[0_0_15px_rgba(55,119,255,0.5)] transform hover:scale-[1.02] transition-all duration-300">
-                              CLAIM NOW
-                            </button>
                           </div>
                         </div>
                         
