@@ -30,6 +30,10 @@ export default function PromotionalLandingPage() {
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [showPrize, setShowPrize] = useState(false);
+  // Qualify step states
+  const [qualifyStep, setQualifyStep] = useState(0);
+  const [selectedRole, setSelectedRole] = useState('');
+  const [selectedTimeline, setSelectedTimeline] = useState('');
   // Video state
   const [isVideoMuted, setIsVideoMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -133,6 +137,9 @@ export default function PromotionalLandingPage() {
     setVerificationCode(['', '', '', '', '', '']);
     setWheelRotation(0);
     setShowPrize(false);
+    setQualifyStep(0);
+    setSelectedRole('');
+    setSelectedTimeline('');
     
     // Step 1: Show QR scanning animation
     const qrScanTimer = setTimeout(() => {
@@ -185,13 +192,33 @@ export default function PromotionalLandingPage() {
       animationTimers.current.push(timer);
     }
     
-    // Step 6: Submit form
+    // Step 6: Submit form and move to qualify step
     const submitTimer = setTimeout(() => {
-      setAnimationStep(2); // Move to verification step
+      setAnimationStep(2); // Move to qualify step
     }, 10000);
     animationTimers.current.push(submitTimer);
     
-    // Step 7: Fill verification code
+    // Step 7: Qualify questions - Role selection
+    const roleSelectTimer = setTimeout(() => {
+      setSelectedRole('Owner / Executive');
+      setQualifyStep(1);
+    }, 11000);
+    animationTimers.current.push(roleSelectTimer);
+    
+    // Step 8: Qualify questions - Timeline selection
+    const timelineSelectTimer = setTimeout(() => {
+      setSelectedTimeline('Actively looking now');
+      setQualifyStep(2);
+    }, 13000);
+    animationTimers.current.push(timelineSelectTimer);
+    
+    // Step 9: Move to verification step
+    const moveToVerifyTimer = setTimeout(() => {
+      setAnimationStep(3); // Move to verification step
+    }, 15000);
+    animationTimers.current.push(moveToVerifyTimer);
+    
+    // Step 10: Fill verification code
     const verificationDigits = ['1', '2', '3', '4', '5', '6'];
     for (let i = 0; i < verificationDigits.length; i++) {
       const timer = setTimeout(() => {
@@ -200,33 +227,33 @@ export default function PromotionalLandingPage() {
           newCode[i] = verificationDigits[i];
           return newCode;
         });
-      }, 500 * i + 11000); // Start after 11s, fill each digit with 500ms delay
+      }, 500 * i + 16000); // Start after 16s, fill each digit with 500ms delay
       animationTimers.current.push(timer);
     }
     
-    // Step 8: Move to wheel step
+    // Step 11: Move to wheel step
     const moveToWheelTimer = setTimeout(() => {
-      setAnimationStep(3); // Move to wheel step
-    }, 15000);
+      setAnimationStep(4); // Move to wheel step
+    }, 20000);
     animationTimers.current.push(moveToWheelTimer);
     
-    // Step 9: Spin the wheel
+    // Step 12: Spin the wheel
     const spinWheelTimer = setTimeout(() => {
       setWheelRotation(1); // Set to 1 to trigger wheel spinning
-    }, 16000);
+    }, 21000);
     animationTimers.current.push(spinWheelTimer);
     
-    // Step 10: Show prize
+    // Step 13: Show prize
     const showPrizeTimer = setTimeout(() => {
-      setAnimationStep(4); // Move to prize step
+      setAnimationStep(5); // Move to prize step
       setShowPrize(true);
-    }, 19000);
+    }, 24000);
     animationTimers.current.push(showPrizeTimer);
     
     // Reset animation after full cycle
     const resetTimer = setTimeout(() => {
       resetAnimation(); // Restart the animation
-    }, 25000);
+    }, 30000);
     animationTimers.current.push(resetTimer);
   };
   
@@ -269,126 +296,74 @@ export default function PromotionalLandingPage() {
           background: rgba(17,17,17,0.6);
           box-shadow: 0 10px 30px rgba(0,0,0,0.35);
         }
-        .radial-blob {
-          background: radial-gradient(800px 300px at 20% 10%, rgba(55,121,255,0.12) 0%, rgba(11,254,136,0.08) 40%, rgba(255,255,255,0) 70%);
+        .decorated {
+          position: relative;
+          z-index: 1;
+          color: black;
+          display: inline-block;
+        }
+        .decorated::before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          left: 4px;
+          top: 40px;
+          right: -12px;
+          bottom: -2px;
+          background: #0cff88;
+          border-radius: 8px;
         }
       `}</style>
       
       {/* Removed navigation menu for ONE clear goal with no distractions */}
       
-      {/* Hero Section */}
-      <section className="flex-grow flex flex-col items-center justify-center text-center px-2 pt-8 pb-16 md:pt-10 md:pb-16 bg-white">
-        <div className="max-w-6xl w-full mx-auto">
+      {/* Hero Section - Compact Above the Fold */}
+      <section className="min-h-screen flex items-center justify-center px-4 py-8 bg-gradient-to-br from-[#1e3a8a] via-[#3b82f6] to-[#1e40af]">
+        <div className="max-w-7xl w-full mx-auto">
           
-          <div className="relative flex flex-col md:flex-row md:items-center md:text-left">
-            {/* Soft ambient gradient background */}
-            <div className="pointer-events-none absolute inset-0 radial-blob" />
-            <div className="md:w-1/2 md:pr-8 order-1 md:order-1">
-              {/* Mini Tagline */}
-              <p className="text-sm md:text-base text-gray-600 mb-3 font-medium">
-                Engage, Capture & Reward Attendees Instantly
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            
+            {/* Left Column - Content */}
+            <div className="space-y-6">
+              {/* Pre-headline Question */}
+              <p className="text-lg md:text-xl text-white/80 font-medium">
+                Do you have a tradeshow coming up?
               </p>
               
               {/* Main Headline */}
-              <h1 className="text-4xl md:text-5xl lg:text-5xl font-semibold mb-4">
-                Your First 100 Tradeshow Leads <span className="font-semibold">Free</span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                Get <span className="decorated">Qualified</span> Leads for Your Next Tradeshow
               </h1>
               
-              {/* Subheadline with value proposition */}
-              <p className="text-xl md:text-2xl mb-8">
-                Capture verified leads in seconds with QR codes + SMS/Email, and keep attendees excited with instant prize wheel rewards. Your first 100 leads are free — then just $2 per verified lead.
+              {/* Subheadline 2 */}
+              <p className="text-lg md:text-xl text-white/80 leading-relaxed select-none">
+                Our tradeshow system turns booth traffic into sales-ready leads — verified, <span className="decorated whitespace-nowrap">qualified</span>, and instantly available.
               </p>
               
-              {/* 3 Key Benefits */}
-              <div className="text-left mb-8 space-y-4">
-                <h3 className="text-lg font-bold mb-4">✅ 3 Key Benefits</h3>
-                
-                <div className="flex items-start">
-                  <span className="text-[#0bfe88] text-xl mr-3">🎯</span>
-                  <div>
-                    <p>
-                      <span className="font-bold">Engage Visitors</span>
-                      <span> — Prize wheel keeps attendees excited, stopping at your booth and creating social buzz.</span>
-                    </p>
-                  </div>
-                </div>           
-                
-                <div className="flex items-start">
-                  <span className="text-[#0bfe88] text-xl mr-3">📲</span>
-                  <div>
-                    <p>
-                      <span className="font-bold">Capture & Verify</span>
-                      <span> — QR code + SMS/Email verification ensures every lead is instantly stored and accurate — no fake info, no lost cards.</span>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <span className="text-[#0bfe88] text-xl mr-3">💼</span>
-                  <div>
-                    <p>
-                      <span className="font-bold">Convert to Business</span>
-                      <span> — Leads flow directly into your CRM for faster follow-up and higher ROI from every event.</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* CTA Buttons */}
-              <div className="flex flex-col items-start mb-6">
-                {/* Primary CTA - Version A (Urgency) */}
+              {/* CTA Button */}
+              <div>
                 <a 
                   href="#claim-offer" 
                   onClick={openModal}
-                  className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-10 py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center w-full md:w-auto shadow-lg mb-3"
+                  className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-xl px-8 py-4 rounded-xl transition-all transform hover:scale-105 inline-flex items-center justify-center shadow-xl"
                 >
-                  <span className="text-xl font-bold">👉 Start Free — Claim 100 Leads Now</span>
+                  Try Risk Free — Only Pay for Qualified Leads
                 </a>
-                
-                {/* Alternative CTA - Version B (Simplicity) - commented out for A/B testing */}
-                {/* <a 
-                  href="#claim-offer" 
-                  onClick={openModal}
-                  className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-lg px-10 py-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center w-full md:w-auto shadow-lg mb-3"
-                >
-                  <span className="text-xl font-bold">👉 Get My 100 Free Leads Today</span>
-                </a> */}
-                
-                {/* Secondary CTA: scroll to verification section */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    const el = document.querySelector('#learn-more');
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }}
-                  className="mt-3 text-sm text-[#3777ff] hover:underline"
-                  aria-label="See how it works"
-                >
-                  See how it works
-                </button>
-                {/* Trust & Scarcity Line (refined) */}
-                <div className="mt-3 text-sm text-gray-600">
-                  <p className="mb-2">
-                    Only <span className="font-semibold text-[#ff6b35]">{spotsLeft} spots left this month</span> — updated in real time. 
-                    Trusted by exhibitors with <span className="font-semibold">3× higher conversions</span>, and rated <span className="text-yellow-500">⭐ 4.9/5</span> by attendees.
-                  </p>
-                </div>
-                {/* <div className="mt-3 flex items-center">
-                  <span className="text-sm text-gray-600">no credit card required</span>
-                </div> */}
               </div>
               
-              {/* Trust Statement
-              <p className="text-sm text-gray-600 mt-4">
-                Trusted by trade show teams like yours — boosters of booth ROI.
-              </p> */}
+              {/* Fine Print */}
+              <p className="text-sm text-white/60">
+                Limited-time promo · No credit card required · Cancel anytime
+              </p>
             </div>
             
-            {/* Visual: QR Scan + Prize Assignment + floating social proof */}
-            <div className="md:w-1/2 flex justify-center relative order-2 md:order-2">
-              {/* Phone Device Mockup with Animation */}
-              <div className="device-mockup phone relative z-20 mx-auto">
-                <div className="rounded-[54px] border border-gray-700 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] bg-[#1a1a1a] p-2 w-[280px] h-[580px] relative">
+            {/* Right Column - Visual with Floating Tooltips */}
+            <div className="relative flex flex-col items-center justify-center min-h-[500px] w-full px-8">
+
+
+              {/* Phone Device Mockup - Center */}
+              <div className="device-mockup phone relative z-10">
+                <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] bg-[#1a1a1a] p-2 w-[220px] h-[440px] relative">
                   {/* Phone notch */}
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120px] h-[24px] bg-black rounded-b-[12px] z-50"></div>
                   
@@ -503,8 +478,60 @@ export default function PromotionalLandingPage() {
                           </div>
                         </div>
                         
-                        {/* Step 3: Verification Code */}
+                        {/* Step 3: Qualify Questions */}
                         <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="mb-6 text-center">
+                            <span className="text-white text-lg font-bold tracking-wider mb-1 block">QUALIFY</span>
+                            <div className="w-16 h-1 bg-[#0bfe88] mx-auto rounded-full"></div>
+                          </div>
+                          
+                          <div className="space-y-6">
+                            {/* Question 1: Role / Authority */}
+                            {qualifyStep === 0 && (
+                              <div className="space-y-3">
+                                <p className="text-white text-sm font-medium">What best describes your role?</p>
+                                <div className="space-y-2">
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedRole === 'Owner / Executive' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                    <span className="text-sm font-medium">Owner / Executive</span>
+                                  </button>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedRole === 'Manager / Director' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                    <span className="text-sm font-medium">Manager / Director</span>
+                                  </button>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedRole === 'Staff / Student / Other' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                    <span className="text-sm font-medium">Staff / Student / Other</span>
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {/* Question 2: Buying Timeline / Intent */}
+                            {qualifyStep === 1 && (
+                              <div className="space-y-3">
+                                <p className="text-white text-sm font-medium">Are you currently looking for solutions like ours?</p>
+                                <div className="space-y-2">
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedTimeline === 'Actively looking now' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                    <span className="text-sm font-medium">Actively looking now</span>
+                                  </button>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedTimeline === 'Within 6–12 months' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                    <span className="text-sm font-medium">Within 6–12 months</span>
+                                  </button>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedTimeline === 'Just browsing' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                    <span className="text-sm font-medium">Just browsing</span>
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {/* Progress indicator */}
+                            <div className="flex justify-center space-x-2 mt-6">
+                              <div className={`w-2 h-2 rounded-full ${qualifyStep >= 1 ? 'bg-[#0bfe88]' : 'bg-white/30'}`}></div>
+                              <div className={`w-2 h-2 rounded-full ${qualifyStep >= 2 ? 'bg-[#0bfe88]' : 'bg-white/30'}`}></div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Step 4: Verification Code */}
+                        <div className={`transition-all duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="mb-6 text-center">
                             <span className="text-white text-lg font-bold tracking-wider mb-1 block">VERIFY</span>
                             <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full"></div>
@@ -527,8 +554,8 @@ export default function PromotionalLandingPage() {
                           </div>
                         </div>
                         
-                        {/* Step 4: Prize Wheel */}
-                        <div className={`transition-all duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                        {/* Step 5: Prize Wheel */}
+                        <div className={`transition-all duration-500 ${animationStep === 4 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           {/* Ultra-compact Prize Wheel Layout */}
                           <div className="flex flex-col items-center mt-5" style={{ height: "350px", padding: "15px 0 0 0" }}>
                             {/* Title */}
@@ -593,8 +620,8 @@ export default function PromotionalLandingPage() {
                           </div>
                         </div>
                         
-                        {/* Step 5: Prize Reveal */}
-                        <div className={`transition-all duration-500 ${animationStep === 4 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                        {/* Step 6: Prize Reveal */}
+                        <div className={`transition-all duration-500 ${animationStep === 5 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="text-center py-4">
                             <div className="text-4xl mb-2">🎉</div>
                             <h3 className="text-white text-xl font-bold mb-2">Congratulations!</h3>
@@ -612,7 +639,7 @@ export default function PromotionalLandingPage() {
                         
                         {/* Process steps indicator */}
                         <div className="mt-16 text-center">
-                          <p className="text-xs text-white/70 text-center">Scan → Register → Verify → Win</p>
+                          <p className="text-xs text-white/70 text-center">Scan → Register → Qualify → Verify → Win</p>
                         </div>
                       </div>
                     </div>
@@ -620,40 +647,7 @@ export default function PromotionalLandingPage() {
                 </div>
               </div>
 
-              {/* Floating Social Proof chips around the phone */}
-              <div className="hidden md:block">
-                {/* Top-left rating card */}
-                <div className="absolute -top-6 -left-4 anim-float z-30">
-                  <div className="glass-card rounded-2xl px-4 py-3 shadow-xl border border-white/50">
-                    <div className="flex items-center gap-2 text-base">
-                      <span className="text-yellow-500 text-lg">★★★★★</span>
-                      <span className="font-semibold text-gray-900">4.9/5</span>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">from live booth attendees</p>
-                  </div>
-                </div>
 
-                {/* Right badge */}
-                <div className="absolute -right-8 top-8 anim-float-rev z-30">
-                  <div className="glass-card rounded-full px-5 py-3 shadow-xl border border-white/50 flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#0bfe88]"></span>
-                    <span className="text-sm font-semibold text-gray-800">3× higher conversions</span>
-                  </div>
-                </div>
-
-                {/* Bottom-left avatars */}
-                <div className="absolute -left-10 bottom-8 anim-float-slow z-30">
-                  <div className="glass-card rounded-xl px-4 py-3 shadow-xl border border-white/50">
-                    <div className="flex -space-x-2">
-                      <img src="https://i.pravatar.cc/32?img=1" alt="" className="w-8 h-8 rounded-full border border-white" />
-                      <img src="https://i.pravatar.cc/32?img=2" alt="" className="w-8 h-8 rounded-full border border-white" />
-                      <img src="https://i.pravatar.cc/32?img=3" alt="" className="w-8 h-8 rounded-full border border-white" />
-                      <img src="https://i.pravatar.cc/32?img=4" alt="" className="w-8 h-8 rounded-full border border-white" />
-                    </div>
-                    <p className="text-sm text-gray-700 mt-1">2,500+ scans last month</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
