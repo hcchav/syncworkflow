@@ -143,7 +143,7 @@ export default function PromotionalLandingPage() {
     
     // Step 1: Show QR scanning animation
     const qrScanTimer = setTimeout(() => {
-      setQrScanned(true);
+      // setQrScanned(true);
     }, 2000); // Simulate QR scanning for 2 seconds
     animationTimers.current.push(qrScanTimer);
     
@@ -155,7 +155,7 @@ export default function PromotionalLandingPage() {
     
     // Step 3: Type name (John Doe)
     const nameToType = 'John Doe';
-    for (let i = 0; i < nameToType.length; i++) {
+    for (let i = 0; i <nameToType.length; i++) {
       const timer = setTimeout(() => {
         setNameValue(nameToType.substring(0, i + 1));
         // Set name as completed when typing is finished
@@ -195,26 +195,42 @@ export default function PromotionalLandingPage() {
     // Step 6: Submit form and move to qualify step
     const submitTimer = setTimeout(() => {
       setAnimationStep(2); // Move to qualify step
+      setQualifyStep(1);
     }, 10000);
     animationTimers.current.push(submitTimer);
     
     // Step 7: Qualify questions - Role selection
     const roleSelectTimer = setTimeout(() => {
-      setSelectedRole('Owner / Executive');
-      setQualifyStep(1);
+  
     }, 11000);
     animationTimers.current.push(roleSelectTimer);
-    
-    // Step 8: Qualify questions - Timeline selection
-    const timelineSelectTimer = setTimeout(() => {
-      setSelectedTimeline('Actively looking now');
+
+     // Step 7: Qualify questions - Role selection
+     const selectRoleOneTimer = setTimeout(() => {
+      setSelectedRole('Owner / Executive');
+  
+    }, 12000);
+    animationTimers.current.push(roleSelectTimer);
+
+
+    // Step 8: Qualify questions - Company selection
+    const companySelectTimer = setTimeout(() => {
       setQualifyStep(2);
     }, 13000);
+    animationTimers.current.push(companySelectTimer);
+
+    
+    // Step 7: Qualify questions - Timeline selection
+    const timelineSelectTimer = setTimeout(() => {
+      setSelectedTimeline('Actively looking now');
+    
+    }, 14000);
     animationTimers.current.push(timelineSelectTimer);
     
     // Step 9: Move to verification step
     const moveToVerifyTimer = setTimeout(() => {
-      setAnimationStep(3); // Move to verification step
+       // Move to verification step
+       setAnimationStep(3);
     }, 15000);
     animationTimers.current.push(moveToVerifyTimer);
     
@@ -234,26 +250,26 @@ export default function PromotionalLandingPage() {
     // Step 11: Move to wheel step
     const moveToWheelTimer = setTimeout(() => {
       setAnimationStep(4); // Move to wheel step
-    }, 20000);
+    }, 19000);
     animationTimers.current.push(moveToWheelTimer);
     
     // Step 12: Spin the wheel
     const spinWheelTimer = setTimeout(() => {
       setWheelRotation(1); // Set to 1 to trigger wheel spinning
-    }, 21000);
+    }, 20000);
     animationTimers.current.push(spinWheelTimer);
     
     // Step 13: Show prize
     const showPrizeTimer = setTimeout(() => {
       setAnimationStep(5); // Move to prize step
       setShowPrize(true);
-    }, 24000);
+    }, 21000);
     animationTimers.current.push(showPrizeTimer);
     
     // Reset animation after full cycle
     const resetTimer = setTimeout(() => {
       resetAnimation(); // Restart the animation
-    }, 30000);
+    }, 24000);
     animationTimers.current.push(resetTimer);
   };
   
@@ -299,18 +315,18 @@ export default function PromotionalLandingPage() {
         .decorated {
           position: relative;
           z-index: 1;
-          color: black;
+          color: #4b4e4e;
           display: inline-block;
         }
         .decorated::before {
           content: "";
           position: absolute;
           z-index: -1;
-          left: 4px;
-          top: 40px;
+          left: -10px;
+          top: 8px;
           right: -12px;
           bottom: -2px;
-          background: #0cff88;
+          background: #fac506;
           border-radius: 8px;
         }
       `}</style>
@@ -319,43 +335,71 @@ export default function PromotionalLandingPage() {
       
       {/* Hero Section - Compact Above the Fold */}
       <section className="min-h-screen flex items-center justify-center px-4 py-8 bg-gradient-to-br from-[#1e3a8a] via-[#3b82f6] to-[#1e40af]">
-        <div className="max-w-7xl w-full mx-auto">
+          <div className="max-w-7xl w-full mx-auto">
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             
             {/* Left Column - Content */}
             <div className="space-y-6">
-              {/* Pre-headline Question */}
-              <p className="text-lg md:text-xl text-white/80 font-medium">
-                Do you have a tradeshow coming up?
-              </p>
+              
               
               {/* Main Headline */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                Get <span className="decorated">Qualified</span> Leads for Your Next Tradeshow
+              Need More <span className="decorated text-shadow-color-white">Qualified Leads</span> at Your Next Tradeshow? 
               </h1>
               
-              {/* Subheadline 2 */}
+              {/* Subheadline */}
               <p className="text-lg md:text-xl text-white/80 leading-relaxed select-none">
-                Our tradeshow system turns booth traffic into sales-ready leads — verified, <span className="decorated whitespace-nowrap">qualified</span>, and instantly available.
-              </p>
+              Attendee Process → Scan, Qualify, Win, Convert.</p>
+              
+             
               
               {/* CTA Button */}
-              <div>
+              <div className="flex flex-col sm:flex-row gap-4">
                 <a 
                   href="#claim-offer" 
                   onClick={openModal}
-                  className="bg-[#0bfe88] hover:bg-opacity-90 text-black font-bold text-xl px-8 py-4 rounded-xl transition-all transform hover:scale-105 inline-flex items-center justify-center shadow-xl"
+                  className="bg-[#f0d418] hover:bg-opacity-90 text-black font-bold text-xl px-8 py-4 rounded-xl transition-all transform hover:scale-105 inline-flex items-center justify-center shadow-xl"
                 >
-                  Try Risk Free — Only Pay for Qualified Leads
+                  Sign Up - Free Setup ($500 Value)
+                </a>
+                <a 
+                  href="#how-it-works"
+                  className="bg-[#f1f1f1] hover:bg-opacity-20 text-black font-bold text-xl px-8 py-4 rounded-xl transition-all transform hover:scale-105 inline-flex items-center justify-center border border-white/20 shadow-lg"
+                >
+                  How It Works
                 </a>
               </div>
               
-              {/* Fine Print */}
-              <p className="text-sm text-white/60">
-                Limited-time promo · No credit card required · Cancel anytime
-              </p>
+              {/* Trust Callouts */}
+              <div className="flex flex-wrap justify-center gap-6 mt-6 text-sm text-white/90">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                  <span>Only pay for qualified leads</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                  </svg>
+                  <span>Cancel anytime</span>
+                </div>
+              </div>
             </div>
+          
             
             {/* Right Column - Visual with Floating Tooltips */}
             <div className="relative flex flex-col items-center justify-center min-h-[500px] w-full px-8">
@@ -363,7 +407,7 @@ export default function PromotionalLandingPage() {
 
               {/* Phone Device Mockup - Center */}
               <div className="device-mockup phone relative z-10">
-                <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] bg-[#1a1a1a] p-2 w-[220px] h-[440px] relative">
+                <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] bg-[#1a1a1a] p-2 w-[280px] h-[560px] relative">
                   {/* Phone notch */}
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120px] h-[24px] bg-black rounded-b-[12px] z-50"></div>
                   
@@ -376,9 +420,6 @@ export default function PromotionalLandingPage() {
                     {/* Top UI */}
                     <div className="absolute top-0 left-0 right-0 z-40 pt-8 pb-4 px-4">
                       <div className="flex justify-end items-center">
-                        <div className="text-xs font-bold">
-                          <span className="text-white">Sync</span><span className="text-[#3777ff]">Workflow</span>
-                        </div>
                       </div>
                     </div>
                     
@@ -395,7 +436,7 @@ export default function PromotionalLandingPage() {
                           
                           <div className="flex flex-col items-center justify-center mt-4">
                             {/* QR Code scanning frame */}
-                            <div className="relative w-48 h-48 border-2 border-dashed border-[#3777ff] rounded-lg flex items-center justify-center">
+                            <div className="relative w-48 h-48 rounded-lg flex items-center justify-center">
                               {/* Corner markers */}
                               <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#3777ff]"></div>
                               <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#3777ff]"></div>
@@ -436,7 +477,7 @@ export default function PromotionalLandingPage() {
                                 <p className="text-white text-sm">{nameValue || '|'}</p>
                                 {nameCompleted && (
                                   <div className="absolute right-2 top-1/2 transform -translate-y-1/2 transition-opacity duration-300 opacity-100">
-                                    <svg className="h-4 w-4 text-[#0bfe88]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="h-4 w-4 text-[#3777ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                   </div>
@@ -450,7 +491,7 @@ export default function PromotionalLandingPage() {
                                 <p className="text-white text-sm">{emailValue || '|'}</p>
                                 {emailCompleted && (
                                   <div className="absolute right-2 top-1/2 transform -translate-y-1/2 transition-opacity duration-300 opacity-100">
-                                    <svg className="h-4 w-4 text-[#0bfe88]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="h-4 w-4 text-[#3777ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                   </div>
@@ -464,7 +505,7 @@ export default function PromotionalLandingPage() {
                                 <p className="text-white text-sm">{phoneValue || '|'}</p>
                                 {phoneCompleted && (
                                   <div className="absolute right-2 top-1/2 transform -translate-y-1/2 transition-opacity duration-300 opacity-100">
-                                    <svg className="h-4 w-4 text-[#0bfe88]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="h-4 w-4 text-[#3777ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                   </div>
@@ -472,9 +513,6 @@ export default function PromotionalLandingPage() {
                               </div>
                             </div>
                             
-                            <button className="w-full bg-[#3777ff] text-white py-2 rounded-md mt-4 font-medium">
-                              Submit
-                            </button>
                           </div>
                         </div>
                         
@@ -482,22 +520,22 @@ export default function PromotionalLandingPage() {
                         <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="mb-6 text-center">
                             <span className="text-white text-lg font-bold tracking-wider mb-1 block">QUALIFY</span>
-                            <div className="w-16 h-1 bg-[#0bfe88] mx-auto rounded-full"></div>
+                            <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full"></div>
                           </div>
                           
                           <div className="space-y-6">
                             {/* Question 1: Role / Authority */}
-                            {qualifyStep === 0 && (
+                            {qualifyStep === 1 && (
                               <div className="space-y-3">
                                 <p className="text-white text-sm font-medium">What best describes your role?</p>
                                 <div className="space-y-2">
-                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedRole === 'Owner / Executive' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedRole === 'Owner / Executive' ? 'bg-[#3777ff] border-[#3777ff] text-white' : 'bg-white/10 border-white/20 text-white'}`}>
                                     <span className="text-sm font-medium">Owner / Executive</span>
                                   </button>
-                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedRole === 'Manager / Director' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedRole === 'Manager / Director' ? 'bg-[#3777ff] border-[#3777ff] text-white' : 'bg-white/10 border-white/20 text-white'}`}>
                                     <span className="text-sm font-medium">Manager / Director</span>
                                   </button>
-                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedRole === 'Staff / Student / Other' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedRole === 'Staff / Student / Other' ? 'bg-[#3777ff] border-[#3777ff] text-white' : 'bg-white/10 border-white/20 text-white'}`}>
                                     <span className="text-sm font-medium">Staff / Student / Other</span>
                                   </button>
                                 </div>
@@ -505,28 +543,24 @@ export default function PromotionalLandingPage() {
                             )}
                             
                             {/* Question 2: Buying Timeline / Intent */}
-                            {qualifyStep === 1 && (
+                            {qualifyStep === 2 && (
                               <div className="space-y-3">
                                 <p className="text-white text-sm font-medium">Are you currently looking for solutions like ours?</p>
                                 <div className="space-y-2">
-                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedTimeline === 'Actively looking now' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedTimeline === 'Actively looking now' ? 'bg-[#3777ff] border-[#3777ff] text-white' : 'bg-white/10 border-white/20 text-white'}`}>
                                     <span className="text-sm font-medium">Actively looking now</span>
                                   </button>
-                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedTimeline === 'Within 6–12 months' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedTimeline === 'Within 6–12 months' ? 'bg-[#3777ff] border-[#3777ff] text-white' : 'bg-white/10 border-white/20 text-white'}`}>
                                     <span className="text-sm font-medium">Within 6–12 months</span>
                                   </button>
-                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedTimeline === 'Just browsing' ? 'bg-[#0bfe88] border-[#0bfe88] text-black' : 'bg-white/10 border-white/20 text-white'}`}>
+                                  <button className={`w-full p-3 rounded-lg border transition-all ${selectedTimeline === 'Just browsing' ? 'bg-[#3777ff] border-[#3777ff] text-white' : 'bg-white/10 border-white/20 text-white'}`}>
                                     <span className="text-sm font-medium">Just browsing</span>
                                   </button>
                                 </div>
                               </div>
                             )}
                             
-                            {/* Progress indicator */}
-                            <div className="flex justify-center space-x-2 mt-6">
-                              <div className={`w-2 h-2 rounded-full ${qualifyStep >= 1 ? 'bg-[#0bfe88]' : 'bg-white/30'}`}></div>
-                              <div className={`w-2 h-2 rounded-full ${qualifyStep >= 2 ? 'bg-[#0bfe88]' : 'bg-white/30'}`}></div>
-                            </div>
+                       
                           </div>
                         </div>
                         
@@ -548,9 +582,6 @@ export default function PromotionalLandingPage() {
                               ))}
                             </div>
                             
-                            <button className="w-full bg-[#3777ff] text-white py-2 rounded-md mt-4 font-medium">
-                              Verify
-                            </button>
                           </div>
                         </div>
                         
@@ -561,7 +592,7 @@ export default function PromotionalLandingPage() {
                             {/* Title */}
                             <div className="text-center">
                               <span className="text-white text-lg font-bold tracking-wider block">SPIN TO WIN</span>
-                              <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full mb-2"></div>
+                              <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full mb-2"></div>
                             </div>
                             
                             {/* Prize Wheel - Minimal spacing */}
@@ -603,20 +634,6 @@ export default function PromotionalLandingPage() {
                               </div>
                             </div>
                             
-                            {/* Button at bottom - no margin */}
-                            <div className="text-center mt-0">
-                              <button 
-                                onClick={() => {
-                                  // Force rising edge: 0 -> 1
-                                  setWheelRotation(0);
-                                  setTimeout(() => setWheelRotation(1), 20);
-                                }}
-                                disabled={wheelRotation > 0}
-                                className={`bg-[var(--brand-blue)] text-white font-bold py-1 px-6 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${wheelRotation > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(55,119,255,0.5)]'}`}
-                              >
-                                SPIN
-                              </button>
-                            </div>
                           </div>
                         </div>
                         
@@ -625,11 +642,11 @@ export default function PromotionalLandingPage() {
                           <div className="text-center py-4">
                             <div className="text-4xl mb-2">🎉</div>
                             <h3 className="text-white text-xl font-bold mb-2">Congratulations!</h3>
-                            <div className="w-16 h-1 bg-[var(--brand-blue)] mx-auto rounded-full mb-4"></div>
+                            <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full mb-4"></div>
                             
                             <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 mb-4 border border-gray-700">
                               <p className="text-white font-bold mb-1">You won a</p>
-                              <p className="text-[var(--brand-blue)] text-xl font-bold mb-2">100 Free Leads</p>
+                              <p className="text-[#3777ff] text-xl font-bold mb-2">Free Setup Package (Value $500)  </p>
                               <div className="text-3xl mb-1">🏆</div>
                               <p className="text-gray-400 text-xs">Check your email for details</p>
                             </div>
@@ -637,17 +654,11 @@ export default function PromotionalLandingPage() {
                           </div>
                         </div>
                         
-                        {/* Process steps indicator */}
-                        <div className="mt-16 text-center">
-                          <p className="text-xs text-white/70 text-center">Scan → Register → Qualify → Verify → Win</p>
-                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-
             </div>
           </div>
         </div>
@@ -688,7 +699,7 @@ export default function PromotionalLandingPage() {
                           <span className="text-white font-bold">Sync<span className="text-[#3777ff]">Workflow</span></span>
                         </div>
                         <div className="text-white">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                             <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.533 1.533 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                           </svg>
                         </div>
@@ -734,7 +745,6 @@ export default function PromotionalLandingPage() {
                   </div>
                 </div>
               </div>
-            </div>
             
             {/* Additional Phone Mockup Images */}
             <div className="flex flex-col md:flex-row gap-4 mt-8 md:mt-0">
@@ -762,7 +772,7 @@ export default function PromotionalLandingPage() {
             </div>
           </div>
           
-    
+    </div>
         {/* Create Excitement and Boost Interaction */}
         <div className="text-center mb-10 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold mb-3">Create Excitement and Boost Interaction</h2>
@@ -806,14 +816,14 @@ export default function PromotionalLandingPage() {
               </div>
             </div>
           </div>
-
+            
           {/* Row 1: Text to the right of the image */}
           <div className="order-2 lg:order-2 self-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">Create Social Buzz</h3>
             <ul className="text-gray-700 space-y-3 text-base">
-              <li className="flex items-start gap-2"><span className="text-[#0bfe88] mt-0.5">✓</span><span>Tag the tradeshow to drive foot traffic to your booth</span></li>
-              <li className="flex items-start gap-2"><span className="text-[#0bfe88] mt-0.5">✓</span><span>Showcase winners and comments to build momentum</span></li>
-              <li className="flex items-start gap-2"><span className="text-[#0bfe88] mt-0.5">✓</span><span>Encourage attendees to post and mention your handle</span></li>
+              <li className="flex items-start gap-2"><span className="text-[#3777ff] mt-0.5">✓</span><span>Tag the tradeshow to drive foot traffic to your booth</span></li>
+              <li className="flex items-start gap-2"><span className="text-[#3777ff] mt-0.5">✓</span><span>Showcase winners and comments to build momentum</span></li>
+              <li className="flex items-start gap-2"><span className="text-[#3777ff] mt-0.5">✓</span><span>Encourage attendees to post and mention your handle</span></li>
             </ul>
           </div>
 
@@ -862,7 +872,7 @@ export default function PromotionalLandingPage() {
                     className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-sm font-medium"
                   >
                     <span className="flex items-center gap-2 bg-black/60 px-4 py-2 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M3 10v4h4l5 5V5L7 10H3z"/></svg>
                       Tap to unmute
                     </span>
                   </button>
@@ -887,7 +897,7 @@ export default function PromotionalLandingPage() {
                 <div className="text-gray-700 font-medium">Higher Conversion Rate</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-[#0bfe88] mb-2">85%</div>
+                <div className="text-4xl font-bold text-[#3777ff] mb-2">85%</div>
                 <div className="text-gray-700 font-medium">Complete Registration</div>
               </div>
               <div>
@@ -923,9 +933,9 @@ export default function PromotionalLandingPage() {
                       $300 OFF for New Clients!
                     </div>
                     <ul className="mb-6 space-y-2">
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Branded QR forms</span></li>
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>SMS & Email notifications</span></li>
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Secure hosting</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Branded QR forms</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>SMS & Email notifications</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Secure hosting</span></li>
                     </ul>
                     <div className="text-lg font-bold text-[#3777ff] mt-auto">
                       $5 <span className="text-sm font-normal">per attendee</span>
@@ -955,7 +965,7 @@ export default function PromotionalLandingPage() {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Basic Plan */}
-                  <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#3777ff] hover:shadow-xl transition-shadow duration-300">
+                  <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#3777ff] hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div className="text-2xl font-bold text-[#3777ff] mb-2">Basic</div>
                     <div className="flex items-center mb-4">
                       <span className="text-gray-400 line-through mr-2">$700</span>
@@ -967,9 +977,9 @@ export default function PromotionalLandingPage() {
                     </div>
                     <div className="text-lg font-semibold mb-2">Includes:</div>
                     <ul className="mb-6 space-y-2">
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>SMS & Email Notifications</span></li>
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Secure Hosting</span></li>
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Basic Branding</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>SMS & Email Notifications</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Secure Hosting</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Basic Branding</span></li>
                     </ul>
                     <div className="text-lg font-bold text-[#3777ff] mt-auto">
                       $5 <span className="text-sm font-normal">per attendee</span>
@@ -978,8 +988,8 @@ export default function PromotionalLandingPage() {
                   </div>
                   
                   {/* Pro Plan */}
-                  <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#0bfe88] transform md:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                    <div className="absolute -top-3 right-4 bg-[#0bfe88] text-xs text-gray-900 font-bold py-1 px-2 rounded-full">POPULAR</div>
+                  <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#3777ff] transform md:scale-105 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="absolute -top-3 right-4 bg-[#3777ff] text-xs text-white font-bold py-1 px-2 rounded-full">POPULAR</div>
                     <div className="text-2xl font-bold text-[#3777ff] mb-2">Pro</div>
                     <div className="flex items-center mb-4">
                       <span className="text-gray-400 line-through mr-2">$900</span>
@@ -989,12 +999,12 @@ export default function PromotionalLandingPage() {
                     <div className="bg-red-100 text-red-600 text-sm font-bold py-1 px-2 rounded mb-3 inline-block">$300 OFF for New Clients!</div>
                     <div className="text-lg font-semibold mb-2">Everything in Basic plus:</div>
                     <ul className="mb-6 space-y-2">
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Custom Domain</span></li>
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Prize Tool</span></li>
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Lead Scoring</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Custom Domain</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Prize Tool</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Lead Scoring</span></li>
                     </ul>
                     <div className="text-lg font-bold text-[#3777ff] mt-auto">$4 <span className="text-sm font-normal">per attendee</span></div>
-                    <button onClick={openModal} className="w-full mt-4 bg-[#0bfe88] hover:bg-[#09d973] text-gray-900 py-2 px-4 rounded-lg transition-colors duration-300">Claim Offer</button>
+                    <button onClick={openModal} className="w-full mt-4 bg-[#3777ff] hover:bg-[#2855c5] text-white py-2 px-4 rounded-lg transition-colors duration-300">Claim Offer</button>
                   </div>
                   
                   {/* Custom Plan */}
@@ -1003,9 +1013,9 @@ export default function PromotionalLandingPage() {
                     <div className="flex items-center mb-4"><span className="text-2xl font-bold">Custom</span><span className="text-gray-600 ml-1">quote</span></div>
                     <div className="text-lg font-semibold mb-2">Tailored solution with:</div>
                     <ul className="mb-6 space-y-2">
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Custom Features</span></li>
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>API Integrations</span></li>
-                      <li className="flex items-start"><svg className="h-5 w-5 text-[#0bfe88] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Priority Support</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Custom Features</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>API Integrations</span></li>
+                      <li className="flex items-start"><svg className="h-5 w-5 text-[#3777ff] mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg><span>Priority Support</span></li>
                     </ul>
                     <div className="text-lg font-bold text-[#3777ff] mt-auto">Custom <span className="text-sm font-normal">pricing</span></div>
                     <button onClick={openModal} className="w-full mt-4 bg-gray-800 hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition-colors duration-300">Contact Us</button>
@@ -1057,7 +1067,7 @@ export default function PromotionalLandingPage() {
                     />
                     {isNameValid && (
                       <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
@@ -1084,7 +1094,7 @@ export default function PromotionalLandingPage() {
                     />
                     {isEmailValid && (
                       <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
@@ -1121,7 +1131,7 @@ export default function PromotionalLandingPage() {
                     />
                     {isPhoneValid && (
                       <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
@@ -1234,5 +1244,6 @@ export default function PromotionalLandingPage() {
         </div>
       </footer>
     </div>
+    
   );
 }
