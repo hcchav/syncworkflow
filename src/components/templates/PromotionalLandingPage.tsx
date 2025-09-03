@@ -45,17 +45,29 @@ export default function PromotionalLandingPage() {
   
   // Reset and restart animation
   const resetAnimation = () => {
+    // First clear all timers
     animationTimers.current.forEach(timer => clearTimeout(timer));
     animationTimers.current = [];
+    
+    // Reset all states
     setAnimationStep(0);
     setQrScanned(false);
     setNameValue('');
     setEmailValue('');
     setPhoneValue('');
     setVerificationCode(['', '', '', '', '', '']);
-    setWheelRotation(0);
     setShowPrize(false);
-    startAnimation();
+    
+    // Reset wheel state with a small delay to ensure clean state
+    setTimeout(() => {
+      setWheelRotation(0);
+      
+      // Give React time to process the state reset before restarting
+      const timer = setTimeout(() => {
+        startAnimation();
+      }, 200);
+      animationTimers.current.push(timer);
+    }, 0);
   };
 
   // Validation functions
@@ -255,7 +267,14 @@ export default function PromotionalLandingPage() {
     
     // Step 12: Spin the wheel
     const spinWheelTimer = setTimeout(() => {
-      setWheelRotation(1); // Set to 1 to trigger wheel spinning
+      // Reset wheel rotation to 0 before spinning again
+      setWheelRotation(0);
+      
+      // Small delay to ensure state is updated before triggering spin
+      const timer = setTimeout(() => {
+        setWheelRotation(1); // Set to 1 to trigger the spin
+      }, 50);
+      animationTimers.current.push(timer);
     }, 20000);
     animationTimers.current.push(spinWheelTimer);
     
@@ -371,31 +390,43 @@ export default function PromotionalLandingPage() {
                 </a>
               </div>
               
-              {/* Trust Callouts */}
-              <div className="flex flex-wrap justify-center gap-6 mt-6 text-sm text-white/90">
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                  </svg>
-                  <span>Only pay for qualified leads</span>
+              {/* Trust Callouts - Static */}
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-8 text-sm">
+                <div className="flex items-center gap-3 bg-gradient-to-r from-white/5 to-white/[0.03] backdrop-blur-sm px-5 py-3 rounded-xl border border-white/5">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#2ecc71]/10 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                  </div>
+                  <span className="text-white/95 font-medium whitespace-nowrap">Only pay for qualified leads</span>
                 </div>
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                    <line x1="1" y1="10" x2="23" y2="10"></line>
-                  </svg>
-                  <span>No credit card required</span>
+                
+                <div className="hidden sm:block text-white/20">•</div>
+                
+                <div className="flex items-center gap-3 bg-gradient-to-r from-white/5 to-white/[0.03] backdrop-blur-sm px-5 py-3 rounded-xl border border-white/5">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#2ecc71]/10 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                      <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                  </div>
+                  <span className="text-white/95 font-medium whitespace-nowrap">No credit card required</span>
                 </div>
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                  </svg>
-                  <span>Cancel anytime</span>
+                
+                <div className="hidden sm:block text-white/20">•</div>
+                
+                <div className="flex items-center gap-3 bg-gradient-to-r from-white/5 to-white/[0.03] backdrop-blur-sm px-5 py-3 rounded-xl border border-white/5">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#2ecc71]/10 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="15" y1="9" x2="9" y2="15"></line>
+                      <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                  </div>
+                  <span className="text-white/95 font-medium whitespace-nowrap">Cancel anytime</span>
                 </div>
               </div>
             </div>
