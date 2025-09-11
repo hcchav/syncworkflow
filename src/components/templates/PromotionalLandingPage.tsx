@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { CustomWheel } from '../ui/CustomWheel';
 import '../../styles/wheel.css';
@@ -29,6 +29,8 @@ export default function PromotionalLandingPage() {
   const [phoneCompleted, setPhoneCompleted] = useState(false);
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [wheelRotation, setWheelRotation] = useState(0);
+  const [mustStartSpinning, setMustStartSpinning] = useState(false);
+  const [prizeNumber, setPrizeNumber] = useState(0);
   const [showPrize, setShowPrize] = useState(false);
   // Qualify step states
   const [qualifyStep, setQualifyStep] = useState(0);
@@ -43,13 +45,20 @@ export default function PromotionalLandingPage() {
   // Animation timers reference
   const animationTimers = useRef<NodeJS.Timeout[]>([]);
   
-  // Reset and restart animation
-  const resetAnimation = () => {
-    // First clear all timers
+  // Use refs to store the latest version of the functions
+  const startAnimationRef = useRef<() => void>();
+  const resetAnimationRef = useRef<() => void>();
+
+  // Define resetAnimation first using refs
+  const resetAnimation = useCallback(() => {
+    console.log('--- RESET ANIMATION ---');
+    
+    // Clear any pending animations first
     animationTimers.current.forEach(timer => clearTimeout(timer));
     animationTimers.current = [];
     
     // Reset all states
+    console.log('Resetting all states...');
     setAnimationStep(0);
     setQrScanned(false);
     setNameValue('');
@@ -57,25 +66,213 @@ export default function PromotionalLandingPage() {
     setPhoneValue('');
     setVerificationCode(['', '', '', '', '', '']);
     setShowPrize(false);
+    setQualifyStep(0);
+    setSelectedRole('');
+    setSelectedTimeline('');
     
-    // Reset wheel state with a small delay to ensure clean state
-    setTimeout(() => {
-      setWheelRotation(0);
+    // Reset wheel state immediately
+    console.log('Resetting wheel state...');
+    setWheelRotation(0);
+    setPrizeNumber(0);
+    
+    // Reset the spinning state after a small delay to ensure clean state
+    const resetTimer = setTimeout(() => {
+      setMustStartSpinning(false);
       
-      // Give React time to process the state reset before restarting
-      const timer = setTimeout(() => {
-        startAnimation();
-      }, 200);
-      animationTimers.current.push(timer);
-    }, 0);
-  };
+      // Start the animation sequence after reset is complete
+      const startTimer = setTimeout(() => {
+        console.log('Starting new animation sequence...');
+        if (startAnimationRef.current) {
+          startAnimationRef.current();
+        }
+      }, 500);
+      
+      animationTimers.current.push(startTimer);
+    }, 100);
+    
+    animationTimers.current.push(resetTimer);
+  }, []);
+  
+  // Update the ref when resetAnimation changes
+  useEffect(() => {
+    resetAnimationRef.current = resetAnimation;
+  }, [resetAnimation]);
 
-  // Validation functions
-  const validateName = (value: string) => {
-    const isValid = value.trim().length >= 2; // At least 2 characters
-    setIsNameValid(isValid);
-    return isValid;
-  };
+  // Define startAnimation using the ref for resetAnimation
+  const startAnimation = useCallback(() => {
+    console.log('Starting animation sequence...');
+    
+    // Clear any existing timers
+    animationTimers.current.forEach(timer => clearTimeout(timer));
+    animationTimers.current = [];
+    
+    // Reset animation states
+    setQrScanned(false);
+    setAnimationStep(0);
+    setNameValue('');
+    setEmailValue('');
+    setPhoneValue('');
+    setNameCompleted(false);
+    setEmailCompleted(false);
+    setPhoneCompleted(false);
+    setVerificationCode(['', '', '', '', '', '']);
+    setWheelRotation(0);
+    setShowPrize(false);
+    setQualifyStep(0);
+    setSelectedRole('');
+    setSelectedTimeline('');
+    
+    // Step 1: Show QR scanning animation
+    const qrScanTimer = setTimeout(() => {
+      console.log('Step 1: QR scanning...');
+      setQrScanned(true);
+    }, 1000);
+    animationTimers.current.push(qrScanTimer);
+    
+    // Step 2: Move to form after QR scan
+    const moveToFormTimer = setTimeout(() => {
+      console.log('Step 2: Moving to form...');
+      setAnimationStep(1);
+    }, 3000);
+    animationTimers.current.push(moveToFormTimer);
+    
+    // Step 3: Type name (John Doe)
+    const nameToType = 'John Doe';
+    for (let i = 0; i < nameToType.length; i++) {
+      const timer = setTimeout(() => {
+        setNameValue(nameToType.substring(0, i + 1));
+        if (i === nameToType.length - 1) {
+          setTimeout(() => setNameCompleted(true), 300);
+        }
+      }, 100 * i + 4000);
+      animationTimers.current.push(timer);
+    }
+    
+    // Step 4: Type email (john.doe@example.com)
+    const emailToType = 'john.doe@example.com';
+    for (let i = 0; i < emailToType.length; i++) {
+      const timer = setTimeout(() => {
+        setEmailValue(emailToType.substring(0, i + 1));
+        if (i === emailToType.length - 1) {
+          setTimeout(() => setEmailCompleted(true), 300);
+        }
+      }, 100 * i + 6000);
+      animationTimers.current.push(timer);
+    }
+    
+    // Step 5: Type phone (555-123-4567)
+    const phoneToType = '555-123-4567';
+    for (let i = 0; i < phoneToType.length; i++) {
+      const timer = setTimeout(() => {
+        setPhoneValue(phoneToType.substring(0, i + 1));
+        if (i === phoneToType.length - 1) {
+          setTimeout(() => setPhoneCompleted(true), 300);
+        }
+      }, 100 * i + 8000);
+      animationTimers.current.push(timer);
+    }
+    
+    // Step 6: Submit form and move to qualify step
+    const submitTimer = setTimeout(() => {
+      console.log('Step 6: Submitting form...');
+      setAnimationStep(2);
+      setQualifyStep(1);
+    }, 10000);
+    animationTimers.current.push(submitTimer);
+    
+    // Step 7: Select role
+    const roleSelectTimer = setTimeout(() => {
+      console.log('Step 7: Selecting role...');
+      setSelectedRole('Owner / Executive');
+    }, 12000);
+    animationTimers.current.push(roleSelectTimer);
+    
+    // Step 8: Move to company selection
+    const companySelectTimer = setTimeout(() => {
+      console.log('Step 8: Moving to company selection...');
+      setQualifyStep(2);
+    }, 14000);
+    animationTimers.current.push(companySelectTimer);
+    
+    // Step 9: Select timeline
+    const timelineSelectTimer = setTimeout(() => {
+      console.log('Step 9: Selecting timeline...');
+      setSelectedTimeline('Actively looking now');
+    }, 16000);
+    animationTimers.current.push(timelineSelectTimer);
+    
+    // Step 10: Show wheel
+    const showWheelTimer = setTimeout(() => {
+      console.log('Step 10: Showing wheel...');
+      setQualifyStep(3);
+
+      setAnimationStep(4); // Changed from 3 to 4 to match the wheel's step
+    }, 18000);
+    animationTimers.current.push(showWheelTimer);
+    
+    // Step 11: Spin wheel
+    const spinWheelTimer = setTimeout(() => {
+      console.log('Step 11: Spinning wheel...');
+      // Set the prize number (0-7 for the 8 segments)
+      // For demo purposes, we'll use a specific prize number (e.g., 7 for Free Setup)
+      const targetPrize = 7; // Math.floor(Math.random() * 8) for random prize
+      
+      // Reset states before starting new spin
+      setShowPrize(false);
+      setMustStartSpinning(false);
+      
+      // Small delay to ensure state is properly reset
+      const startSpinTimer = setTimeout(() => {
+        setPrizeNumber(targetPrize);
+        setMustStartSpinning(true);
+        console.log(`Spinning to prize #${targetPrize}`);
+      }, 50);
+      
+      animationTimers.current.push(startSpinTimer);
+      
+      // Step 12: Show prize after wheel completes spinning (4s spin + 1s buffer)
+      const showPrizeTimer = setTimeout(() => {
+        console.log('Step 12: Showing prize...');
+        setShowPrize(true);
+        setAnimationStep(5); // Ensure we're on the prize reveal step
+        
+        // Reset mustStartSpinning after the spin is complete
+        setMustStartSpinning(false);
+        
+        // Step 13: Reset animation after showing prize for 5 seconds
+        const resetTimer = setTimeout(() => {
+          console.log('Step 13: Resetting animation...');
+          if (resetAnimationRef.current) {
+            resetAnimationRef.current();
+          }
+        }, 5000);
+        animationTimers.current.push(resetTimer);
+        
+      }, 5000); // 4s spin + 1s buffer
+      animationTimers.current.push(showPrizeTimer);
+      
+    }, 20000);
+    animationTimers.current.push(spinWheelTimer);
+    
+  }, []);
+  
+  // Update the ref when startAnimation changes
+  useEffect(() => {
+    startAnimationRef.current = startAnimation;
+  }, [startAnimation]);
+  
+  // Initialize the animation on mount
+  useEffect(() => {
+    if (startAnimationRef.current) {
+      startAnimationRef.current();
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      animationTimers.current.forEach(timer => clearTimeout(timer));
+      animationTimers.current = [];
+    };
+  }, []);
 
   const validateEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -130,177 +327,13 @@ export default function PromotionalLandingPage() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  
-  // Start animation sequence
-  const startAnimation = () => {
-    // Clear any existing timers
-    animationTimers.current.forEach(timer => clearTimeout(timer));
-    animationTimers.current = [];
-    
-    // Reset animation states
-    setQrScanned(false);
-    setAnimationStep(0);
-    setNameValue('');
-    setEmailValue('');
-    setPhoneValue('');
-    setNameCompleted(false);
-    setEmailCompleted(false);
-    setPhoneCompleted(false);
-    setVerificationCode(['', '', '', '', '', '']);
-    setWheelRotation(0);
-    setShowPrize(false);
-    setQualifyStep(0);
-    setSelectedRole('');
-    setSelectedTimeline('');
-    
-    // Step 1: Show QR scanning animation
-    const qrScanTimer = setTimeout(() => {
-      // setQrScanned(true);
-    }, 2000); // Simulate QR scanning for 2 seconds
-    animationTimers.current.push(qrScanTimer);
-    
-    // Step 2: Move to form after QR scan
-    const moveToFormTimer = setTimeout(() => {
-      setAnimationStep(1); // Move to form step
-    }, 3000);
-    animationTimers.current.push(moveToFormTimer);
-    
-    // Step 3: Type name (John Doe)
-    const nameToType = 'John Doe';
-    for (let i = 0; i <nameToType.length; i++) {
-      const timer = setTimeout(() => {
-        setNameValue(nameToType.substring(0, i + 1));
-        // Set name as completed when typing is finished
-        if (i === nameToType.length - 1) {
-          setTimeout(() => setNameCompleted(true), 300); // Show check mark after a slight delay
-        }
-      }, 100 * i + 4000); // Start after 4s, type each character with 100ms delay
-      animationTimers.current.push(timer);
-    }
-    
-    // Step 4: Type email (john.doe@example.com)
-    const emailToType = 'john.doe@example.com';
-    for (let i = 0; i < emailToType.length; i++) {
-      const timer = setTimeout(() => {
-        setEmailValue(emailToType.substring(0, i + 1));
-        // Set email as completed when typing is finished
-        if (i === emailToType.length - 1) {
-          setTimeout(() => setEmailCompleted(true), 300); // Show check mark after a slight delay
-        }
-      }, 100 * i + 6000); // Start after 6s
-      animationTimers.current.push(timer);
-    }
-    
-    // Step 5: Type phone (555-123-4567)
-    const phoneToType = '555-123-4567';
-    for (let i = 0; i < phoneToType.length; i++) {
-      const timer = setTimeout(() => {
-        setPhoneValue(phoneToType.substring(0, i + 1));
-        // Set phone as completed when typing is finished
-        if (i === phoneToType.length - 1) {
-          setTimeout(() => setPhoneCompleted(true), 300); // Show check mark after a slight delay
-        }
-      }, 100 * i + 8000); // Start after 8s
-      animationTimers.current.push(timer);
-    }
-    
-    // Step 6: Submit form and move to qualify step
-    const submitTimer = setTimeout(() => {
-      setAnimationStep(2); // Move to qualify step
-      setQualifyStep(1);
-    }, 10000);
-    animationTimers.current.push(submitTimer);
-    
-    // Step 7: Qualify questions - Role selection
-    const roleSelectTimer = setTimeout(() => {
-  
-    }, 11000);
-    animationTimers.current.push(roleSelectTimer);
 
-     // Step 7: Qualify questions - Role selection
-     const selectRoleOneTimer = setTimeout(() => {
-      setSelectedRole('Owner / Executive');
-  
-    }, 12000);
-    animationTimers.current.push(roleSelectTimer);
-
-
-    // Step 8: Qualify questions - Company selection
-    const companySelectTimer = setTimeout(() => {
-      setQualifyStep(2);
-    }, 13000);
-    animationTimers.current.push(companySelectTimer);
-
-    
-    // Step 7: Qualify questions - Timeline selection
-    const timelineSelectTimer = setTimeout(() => {
-      setSelectedTimeline('Actively looking now');
-    
-    }, 14000);
-    animationTimers.current.push(timelineSelectTimer);
-    
-    // Step 9: Move to verification step
-    const moveToVerifyTimer = setTimeout(() => {
-       // Move to verification step
-       setAnimationStep(3);
-    }, 15000);
-    animationTimers.current.push(moveToVerifyTimer);
-    
-    // Step 10: Fill verification code
-    const verificationDigits = ['1', '2', '3', '4', '5', '6'];
-    for (let i = 0; i < verificationDigits.length; i++) {
-      const timer = setTimeout(() => {
-        setVerificationCode(prev => {
-          const newCode = [...prev];
-          newCode[i] = verificationDigits[i];
-          return newCode;
-        });
-      }, 500 * i + 16000); // Start after 16s, fill each digit with 500ms delay
-      animationTimers.current.push(timer);
-    }
-    
-    // Step 11: Move to wheel step
-    const moveToWheelTimer = setTimeout(() => {
-      setAnimationStep(4); // Move to wheel step
-    }, 19000);
-    animationTimers.current.push(moveToWheelTimer);
-    
-    // Step 12: Spin the wheel
-    const spinWheelTimer = setTimeout(() => {
-      // Reset wheel rotation to 0 before spinning again
-      setWheelRotation(0);
-      
-      // Small delay to ensure state is updated before triggering spin
-      const timer = setTimeout(() => {
-        setWheelRotation(1); // Set to 1 to trigger the spin
-      }, 50);
-      animationTimers.current.push(timer);
-    }, 20000);
-    animationTimers.current.push(spinWheelTimer);
-    
-    // Step 13: Show prize
-    const showPrizeTimer = setTimeout(() => {
-      setAnimationStep(5); // Move to prize step
-      setShowPrize(true);
-    }, 21000);
-    animationTimers.current.push(showPrizeTimer);
-    
-    // Reset animation after full cycle
-    const resetTimer = setTimeout(() => {
-      resetAnimation(); // Restart the animation
-    }, 24000);
-    animationTimers.current.push(resetTimer);
+  // Validate name function
+  const validateName = (value: string) => {
+    const isValid = value.trim().length >= 2;
+    setIsNameValid(isValid);
+    return isValid;
   };
-  
-  // Start animation on component mount
-  useEffect(() => {
-    startAnimation();
-    
-    // Clean up timers on unmount
-    return () => {
-      animationTimers.current.forEach(timer => clearTimeout(timer));
-    };
-  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
@@ -630,19 +663,23 @@ export default function PromotionalLandingPage() {
                             <div style={{ position: "relative", height: "300px", width: "100%" }}>
                               <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
                                 <CustomWheel
-                                  mustStartSpinning={wheelRotation > 0}
-                                  prizeNumber={1} // Index 1 corresponds to VIP Badge
+                                  mustStartSpinning={mustStartSpinning}
+                                  prizeNumber={prizeNumber}
+                                  onStopSpinning={() => {
+                                    console.log('Wheel stopped spinning');
+                                    setShowPrize(true);
+                                  }}
                                   data={[
-                                    { option: 'Notebook', style: { backgroundColor: '#FF5252', textColor: 'white' } },
+                                    { option: 'No Prize', style: { backgroundColor: '#FF5252', textColor: 'white' } },
                                     { option: 'VIP Badge', style: { backgroundColor: '#4CAF50', textColor: 'white' } },
                                     { option: 'Gift Card', style: { backgroundColor: '#2196F3', textColor: 'white' } },
-                                    { option: 'T-Shirt', style: { backgroundColor: '#FFC107', textColor: 'white' } },
-                                    { option: 'Stickers', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
-                                    { option: 'Mug', style: { backgroundColor: '#FF9800', textColor: 'white' } },
-                                    { option: 'Discount', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
-                                    { option: 'Pen', style: { backgroundColor: '#8BC34A', textColor: 'white' } }
+                                    { option: 'No Prize', style: { backgroundColor: '#FFC107', textColor: 'white' } },
+                                    { option: '50% Discount', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
+                                    { option: 'No Prize', style: { backgroundColor: '#FF9800', textColor: 'white' } },
+                                    { option: '25% Discount', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
+                                    { option: 'Free Setup', style: { backgroundColor: '#8BC34A', textColor: 'white' } }
                                   ]}
-                                  spinDuration={0.8}
+                                  spinDuration={4}
                                   outerBorderColor="#333"
                                   outerBorderWidth={2}
                                   innerBorderColor="#333"
@@ -1275,6 +1312,5 @@ export default function PromotionalLandingPage() {
         </div>
       </footer>
     </div>
-    
   );
 }

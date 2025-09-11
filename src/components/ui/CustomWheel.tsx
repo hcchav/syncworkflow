@@ -60,40 +60,94 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
   const segmentAngle = 360 / data.length;
   const radius = wheelRadius;
 
+  // Reset the edge detector when component unmounts or when mustStartSpinning becomes false
   useEffect(() => {
-    // Rising-edge trigger: only spin when mustStartSpinning transitions false -> true
-    if (mustStartSpinning && !prevStartRef.current && !isSpinning) {
+    return () => {
+      if (mustStartSpinning) {
+        prevStartRef.current = false;
+      }
+    };
+  }, [mustStartSpinning]);
+
+  useEffect(() => {
+    // Only trigger on rising edge of mustStartSpinning
+    if (mustStartSpinning && !prevStartRef.current) {
+      console.log('🚀 Starting wheel spin effect');
       prevStartRef.current = true;
+      
+      // Create a new spin ID to track this specific spin
+      const spinId = Date.now();
+      console.log(`🆔 Starting spin with ID: ${spinId}`);
+      
+      // Reset any existing spinning state
       setIsSpinning(true);
-
-      // Calculate final rotation to land on the prize
-      const targetAngle = 360 - (prizeNumber * segmentAngle) - (segmentAngle / 2);
-      const spins = 5; // Number of full rotations
-      const finalRotation = targetAngle + (spins * 360);
-
-      // Ensure transition is applied before updating transform
-      setTimeout(() => {
-        setRotation(prev => {
-          // Start from current visual rotation to ensure smoothness
-          const base = typeof prev === 'number' ? prev : 0;
-          return base + finalRotation;
-        });
-      }, 20);
-
-      // Stop spinning after duration
-      const stopTimer = setTimeout(() => {
-        setIsSpinning(false);
-        if (onStopSpinning) onStopSpinning();
-      }, spinDuration * 1000 + 30);
-
-      return () => clearTimeout(stopTimer);
+      
+      // Calculate the target segment's middle angle (in degrees)
+      const targetSegmentMiddle = (prizeNumber * segmentAngle) + (segmentAngle / 2);
+      
+      // Calculate the angle needed to land the target at the bottom (270°)
+      // We add 360 to ensure we always rotate clockwise (positive rotation)
+      const angleToBottom = (360 - targetSegmentMiddle + 270) % 360;
+      
+      // Number of full rotations before stopping (at least 5 full rotations)
+      const fullRotations = 5 * 360;
+      const totalRotation = fullRotations + angleToBottom;
+      
+      console.log(`🎯 Target segment middle: ${targetSegmentMiddle}°`);
+      console.log(`🔄 Need to rotate ${angleToBottom}° to land at bottom`);
+      console.log(`🔄 Total rotation: ${totalRotation}° (5 spins + ${angleToBottom}° final rotation)`);
+      console.log(`🎯 Final prize: ${data[prizeNumber]?.option}`);
+      
+      // Set up animation frame for smooth rotation
+      let startTime: number | null = null;
+      const duration = 5000; // 5 seconds total spin time
+      let animationFrameId: number;
+      
+      const animate = (timestamp: number) => {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function that starts fast and slows down at the end
+        const easeOutQuart = (t: number): number => {
+          return 1 - Math.pow(1 - t, 4);
+        };
+        
+        // Apply easing to the progress
+        const easedProgress = easeOutQuart(progress);
+        
+        // Calculate current rotation with non-linear progression
+        // Start with the current rotation to ensure smooth continuation
+        const startRotation = rotation % 360;
+        const rotationDistance = (totalRotation - startRotation) % 360;
+        const currentRotation = startRotation + (rotationDistance * easedProgress);
+        
+        setRotation(currentRotation);
+        
+        if (progress < 1) {
+          animationFrameId = requestAnimationFrame(animate);
+        } else {
+          console.log(`✅ Spin ${spinId} completed successfully`);
+          setIsSpinning(false);
+          if (onStopSpinning) onStopSpinning();
+        }
+      };
+      
+      // Start the animation
+      animationFrameId = requestAnimationFrame(animate);
+      
+      // Cleanup function
+      return () => {
+        console.log(`🧹 Cleaning up spin ${spinId}`);
+        cancelAnimationFrame(animationFrameId);
+      };
     }
-
-    // Reset edge detector when parent resets trigger
+    
+    // Reset the edge detector when mustStartSpinning becomes false
     if (!mustStartSpinning) {
       prevStartRef.current = false;
     }
-  }, [mustStartSpinning, isSpinning, prizeNumber, segmentAngle, spinDuration, onStopSpinning]);
+  }, [mustStartSpinning, prizeNumber, segmentAngle, spinDuration, onStopSpinning]);
 
   const createSegmentPath = (index: number) => {
     const startAngle = index * segmentAngle;
