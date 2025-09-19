@@ -729,19 +729,39 @@ export default function PromotionalLandingPage() {
                                         clipPath: 'polygon(0 0, 100% 0, 100% 100%)'
                                       }}
                                     >
-                                      <div style={{
-                                        position: 'absolute',
-                                        top: '32px',
-                                        right: '20px',
-                                        fontSize: '14px',
-                                        fontWeight: 'bold',
-                                        color: segment.textColor,
-                                        transform: 'rotate(-22.5deg)',
-                                        transformOrigin: 'center',
-                                        whiteSpace: 'nowrap'
-                                      }}>
-                                        {segment.label}
-                                      </div>
+                                      {segment.label === 'No Prize' ? (
+                                        // Vertical stacked text for "No Prize"
+                                        <div style={{
+                                          position: 'absolute',
+                                          top: '25px',
+                                          right: '15px',
+                                          fontSize: '12px',
+                                          fontWeight: 'bold',
+                                          color: segment.textColor,
+                                          transform: 'rotate(-22.5deg)',
+                                          transformOrigin: 'center',
+                                          textAlign: 'center',
+                                          lineHeight: '1.1'
+                                        }}>
+                                          <div>No</div>
+                                          <div>Prize</div>
+                                        </div>
+                                      ) : (
+                                        // Horizontal text for other prizes
+                                        <div style={{
+                                          position: 'absolute',
+                                          top: '32px',
+                                          right: '20px',
+                                          fontSize: '14px',
+                                          fontWeight: 'bold',
+                                          color: segment.textColor,
+                                          transform: 'rotate(-22.5deg)',
+                                          transformOrigin: 'center',
+                                          whiteSpace: 'nowrap'
+                                        }}>
+                                          {segment.label}
+                                        </div>
+                                      )}
                                     </div>
                                   ))}
                                   
