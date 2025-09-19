@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { CustomWheel } from '../ui/CustomWheel';
 import '../../styles/wheel.css';
 
 export default function PromotionalLandingPage() {
@@ -223,10 +222,14 @@ export default function PromotionalLandingPage() {
       
       // Small delay to ensure state is properly reset
       const startSpinTimer = setTimeout(() => {
+        console.log(`Setting prize number to ${targetPrize} and starting spin`);
         setPrizeNumber(targetPrize);
-        setMustStartSpinning(true);
-        console.log(`Spinning to prize #${targetPrize}`);
-      }, 50);
+        // Add another small delay to ensure prizeNumber is set before spinning
+        setTimeout(() => {
+          setMustStartSpinning(true);
+          console.log(`Wheel should now be spinning to prize #${targetPrize}`);
+        }, 100);
+      }, 100);
       
       animationTimers.current.push(startSpinTimer);
       
@@ -659,46 +662,102 @@ export default function PromotionalLandingPage() {
                               <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full mb-2"></div>
                             </div>
                             
-                            {/* Prize Wheel - Minimal spacing */}
-                            <div style={{ position: "relative", height: "300px", width: "100%" }}>
-                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}>
-                                <CustomWheel
-                                  mustStartSpinning={mustStartSpinning}
-                                  prizeNumber={prizeNumber}
-                                  onStopSpinning={() => {
-                                    console.log('Wheel stopped spinning');
-                                    setShowPrize(true);
+                            {/* Prize Wheel - Custom CSS implementation */}
+                            <div style={{ position: "relative", height: "280px", width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                              <div style={{ width: "250px", height: "250px", position: "relative" }}>
+                                {/* Debug info */}
+                                {process.env.NODE_ENV === 'development' && (
+                                  <div style={{ position: 'absolute', top: '-25px', left: '0', fontSize: '8px', color: 'white', zIndex: 1000 }}>
+                                    Spinning: {mustStartSpinning ? 'YES' : 'NO'} | Prize: {prizeNumber}
+                                  </div>
+                                )}
+                                
+                                {/* Wheel pointer */}
+                                <div style={{
+                                  position: 'absolute',
+                                  top: '-12px',
+                                  left: '50%',
+                                  transform: 'translateX(-50%)',
+                                  width: '0',
+                                  height: '0',
+                                  borderLeft: '15px solid transparent',
+                                  borderRight: '15px solid transparent',
+                                  borderBottom: '26px solid #fff',
+                                  zIndex: 10
+                                }}></div>
+                                
+                                {/* Spinning wheel */}
+                                <div 
+                                  style={{
+                                    width: '250px',
+                                    height: '250px',
+                                    borderRadius: '50%',
+                                    position: 'relative',
+                                    overflow: 'hidden',
+                                    border: '5px solid #333',
+                                    transform: mustStartSpinning ? `rotate(${1800 + (prizeNumber * 45)}deg)` : 'rotate(0deg)',
+                                    transition: mustStartSpinning ? 'transform 4s cubic-bezier(0.23, 1, 0.32, 1)' : 'none'
                                   }}
-                                  data={[
-                                    { option: 'No Prize', style: { backgroundColor: '#FF5252', textColor: 'white' } },
-                                    { option: 'VIP Badge', style: { backgroundColor: '#4CAF50', textColor: 'white' } },
-                                    { option: 'Gift Card', style: { backgroundColor: '#2196F3', textColor: 'white' } },
-                                    { option: 'No Prize', style: { backgroundColor: '#FFC107', textColor: 'white' } },
-                                    { option: '50% Discount', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
-                                    { option: 'No Prize', style: { backgroundColor: '#FF9800', textColor: 'white' } },
-                                    { option: '25% Discount', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
-                                    { option: 'Free Setup', style: { backgroundColor: '#8BC34A', textColor: 'white' } }
-                                  ]}
-                                  spinDuration={4}
-                                  outerBorderColor="#333"
-                                  outerBorderWidth={2}
-                                  innerBorderColor="#333"
-                                  innerBorderWidth={3}
-                                  innerRadius={15}
-                                  radiusLineColor="#ffffff"
-                                  radiusLineWidth={1.5}
-                                  wheelRadius={130}
-                                  fontSize={22}
-                                  textDistance={92}
-                                  fontWeight={700}
-                                  keepUpright
-                                  maxLabelLength={16}
-                                  onStopSpinning={() => {
-                                    // Allow re-spins by resetting trigger to 0 after spin ends
-                                    setWheelRotation(0);
-                                    setTimeout(() => setShowPrize(true), 1000);
+                                  onTransitionEnd={() => {
+                                    if (mustStartSpinning) {
+                                      console.log('Wheel stopped spinning, prize number was:', prizeNumber);
+                                      setMustStartSpinning(false);
+                                      setShowPrize(true);
+                                    }
                                   }}
-                                />
+                                >
+                                  {/* 8 wheel segments */}
+                                  {[
+                                    { label: 'No Prize', color: '#FF5252', textColor: '#fff' },
+                                    { label: 'VIP', color: '#4CAF50', textColor: '#fff' },
+                                    { label: 'Gift', color: '#2196F3', textColor: '#fff' },
+                                    { label: 'No Prize', color: '#FFC107', textColor: '#000' },
+                                    { label: '50%', color: '#9C27B0', textColor: '#fff' },
+                                    { label: 'No Prize', color: '#FF9800', textColor: '#fff' },
+                                    { label: '25%', color: '#00BCD4', textColor: '#fff' },
+                                    { label: 'Free', color: '#8BC34A', textColor: '#fff' }
+                                  ].map((segment, index) => (
+                                    <div
+                                      key={index}
+                                      style={{
+                                        position: 'absolute',
+                                        width: '50%',
+                                        height: '50%',
+                                        transformOrigin: '100% 100%',
+                                        transform: `rotate(${index * 45}deg)`,
+                                        backgroundColor: segment.color,
+                                        clipPath: 'polygon(0 0, 100% 0, 100% 100%)'
+                                      }}
+                                    >
+                                      <div style={{
+                                        position: 'absolute',
+                                        top: '32px',
+                                        right: '20px',
+                                        fontSize: '14px',
+                                        fontWeight: 'bold',
+                                        color: segment.textColor,
+                                        transform: 'rotate(-22.5deg)',
+                                        transformOrigin: 'center',
+                                        whiteSpace: 'nowrap'
+                                      }}>
+                                        {segment.label}
+                                      </div>
+                                    </div>
+                                  ))}
+                                  
+                                  {/* Center circle */}
+                                  <div style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: '40px',
+                                    height: '40px',
+                                    backgroundColor: '#333',
+                                    borderRadius: '50%',
+                                    zIndex: 5
+                                  }}></div>
+                                </div>
                               </div>
                             </div>
                             
