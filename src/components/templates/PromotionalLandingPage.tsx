@@ -2,7 +2,111 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import { Wheel } from 'react-custom-roulette';
 import '../../styles/wheel.css';
+
+/*
+ * ========================================
+ * PRIZE WHEEL DOCUMENTATION
+ * ========================================
+ * 
+ * This component implements a promotional landing page with an animated prize wheel
+ * using the 'react-custom-roulette' library. Here's how the wheel system works:
+ * 
+ * 1. WHEEL CONFIGURATION:
+ * ----------------------
+ * The wheel has 8 segments (index 0-7) with the following prizes:
+ * - Index 0: 'No Prize' (Red background)
+ * - Index 1: 'VIP' (Green background)
+ * - Index 2: 'Gift' (Blue background)
+ * - Index 3: 'No Prize' (Yellow background)
+ * - Index 4: '50%' (Purple background)
+ * - Index 5: 'No Prize' (Orange background)
+ * - Index 6: '25%' (Cyan background)
+ * - Index 7: 'Free Setup' (Light Green background)
+ * 
+ * 2. HOW TO SPIN THE WHEEL:
+ * ------------------------
+ * The wheel is controlled by two main state variables:
+ * - `mustStartSpinning`: Boolean that triggers the spin animation
+ * - `prizeNumber`: Integer (0-7) that determines which segment the wheel lands on
+ * 
+ * To spin the wheel:
+ * a) Set the target prize number: setPrizeNumber(targetIndex)
+ * b) Start the spin: setMustStartSpinning(true)
+ * c) The wheel will automatically stop on the specified prize
+ * d) Reset spinning state: setMustStartSpinning(false)
+ * 
+ * 3. HOW TO CONTROL WHICH PRIZE THE WHEEL LANDS ON:
+ * -------------------------------------------------
+ * The wheel will ALWAYS land on the segment specified by `prizeNumber`.
+ * This is NOT random - it's deterministic based on the prizeNumber value.
+ * 
+ * To make the wheel land on a specific prize:
+ * - For 'No Prize' (Red): setPrizeNumber(0)
+ * - For 'VIP': setPrizeNumber(1)
+ * - For 'Gift': setPrizeNumber(2)
+ * - For 'No Prize' (Yellow): setPrizeNumber(3)
+ * - For '50%': setPrizeNumber(4)
+ * - For 'No Prize' (Orange): setPrizeNumber(5)
+ * - For '25%': setPrizeNumber(6)
+ * - For 'Free Setup': setPrizeNumber(7)
+ * 
+ * 4. ANIMATION SEQUENCE:
+ * ---------------------
+ * The wheel is part of a larger animation sequence that includes:
+ * - QR code scanning (Step 1)
+ * - Form filling (Step 2)
+ * - Qualification questions (Step 3)
+ * - Wheel spinning (Step 4)
+ * - Prize reveal (Step 5)
+ * 
+ * The wheel appears at animationStep 4 and spins automatically after 20 seconds
+ * in the demo animation. In the current implementation, it's set to always land
+ * on prize index 7 ('Free Setup') for demonstration purposes.
+ * 
+ * 5. CUSTOMIZING THE WHEEL:
+ * -------------------------
+ * To modify the wheel behavior:
+ * 
+ * a) Change prizes: Edit the `data` array in the Wheel component (lines 687-696)
+ * b) Add randomness: Replace `const targetPrize = 7;` with `Math.floor(Math.random() * 8)`
+ * c) Weight certain prizes: Use conditional logic to favor certain prize numbers
+ * d) Change spin duration: Modify the `spinDuration` prop (currently 3.0 seconds)
+ * e) Customize appearance: Modify colors, fonts, and styling in the data array
+ * 
+ * 6. IMPORTANT IMPLEMENTATION NOTES:
+ * ---------------------------------
+ * - The wheel uses CSS scaling (scale(0.5)) to fit in the mobile mockup
+ * - Spinning state is managed with small delays to ensure clean state transitions
+ * - The onStopSpinning callback is intentionally minimal to avoid state conflicts
+ * - Debug information is shown in development mode to help with testing
+ * 
+ * 7. EXAMPLE USAGE FOR DIFFERENT SCENARIOS:
+ * -----------------------------------------
+ * 
+ * // Always give the best prize (Free Setup):
+ * setPrizeNumber(7);
+ * setMustStartSpinning(true);
+ * 
+ * // Random prize:
+ * setPrizeNumber(Math.floor(Math.random() * 8));
+ * setMustStartSpinning(true);
+ * 
+ * // Weighted toward good prizes (avoid "No Prize" segments):
+ * const goodPrizes = [1, 2, 4, 6, 7]; // VIP, Gift, 50%, 25%, Free Setup
+ * setPrizeNumber(goodPrizes[Math.floor(Math.random() * goodPrizes.length)]);
+ * setMustStartSpinning(true);
+ * 
+ * // Based on user qualification level:
+ * if (selectedRole === 'Owner / Executive' && selectedTimeline === 'Actively looking now') {
+ *   setPrizeNumber(7); // Give best prize to qualified leads
+ * } else {
+ *   setPrizeNumber(Math.floor(Math.random() * 8)); // Random for others
+ * }
+ * 
+ * ========================================
+ */
 
 export default function PromotionalLandingPage() {
   const [email, setEmail] = useState('');
@@ -27,10 +131,34 @@ export default function PromotionalLandingPage() {
   const [emailCompleted, setEmailCompleted] = useState(false);
   const [phoneCompleted, setPhoneCompleted] = useState(false);
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
-  const [wheelRotation, setWheelRotation] = useState(0);
-  const [mustStartSpinning, setMustStartSpinning] = useState(false);
-  const [prizeNumber, setPrizeNumber] = useState(0);
-  const [showPrize, setShowPrize] = useState(false);
+  
+  // WHEEL STATE VARIABLES:
+  // ======================
+  const [wheelRotation, setWheelRotation] = useState(0); // Not used by react-custom-roulette, kept for compatibility
+  const [mustStartSpinning, setMustStartSpinning] = useState(false); // CRITICAL: Controls when wheel starts spinning
+  const [prizeNumber, setPrizeNumber] = useState(0); // CRITICAL: Controls which segment (0-7) the wheel lands on
+  const [showPrize, setShowPrize] = useState(false); // Controls when to show the prize reveal screen
+  const [winningPrize, setWinningPrize] = useState(''); // Stores winning prize text
+  
+  // Prize wheel configuration - matches wheel page exactly
+  const prizes = [
+    // Segment 0:
+    { option: 'No Prize', style: { backgroundColor: '#FF5252', textColor: '#fff' } },
+    // Segment 1:
+    { option: 'VIP', style: { backgroundColor: '#4CAF50', textColor: '#fff' } },
+    // Segment 2:
+    { option: 'Gift', style: { backgroundColor: '#2196F3', textColor: '#fff' } },
+    // Segment 3:
+    { option: 'No Prize', style: { backgroundColor: '#FFC107', textColor: '#000' } },
+    // Segment 4:
+    { option: '50%', style: { backgroundColor: '#9C27B0', textColor: '#fff' } },
+    // Segment 5:
+    { option: 'No Prize', style: { backgroundColor: '#FF9800', textColor: '#fff' } },
+    // Segment 6:
+    { option: '25%', style: { backgroundColor: '#00BCD4', textColor: '#fff' } },
+    // Segment 7:
+    { option: 'Free Setup', style: { backgroundColor: '#8BC34A', textColor: '#fff' } }
+  ];
   // Qualify step states
   const [qualifyStep, setQualifyStep] = useState(0);
   const [selectedRole, setSelectedRole] = useState('');
@@ -65,6 +193,7 @@ export default function PromotionalLandingPage() {
     setPhoneValue('');
     setVerificationCode(['', '', '', '', '', '']);
     setShowPrize(false);
+    setWinningPrize(''); // Clear winning prize text
     setQualifyStep(0);
     setSelectedRole('');
     setSelectedTimeline('');
@@ -117,6 +246,7 @@ export default function PromotionalLandingPage() {
     setVerificationCode(['', '', '', '', '', '']);
     setWheelRotation(0);
     setShowPrize(false);
+    setWinningPrize(''); // Clear winning prize text
     setQualifyStep(0);
     setSelectedRole('');
     setSelectedTimeline('');
@@ -212,9 +342,41 @@ export default function PromotionalLandingPage() {
     // Step 11: Spin wheel
     const spinWheelTimer = setTimeout(() => {
       console.log('Step 11: Spinning wheel...');
-      // Set the prize number (0-7 for the 8 segments)
-      // For demo purposes, we'll use a specific prize number (e.g., 7 for Free Setup)
-      const targetPrize = 7; // Math.floor(Math.random() * 8) for random prize
+      
+      /* 
+       * PRIZE SELECTION LOGIC:
+       * =====================
+       * This is where you control which prize the wheel lands on.
+       * The wheel will ALWAYS land on the segment specified by targetPrize.
+       * 
+       * Current implementation: Always gives 'Free Setup' (index 7) for demo
+       * 
+       * Alternative implementations:
+       * 1. Random: Math.floor(Math.random() * 8)
+       * 2. Weighted: Favor good prizes over "No Prize" segments
+       * 3. Qualification-based: Give better prizes to qualified leads
+       * 4. Time-based: Different prizes at different times
+       */
+      const targetPrize = 7; // Always 'Free Setup' for demo - change this line to modify behavior
+      
+      // Alternative prize selection examples (uncomment to use):
+      
+      // Random prize:
+      // const targetPrize = Math.floor(Math.random() * 8);
+      
+      // Weighted toward good prizes (avoids "No Prize" segments 0, 3, 5):
+      // const goodPrizes = [1, 2, 4, 6, 7]; // VIP, Gift, 50%, 25%, Free Setup
+      // const targetPrize = goodPrizes[Math.floor(Math.random() * goodPrizes.length)];
+      
+      // Based on user qualification:
+      // let targetPrize;
+      // if (selectedRole === 'Owner / Executive' && selectedTimeline === 'Actively looking now') {
+      //   targetPrize = 7; // Best prize for highly qualified leads
+      // } else if (selectedRole === 'Manager / Director') {
+      //   targetPrize = Math.random() < 0.7 ? [1, 2, 4, 6, 7][Math.floor(Math.random() * 5)] : Math.floor(Math.random() * 8);
+      // } else {
+      //   targetPrize = Math.floor(Math.random() * 8); // Completely random for others
+      // }
       
       // Reset states before starting new spin
       setShowPrize(false);
@@ -233,7 +395,7 @@ export default function PromotionalLandingPage() {
       
       animationTimers.current.push(startSpinTimer);
       
-      // Step 12: Show prize after wheel completes spinning (4s spin + 1s buffer)
+      // Step 12: Show prize after wheel completes spinning (3s spin + 1s buffer)
       const showPrizeTimer = setTimeout(() => {
         console.log('Step 12: Showing prize...');
         setShowPrize(true);
@@ -251,7 +413,7 @@ export default function PromotionalLandingPage() {
         }, 5000);
         animationTimers.current.push(resetTimer);
         
-      }, 5000); // 4s spin + 1s buffer
+      }, 12000); // 3s spin + 1s buffer
       animationTimers.current.push(showPrizeTimer);
       
     }, 20000);
@@ -662,122 +824,67 @@ export default function PromotionalLandingPage() {
                               <div className="w-16 h-1 bg-[#3777ff] mx-auto rounded-full mb-2"></div>
                             </div>
                             
-                            {/* Prize Wheel - Custom CSS implementation */}
-                            <div style={{ position: "relative", height: "280px", width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                              <div style={{ width: "250px", height: "250px", position: "relative" }}>
-                                {/* Debug info */}
-                                {process.env.NODE_ENV === 'development' && (
-                                  <div style={{ position: 'absolute', top: '-25px', left: '0', fontSize: '8px', color: 'white', zIndex: 1000 }}>
-                                    Spinning: {mustStartSpinning ? 'YES' : 'NO'} | Prize: {prizeNumber}
-                                  </div>
-                                )}
-                                
-                                {/* Wheel pointer */}
-                                <div style={{
-                                  position: 'absolute',
-                                  top: '-12px',
-                                  left: '50%',
-                                  transform: 'translateX(-50%)',
-                                  width: '0',
-                                  height: '0',
-                                  borderLeft: '15px solid transparent',
-                                  borderRight: '15px solid transparent',
-                                  borderBottom: '26px solid #fff',
-                                  zIndex: 10
-                                }}></div>
-                                
-                                {/* Spinning wheel */}
-                                <div 
-                                  style={{
-                                    width: '250px',
-                                    height: '250px',
-                                    borderRadius: '50%',
-                                    position: 'relative',
-                                    overflow: 'hidden',
-                                    border: '5px solid #333',
-                                    transform: mustStartSpinning ? `rotate(${1800 + (prizeNumber * 45)}deg)` : 'rotate(0deg)',
-                                    transition: mustStartSpinning ? 'transform 4s cubic-bezier(0.23, 1, 0.32, 1)' : 'none'
-                                  }}
-                                  onTransitionEnd={() => {
-                                    if (mustStartSpinning) {
-                                      console.log('Wheel stopped spinning, prize number was:', prizeNumber);
-                                      setMustStartSpinning(false);
-                                      setShowPrize(true);
-                                    }
-                                  }}
-                                >
-                                  {/* 8 wheel segments */}
-                                  {[
-                                    { label: 'No Prize', color: '#FF5252', textColor: '#fff' },
-                                    { label: 'VIP', color: '#4CAF50', textColor: '#fff' },
-                                    { label: 'Gift', color: '#2196F3', textColor: '#fff' },
-                                    { label: 'No Prize', color: '#FFC107', textColor: '#000' },
-                                    { label: '50%', color: '#9C27B0', textColor: '#fff' },
-                                    { label: 'No Prize', color: '#FF9800', textColor: '#fff' },
-                                    { label: '25%', color: '#00BCD4', textColor: '#fff' },
-                                    { label: 'Free', color: '#8BC34A', textColor: '#fff' }
-                                  ].map((segment, index) => (
-                                    <div
-                                      key={index}
-                                      style={{
-                                        position: 'absolute',
-                                        width: '50%',
-                                        height: '50%',
-                                        transformOrigin: '100% 100%',
-                                        transform: `rotate(${index * 45}deg)`,
-                                        backgroundColor: segment.color,
-                                        clipPath: 'polygon(0 0, 100% 0, 100% 100%)'
-                                      }}
-                                    >
-                                      {segment.label === 'No Prize' ? (
-                                        // Vertical stacked text for "No Prize"
-                                        <div style={{
-                                          position: 'absolute',
-                                          top: '25px',
-                                          right: '15px',
-                                          fontSize: '12px',
-                                          fontWeight: 'bold',
-                                          color: segment.textColor,
-                                          transform: 'rotate(-22.5deg)',
-                                          transformOrigin: 'center',
-                                          textAlign: 'center',
-                                          lineHeight: '1.1'
-                                        }}>
-                                          <div>No</div>
-                                          <div>Prize</div>
-                                        </div>
-                                      ) : (
-                                        // Horizontal text for other prizes
-                                        <div style={{
-                                          position: 'absolute',
-                                          top: '32px',
-                                          right: '20px',
-                                          fontSize: '14px',
-                                          fontWeight: 'bold',
-                                          color: segment.textColor,
-                                          transform: 'rotate(-22.5deg)',
-                                          transformOrigin: 'center',
-                                          whiteSpace: 'nowrap'
-                                        }}>
-                                          {segment.label}
-                                        </div>
-                                      )}
-                                    </div>
-                                  ))}
-                                  
-                                  {/* Center circle */}
-                                  <div style={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    width: '40px',
-                                    height: '40px',
-                                    backgroundColor: '#333',
-                                    borderRadius: '50%',
-                                    zIndex: 5
-                                  }}></div>
+                            {/* Prize Wheel - React Custom Roulette with CSS Scaling */}
+                            <div style={{ position: "relative", height: "180px", width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                              {/* Debug info */}
+                              {process.env.NODE_ENV === 'development' && (
+                                <div style={{ position: 'absolute', top: '-25px', left: '0', fontSize: '8px', color: 'white', zIndex: 1000 }}>
+                                  Spinning: {mustStartSpinning ? 'YES' : 'NO'} | Prize: {prizeNumber}
                                 </div>
+                              )}
+                              
+                              <div style={{ 
+                                width: "300px", 
+                                height: "300px", 
+                                transform: "scale(0.5)", // Scales wheel to 50% to fit in mobile mockup
+                                transformOrigin: "center center",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center"
+                              }}>
+                                {/* 
+                                  WHEEL COMPONENT CONFIGURATION:
+                                  =============================
+                                  This is the main Wheel component from 'react-custom-roulette'.
+                                  
+                                  Key Props:
+                                  - mustStartSpinning: Controls when the wheel starts spinning
+                                  - prizeNumber: Determines which segment (0-7) the wheel lands on
+                                  - data: Array of 8 segments with prizes and styling
+                                  - spinDuration: How long the spin animation takes (3 seconds)
+                                  
+                                  The wheel segments are arranged clockwise starting from the top:
+                                  Index 0 (top): 'No Prize' (Red)
+                                  Index 1: 'VIP' (Green) 
+                                  Index 2: 'Gift' (Blue)
+                                  Index 3: 'No Prize' (Yellow)
+                                  Index 4: '50%' (Purple)
+                                  Index 5: 'No Prize' (Orange)
+                                  Index 6: '25%' (Cyan)
+                                  Index 7: 'Free Setup' (Light Green)
+                                */}
+                                <Wheel
+                                  mustStartSpinning={mustStartSpinning} // Boolean: triggers spin animation
+                                  prizeNumber={prizeNumber} // Integer 0-7: determines landing segment (7 = Free Setup)
+                                  data={prizes} // Array of 8 prize segments
+                                  onStopSpinning={() => {
+                                    console.log('Wheel stopped spinning on prize:', prizes[prizeNumber].option);
+                                    setWinningPrize(prizes[prizeNumber].option);
+                                    setMustStartSpinning(false); // Reset spinning state
+                                    // NOTE: The main animation timer handles showing the prize after the spin completes.
+                                  }}
+                                  // Visual styling props:
+                                  outerBorderColor="#333"      // Dark border around wheel
+                                  outerBorderWidth={3}         // Border thickness
+                                  innerBorderColor="#333"      // Inner border color
+                                  innerBorderWidth={0}         // No inner border
+                                  innerRadius={20}             // Size of center circle
+                                  radiusLineColor="#ffffff"    // Color of lines between segments
+                                  radiusLineWidth={2}          // Thickness of segment divider lines
+                                  fontSize={24}                // Text size on segments
+                                  textDistance={65}            // How far text is from center
+                                  spinDuration={0.9}           // Spin animation duration in seconds
+                                />
                               </div>
                             </div>
                             

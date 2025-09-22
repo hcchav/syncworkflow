@@ -2,40 +2,114 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { CustomWheel } from '../../components/ui/CustomWheel';
+import { Wheel } from 'react-custom-roulette';
 import '../../styles/wheel.css';
 
+/*
+ * ========================================
+ * PRIZE WHEEL PAGE DOCUMENTATION
+ * ========================================
+ * 
+ * This page implements a standalone prize wheel using the 'react-custom-roulette' npm package.
+ * The wheel is configured to ALWAYS land on "Free Setup" for demonstration purposes.
+ * 
+ * 1. WHEEL CONFIGURATION:
+ * ----------------------
+ * The wheel has 8 segments (index 0-7) with the following prizes:
+ * - Index 0: 'No Prize' (Red background)
+ * - Index 1: 'VIP' (Green background)
+ * - Index 2: 'Gift' (Blue background)
+ * - Index 3: 'No Prize' (Yellow background)
+ * - Index 4: '50%' (Purple background)
+ * - Index 5: 'No Prize' (Orange background)
+ * - Index 6: '25%' (Cyan background)
+ * - Index 7: 'Free Setup' (Light Green background) ← TARGET PRIZE
+ * 
+ * 2. HOW TO CONTROL WHICH PRIZE THE WHEEL LANDS ON:
+ * -------------------------------------------------
+ * The wheel will ALWAYS land on the segment specified by `prizeNumber`.
+ * To make it land on "Free Setup": setPrizeNumber(7)
+ * 
+ * Current implementation: Always lands on index 7 (Free Setup)
+ * 
+ * 3. HOW THE SPINNING WORKS:
+ * -------------------------
+ * - `mustStartSpinning`: Boolean that triggers the spin animation
+ * - `prizeNumber`: Integer (0-7) that determines landing segment
+ * - `spinDuration`: How long the spin takes (currently 2.5 seconds)
+ * 
+ * 4. STATE MANAGEMENT:
+ * -------------------
+ * - `mustStartSpinning`: Controls spin trigger
+ * - `prizeNumber`: Controls landing position (set to 7 for Free Setup)
+ * - `showPrize`: Controls prize reveal overlay
+ * - `winningPrize`: Stores the winning prize text for display
+ * 
+ * 5. CUSTOMIZATION OPTIONS:
+ * ------------------------
+ * To change behavior:
+ * - Random: setPrizeNumber(Math.floor(Math.random() * 8))
+ * - Specific prize: setPrizeNumber(desiredIndex)
+ * - Weighted: Use conditional logic to favor certain prizes
+ * 
+ * ========================================
+ */
+
 export default function WheelPage() {
-  const [wheelRotation, setWheelRotation] = useState(0);
-  const [showPrize, setShowPrize] = useState(false);
-  const [prizeNumber, setPrizeNumber] = useState(1);
-  const [winningPrize, setWinningPrize] = useState('');
+  // WHEEL STATE VARIABLES FOR REACT-CUSTOM-ROULETTE:
+  // ================================================
+  const [mustStartSpinning, setMustStartSpinning] = useState(false); // Controls when wheel starts spinning
+  const [showPrize, setShowPrize] = useState(false); // Controls prize reveal overlay
+  const [prizeNumber, setPrizeNumber] = useState(7); // CRITICAL: Set to 7 to always land on "Free Setup"
+  const [winningPrize, setWinningPrize] = useState(''); // Stores winning prize text
   
   const prizes = [
-    { option: 'Notebook', style: { backgroundColor: '#FF5252', textColor: 'white' } },
-    { option: 'VIP Badge', style: { backgroundColor: '#4CAF50', textColor: 'white' } },
-    { option: 'Gift Card', style: { backgroundColor: '#2196F3', textColor: 'white' } },
-    { option: 'T-Shirt', style: { backgroundColor: '#FFC107', textColor: 'white' } },
-    { option: 'Stickers', style: { backgroundColor: '#9C27B0', textColor: 'white' } },
-    { option: 'Mug', style: { backgroundColor: '#FF9800', textColor: 'white' } },
-    { option: 'Discount', style: { backgroundColor: '#00BCD4', textColor: 'white' } },
-    { option: 'Pen', style: { backgroundColor: '#8BC34A', textColor: 'white' } }
+    // Segment 0:
+    { option: 'No Prize', style: { backgroundColor: '#FF5252', textColor: '#fff' } },
+    // Segment 1:
+    { option: 'VIP', style: { backgroundColor: '#4CAF50', textColor: '#fff' } },
+    // Segment 2:
+    { option: 'Gift', style: { backgroundColor: '#2196F3', textColor: '#fff' } },
+    // Segment 3:
+    { option: 'No Prize', style: { backgroundColor: '#FFC107', textColor: '#000' } },
+    // Segment 4:
+    { option: '50%', style: { backgroundColor: '#9C27B0', textColor: '#fff' } },
+    // Segment 5:
+    { option: 'No Prize', style: { backgroundColor: '#FF9800', textColor: '#fff' } },
+    // Segment 6:
+    { option: '25%', style: { backgroundColor: '#00BCD4', textColor: '#fff' } },
+    // Segment 7:
+    { option: 'Free Setup', style: { backgroundColor: '#8BC34A', textColor: '#fff' } }
   ];
   
   const handleSpinClick = () => {
-    if (wheelRotation === 0) {
-      // Generate random prize number (0-7)
-      const randomPrize = Math.floor(Math.random() * prizes.length);
-      setPrizeNumber(randomPrize);
-      setWheelRotation(1);
-      setShowPrize(false);
+    if (!mustStartSpinning) {
+      /*
+       * PRIZE SELECTION LOGIC:
+       * =====================
+       * Currently set to ALWAYS land on "Free Setup" (index 7)
+       * 
+       * To change this behavior, modify the setPrizeNumber call:
+       * - Random: setPrizeNumber(Math.floor(Math.random() * prizes.length))
+       * - Specific prize: setPrizeNumber(desiredIndex)
+       * - Weighted: Use conditional logic to favor certain prizes
+       */
+      setPrizeNumber(7); // Always land on "Free Setup" (index 7)
+      
+      // Alternative implementations (uncomment to use):
+      // const randomPrize = Math.floor(Math.random() * prizes.length); // Random
+      // setPrizeNumber(randomPrize);
+      
+      setMustStartSpinning(true); // Start the spin animation
+      setShowPrize(false); // Hide any existing prize display
     }
   };
   
   const resetWheel = () => {
-    setWheelRotation(0);
-    setShowPrize(false);
-    setWinningPrize('');
+    setMustStartSpinning(false); // Stop spinning state
+    setShowPrize(false); // Hide prize overlay
+    setWinningPrize(''); // Clear winning prize text
+    setPrizeNumber(7); // Reset to Free Setup for next spin
   };
 
   return (
@@ -71,24 +145,39 @@ export default function WheelPage() {
           {/* Prize Wheel */}
           <div style={{ position: "relative", height: "350px", width: "100%" }}>
             <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }}>
-              <CustomWheel
-                mustStartSpinning={wheelRotation > 0}
-                prizeNumber={prizeNumber}
-                data={prizes}
-                spinDuration={0.8}
-                outerBorderColor="#333"
-                outerBorderWidth={1}
-                innerBorderColor="#333"
-                innerBorderWidth={3}
-                innerRadius={15}
-                radiusLineColor=""
-                radiusLineWidth={1}
-                fontSize={28}
-                textDistance={60}
-                fontWeight={700}
+              {/* 
+                REACT-CUSTOM-ROULETTE WHEEL COMPONENT:
+                =====================================
+                This uses the official npm package 'react-custom-roulette'
+                
+                Key Props:
+                - mustStartSpinning: Boolean to trigger spin (controlled by button)
+                - prizeNumber: Index (0-7) determining landing segment (set to 7 for Free Setup)
+                - data: Array of 8 prize segments with styling
+                - spinDuration: Animation duration (0.9 seconds)
+                
+                The wheel will ALWAYS land on the segment specified by prizeNumber.
+                Current setting: prizeNumber = 7 (Free Setup)
+              */}
+              <Wheel
+                mustStartSpinning={mustStartSpinning} // Boolean: triggers spin animation
+                prizeNumber={prizeNumber} // Integer 0-7: determines landing segment (7 = Free Setup)
+                data={prizes} // Array of 8 prize segments
+                spinDuration={0.9} // Spin animation duration in seconds
+                outerBorderColor="#333" // Dark border around wheel
+                outerBorderWidth={3} // Border thickness
+                innerBorderColor="#333" // Inner border color
+                innerBorderWidth={0} // No inner border
+                innerRadius={20} // Size of center circle
+                radiusLineColor="#ffffff" // Color of lines between segments
+                radiusLineWidth={2} // Thickness of segment divider lines
+                fontSize={24} // Text size on segments
+                textDistance={65} // How far text is from center
                 onStopSpinning={() => {
+                  console.log('Wheel stopped spinning on prize:', prizes[prizeNumber].option);
                   setWinningPrize(prizes[prizeNumber].option);
-                  setTimeout(() => setShowPrize(true), 500);
+                  setMustStartSpinning(false); // Reset spinning state
+                  setTimeout(() => setShowPrize(true), 500); // Show prize after delay
                 }}
               />
             </div>
@@ -98,10 +187,10 @@ export default function WheelPage() {
           <div className="text-center mt-4">
             <button 
               onClick={handleSpinClick}
-              disabled={wheelRotation > 0}
-              className={`mb-2 bg-[#0bfe88] text-black font-bold py-3 px-10 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${wheelRotation > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(11,254,136,0.5)] transform hover:scale-105'}`}
+              disabled={mustStartSpinning} // Disable while spinning
+              className={`mb-2 bg-[#0bfe88] text-black font-bold py-3 px-10 rounded-md uppercase hover:bg-opacity-90 transition-all duration-300 ${mustStartSpinning ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-[0_0_15px_rgba(11,254,136,0.5)] transform hover:scale-105'}`}
             >
-              {wheelRotation > 0 ? 'SPINNING...' : 'SPIN'}
+              {mustStartSpinning ? 'SPINNING...' : 'SPIN'}
             </button>
           </div>
         </div>
@@ -116,6 +205,7 @@ export default function WheelPage() {
               
               <p className="text-white font-bold mb-1">You won a</p>
               <p className="text-[#0bfe88] text-2xl font-bold mb-2">{winningPrize}</p>
+              {winningPrize === 'Free Setup' && <p className="text-gray-300 text-sm mb-2">(Value $500)</p>}
               <div className="text-3xl mb-1">🏆</div>
               <p className="text-gray-400 text-xs mb-4">Check your email for details</p>
               
