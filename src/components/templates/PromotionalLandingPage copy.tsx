@@ -995,7 +995,7 @@ export default function PromotionalLandingPage() {
                         {/* Step 5: Prize Wheel */}
                         <div className={`transition-all duration-500 ${animationStep === 4 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           {/* Ultra-compact Prize Wheel Layout */}
-                          <div className="flex flex-col items-center mt-12" style={{ height: "350px", padding: "40px 0 0 0" }}>
+                          <div className="flex flex-col items-center mt-8" style={{ height: "350px", padding: "25px 0 0 0" }}>
                             {/* Title */}
                             <div className="text-center">
                               <span className="text-white text-lg font-bold tracking-wider block">SPIN TO WIN</span>
@@ -1096,146 +1096,9 @@ export default function PromotionalLandingPage() {
         </div>
       </section>
       
-      {/* Why Your Current Leads Are Costing You Money */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Why Your Current Leads Are Costing You Money</h2>
-            <p className="text-lg text-gray-700 max-w-4xl mx-auto mb-8">
-              Surveys show that nearly half of all salespeople fail to meet their quota every year. This is because sales behaviors are often not aligned with how customers make buying decisions. Your sales team wastes precious time chasing leads who lack buying intent.
-            </p>
-          </div>
-          
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Our System Solves the Sales Disconnect by Answering Hoffeld's "Six Whys":</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#3777ff] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-3">Filter for "Why Change?"</h4>
-                <p className="text-gray-600">We use targeted qualification questions to uncover the prospect's pain point and what is undesirable about their current situation, justifying the need for a solution.</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#3777ff] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-3">Validate the "Why Now?" Factor</h4>
-                <p className="text-gray-600">We gather key data points (e.g., purchasing timeline) that help your sales team prioritize prospects with the highest propensity to buy.</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[#3777ff] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                <h4 className="font-semibold text-gray-900 mb-3">Generate Distinct Value</h4>
-                <p className="text-gray-600">Your offering gains unique appeal because attendees volunteer high-value information, positioning your solution as the only one that meets their specific needs.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    
 
-      {/* The Scan-to-Win Difference: Qualification by Design */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">The Scan-to-Win Difference: Qualification by Design</h2>
-            <p className="text-lg text-gray-700 max-w-4xl mx-auto">
-              Gamification works because it appeals to the psychological drivers of achievement and reward. We leverage the highly engaging Spin-to-Win mechanism to motivate attendees to complete the necessary qualification steps.
-            </p>
-          </div>
-          
-          <div className="space-y-8">
-            {/* Step 1 */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8">
-              <div className="flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-[#3777ff] text-white rounded-full flex items-center justify-center text-xl font-bold">1</div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">High-Engagement Entry</h3>
-                  <p className="text-gray-700 mb-4">The QR Code and Spin-to-Win promise clear immediate value, increasing foot traffic (gamified booths see 40% more visitors) and attendee engagement (up to 73% higher).</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Step 2 */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8">
-              <div className="flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-[#10b981] text-white rounded-full flex items-center justify-center text-xl font-bold">2</div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Contact Validation (Friction for Quality)</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-medium text-gray-800">Action:</p>
-                      <p className="text-gray-700">Attendee enters Name, Email, and Phone. They receive a verification code they must enter.</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800">Exhibitor Benefit:</p>
-                      <p className="text-gray-700">This step achieves guaranteed data integrity and eliminates spam, ensuring your sales reps are contacting genuine prospects. The required entry of the code is an incremental commitment that builds momentum toward the larger goal.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="bg-gradient-to-r from-purple-50 to-violet-50 rounded-2xl p-8">
-              <div className="flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-[#8b5cf6] text-white rounded-full flex items-center justify-center text-xl font-bold">3</div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Lead Qualification (Intent Capture)</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-medium text-gray-800">Action:</p>
-                      <p className="text-gray-700">Attendee answers your 2 mandatory qualifying questions.</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800">Exhibitor Benefit:</p>
-                      <p className="text-gray-700">We use multiple-choice/drop-down menus to reduce the physical length of the form and limit the amount of anxiety a visitor has. This instantly converts Marketing Qualified Leads (MQLs) into Sales Qualified Leads (SQLs).</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Step 4 */}
-            <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-8">
-              <div className="flex items-start gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-[#f59e0b] text-white rounded-full flex items-center justify-center text-xl font-bold">4</div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Prize Delivery</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-medium text-gray-800">Action:</p>
-                      <p className="text-gray-700">Attendee receives the code to spin the digital wheel at your booth.</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800">Exhibitor Benefit:</p>
-                      <p className="text-gray-700">The prize acts as reciprocity, rewarding the attendee for the high commitment required, leaving them with a positive brand feeling.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+     
 
       {/* Features Section */}
       <section id="learn-more" className="bg-white text-gray-900 py-16">
