@@ -567,12 +567,11 @@ export default function PromotionalLandingPage() {
               
               {/* Main Headline */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              Need More <span className="decorated text-shadow-color-white">Qualified Leads</span> at Your Next Tradeshow? 
-              </h1>
+              Guarantee Sales<span className="decorated">Qualified Leads</span> at Your Next Tradeshow</h1>
               
               {/* Subheadline */}
               <p className="text-lg md:text-xl text-white/80 leading-relaxed select-none">
-              Attendee Process → Scan, Qualify, Win, Convert.</p>
+              The Spin-to-Win System leverages gamification and multi-step validation to identify high-intent buyers at the booth, ensuring your sales team focuses only on prospects ready to buy.</p>
               
              
               
@@ -583,7 +582,7 @@ export default function PromotionalLandingPage() {
                   onClick={openModal}
                   className="bg-[#f0d418] hover:bg-opacity-90 text-black font-bold text-xl px-8 py-4 rounded-xl transition-all transform hover:scale-105 inline-flex items-center justify-center shadow-xl"
                 >
-                  Sign Up - Free Setup ($500 Value)
+                  Sign up for Free
                 </a>
                 <a 
                   href="#how-it-works"
