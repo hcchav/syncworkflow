@@ -162,11 +162,11 @@ const BoatShowPromo = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             {/* Logo Row */}
-            <div className="flex items-center gap-8 opacity-60">
-              <div className="text-gray-400 font-medium">Trusted by leading exhibitors:</div>
-              <div className="flex items-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 opacity-60">
+              <div className="text-gray-400 font-medium text-center sm:text-left">Trusted by leading exhibitors:</div>
+              <div className="flex items-center gap-3 sm:gap-6 flex-wrap justify-center">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="w-24 h-12 bg-gray-200 rounded flex items-center justify-center">
+                  <div key={i} className="w-20 sm:w-24 h-10 sm:h-12 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
                     <span className="text-gray-400 text-xs">Logo {i}</span>
                   </div>
                 ))}
