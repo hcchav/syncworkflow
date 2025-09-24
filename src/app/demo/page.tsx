@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import ContactForm from '@/components/forms/ContactForm';
+import { Check, Code, Palette, Shield, Zap, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Demo Page - All P0 Features',
@@ -87,7 +88,7 @@ export default function DemoPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="card card-hover p-6">
               <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center mb-4">
-                <span className="text-white font-bold">✓</span>
+                <Code className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-brand-dark mb-2">
                 Next.js 15 + TypeScript
@@ -99,7 +100,7 @@ export default function DemoPage() {
 
             <div className="card card-hover p-6">
               <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center mb-4">
-                <span className="text-white font-bold">✓</span>
+                <Palette className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-brand-dark mb-2">
                 Tailwind + shadcn/ui
@@ -111,7 +112,7 @@ export default function DemoPage() {
 
             <div className="card card-hover p-6">
               <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center mb-4">
-                <span className="text-white font-bold">✓</span>
+                <Shield className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-brand-dark mb-2">
                 ESLint + Prettier
@@ -123,7 +124,7 @@ export default function DemoPage() {
 
             <div className="card card-hover p-6">
               <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center mb-4">
-                <span className="text-white font-bold">✓</span>
+                <Check className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-brand-dark mb-2">
                 Husky Pre-commit
@@ -135,7 +136,7 @@ export default function DemoPage() {
 
             <div className="card card-hover p-6">
               <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center mb-4">
-                <span className="text-white font-bold">✓</span>
+                <Zap className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-brand-dark mb-2">
                 Environment Variables
@@ -147,7 +148,7 @@ export default function DemoPage() {
 
             <div className="card card-hover p-6">
               <div className="w-12 h-12 bg-brand-primary rounded-lg flex items-center justify-center mb-4">
-                <span className="text-white font-bold">✓</span>
+                <FileText className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-brand-dark mb-2">
                 Form Validation

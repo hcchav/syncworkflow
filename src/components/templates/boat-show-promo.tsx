@@ -1,8 +1,24 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import MinimalHeader from '@/components/layout/MinimalHeader';
+import MinimalHeader from '../layout/MinimalHeader';
+import { 
+  Smartphone, 
+  CheckCircle, 
+  Target, 
+  Gamepad2, 
+  Zap, 
+  Settings, 
+  BarChart3, 
+  PartyPopper,
+  TrendingDown,
+  Users,
+  Star,
+  ArrowRight,
+  Palette,
+  Shield
+} from 'lucide-react';
 
 const BoatShowPromo = () => {
   const [formData, setFormData] = useState({
@@ -183,14 +199,14 @@ const BoatShowPromo = () => {
             {/* Right: Icon Grid */}
             <div className="grid grid-cols-2 gap-6">
               {[
-                { icon: "📱", title: "Scan QR", desc: "Visitors scan to start—no apps needed" },
-                { icon: "✅", title: "Verify", desc: "Real contact info, validated instantly" },
-                { icon: "🎯", title: "Qualify", desc: "Smart questions identify hot prospects" },
-                { icon: "🎪", title: "Gamify", desc: "Prize wheel keeps them engaged" },
-                { icon: "⚡", title: "Automate", desc: "Leads flow directly to your CRM" }
+                { icon: <Smartphone className="w-8 h-8" />, title: "Scan QR", desc: "Visitors scan to start—no apps needed" },
+                { icon: <CheckCircle className="w-8 h-8" />, title: "Verify", desc: "Real contact info, validated instantly" },
+                { icon: <Target className="w-8 h-8" />, title: "Qualify", desc: "Smart questions identify hot prospects" },
+                { icon: <Gamepad2 className="w-8 h-8" />, title: "Gamify", desc: "Prize wheel keeps them engaged" },
+                { icon: <Zap className="w-8 h-8" />, title: "Automate", desc: "Leads flow directly to your CRM" }
               ].map((item, index) => (
                 <div key={index} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="text-3xl mb-3">{item.icon}</div>
+                  <div className="text-brand-primary mb-3">{item.icon}</div>
                   <h3 className="font-semibold text-[#171717] mb-2">{item.title}</h3>
                   <p className="text-gray-600 text-sm">{item.desc}</p>
                 </div>
@@ -278,38 +294,38 @@ const BoatShowPromo = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                icon: "🎯",
+                icon: <Target className="w-8 h-8" />,
                 title: "Smart Qualification",
                 desc: "Custom questions identify your ideal prospects automatically."
               },
               {
-                icon: "🔗",
+                icon: <Settings className="w-8 h-8" />,
                 title: "CRM Integration",
                 desc: "Works with Salesforce, HubSpot, and 50+ other systems."
               },
               {
-                icon: "📊",
+                icon: <BarChart3 className="w-8 h-8" />,
                 title: "Real-Time Analytics",
                 desc: "Track booth performance and lead quality in real-time."
               },
               {
-                icon: "🎨",
+                icon: <Palette className="w-8 h-8" />,
                 title: "Custom Branding",
                 desc: "Fully branded experience matches your company style."
               },
               {
-                icon: "📱",
+                icon: <Smartphone className="w-8 h-8" />,
                 title: "Mobile Optimized",
                 desc: "Perfect experience on any device, no apps required."
               },
               {
-                icon: "🛡️",
+                icon: <Shield className="w-8 h-8" />,
                 title: "Data Security",
                 desc: "GDPR compliant with enterprise-grade security."
               }
             ].map((feature, index) => (
               <div key={index} className="card card-hover p-8">
-                <div className="text-4xl mb-4">{feature.icon}</div>
+                <div className="text-brand-primary mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold text-[#171717] mb-3">{feature.title}</h3>
                 <p className="text-gray-600">{feature.desc}</p>
               </div>
@@ -335,7 +351,7 @@ const BoatShowPromo = () => {
             <div className="card p-8 border-l-4 border-red-400">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl">😞</span>
+                  <TrendingDown className="w-6 h-6 text-red-500" />
                 </div>
                 <h3 className="text-2xl font-bold text-[#171717]">Before: Traditional Methods</h3>
               </div>
@@ -362,7 +378,7 @@ const BoatShowPromo = () => {
             <div className="card p-8 border-l-4 border-green-400">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl">🎉</span>
+                  <PartyPopper className="w-6 h-6 text-green-500" />
                 </div>
                 <h3 className="text-2xl font-bold text-[#171717]">After: Our System</h3>
               </div>
