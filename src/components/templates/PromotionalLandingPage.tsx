@@ -2,8 +2,14 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { Wheel } from 'react-custom-roulette';
+import dynamic from 'next/dynamic';
 import '../../styles/wheel.css';
+
+// Dynamically import the Wheel component with SSR disabled
+const Wheel = dynamic(
+  () => import('react-custom-roulette').then((mod) => mod.Wheel),
+  { ssr: false }
+);
 
 /*
  * ========================================

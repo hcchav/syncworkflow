@@ -7,6 +7,9 @@ import { useEffect } from 'react';
 export default function PromotionalPage() {
   // Use CSS to hide the default navigation and footer elements but keep LandingNavbar visible
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Hide default navigation, footer, and announcement bar
     const style = document.createElement('style');
     style.innerHTML = `
@@ -32,7 +35,9 @@ export default function PromotionalPage() {
     
     return () => {
       // Clean up when component unmounts
-      document.head.removeChild(style);
+      if (typeof window !== 'undefined' && document.head.contains(style)) {
+        document.head.removeChild(style);
+      }
     };
   }, []);
 

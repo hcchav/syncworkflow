@@ -2,8 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Wheel } from 'react-custom-roulette';
+import dynamic from 'next/dynamic';
+import { PartyPopper, Trophy } from 'lucide-react';
 import '../../styles/wheel.css';
+
+// Dynamically import the Wheel component with SSR disabled
+const Wheel = dynamic(
+  () => import('react-custom-roulette').then((mod) => mod.Wheel),
+  { ssr: false }
+);
 
 /*
  * ========================================
@@ -199,14 +206,18 @@ export default function WheelPage() {
         {showPrize && (
           <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-10">
             <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 max-w-[80%] border border-gray-700 transform animate-fadeIn">
-              <div className="text-4xl mb-2">🎉</div>
+              <div className="flex justify-center mb-2">
+                <PartyPopper className="w-10 h-10 text-[#0bfe88]" />
+              </div>
               <h3 className="text-white text-xl font-bold mb-2">Congratulations!</h3>
               <div className="w-16 h-1 bg-[#3777FF] mx-auto rounded-full mb-4"></div>
               
               <p className="text-white font-bold mb-1">You won a</p>
               <p className="text-[#0bfe88] text-2xl font-bold mb-2">{winningPrize}</p>
               {winningPrize === 'Free Setup' && <p className="text-gray-300 text-sm mb-2">(Value $500)</p>}
-              <div className="text-3xl mb-1">🏆</div>
+              <div className="flex justify-center mb-1">
+                <Trophy className="w-8 h-8 text-[#FFDC35]" />
+              </div>
               <p className="text-gray-400 text-xs mb-4">Check your email for details</p>
               
               <button 
