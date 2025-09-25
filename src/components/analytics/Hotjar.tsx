@@ -22,13 +22,13 @@ export default function Hotjar({
       h.hj = h.hj || function(...args: any[]) { 
         (h.hj.q = h.hj.q || []).push(args); 
       };
-      h._hjSettings = { hjid, hjsv };
+      h._hjSettings = { hjid };
       a = o.getElementsByTagName('head')[0];
       r = o.createElement('script');
       r.async = 1;
-      r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+      r.src = t + h._hjSettings.hjid + j;
       a.appendChild(r);
-    })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+    })(window, document, 'https://static.hj.contentsquare.net/c/csq-', '.js');
 
     // Set up scroll depth tracking
     let scrollDepth50Fired = false;
@@ -57,7 +57,7 @@ export default function Hotjar({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [hjid, hjsv]);
+  }, [hjid]);
 
   return null;
 }
