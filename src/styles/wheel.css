@@ -66,7 +66,7 @@
 
 .scan-line {
   animation: scanAnimation 2s ease-in-out infinite;
-  box-shadow: 0 0 8px rgba(55, 119, 255, 0.8);
+  box-shadow: 0 0 8px rgba(255, 220, 53, 0.8);
 }
 
 /* Recording dot animation */
@@ -116,4 +116,29 @@
   stroke: #052740 !important;
   stroke-width: 3px !important;
   transform: scale(1.5) !important;
+}
+
+/* Viewfinder grid pattern for phone background */
+.viewfinder-grid {
+  background-image: 
+    linear-gradient(rgba(255, 220, 53, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 220, 53, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+}
+
+/* Scale-in animation for checkmarks */
+@keyframes scale-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

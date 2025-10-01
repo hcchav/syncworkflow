@@ -1,10 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import dynamic from 'next/dynamic';
 import Hotjar, { fireHotjarEvent } from '@/components/analytics/Hotjar';
+import '../../styles/wheel.css';
+
+// Dynamically import the Wheel component with SSR disabled
+const Wheel = dynamic(
+  () => import('react-custom-roulette').then((mod) => mod.Wheel),
+  { 
+    ssr: false,
+    loading: () => <div>Loading wheel...</div>
+  }
+);
 import { 
   CheckCircle, 
   Target, 
@@ -40,6 +51,103 @@ export default function BoatTradeshowLanding() {
   const [showVideo, setShowVideo] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [openFAQ, setOpenFAQ] = useState<string | null>(null);
+  
+  // Phone animation states
+  const [animationStep, setAnimationStep] = useState(0);
+  const [qrScanned, setQrScanned] = useState(false);
+  const [nameValue, setNameValue] = useState('');
+  const [emailValue, setEmailValue] = useState('');
+  const [phoneValue, setPhoneValue] = useState('');
+  const [nameCompleted, setNameCompleted] = useState(false);
+  const [emailCompleted, setEmailCompleted] = useState(false);
+  const [phoneCompleted, setPhoneCompleted] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [registrationExtended, setRegistrationExtended] = useState(false);
+  const [selectedRole, setSelectedRole] = useState('');
+  const [selectedTimeline, setSelectedTimeline] = useState('Actively looking now');
+  const [qualifyStep, setQualifyStep] = useState(1);
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
+  const [mustSpin, setMustSpin] = useState(false);
+  const [prizeNumber, setPrizeNumber] = useState(5); // Always land on 'Free Setup' (yellow segment)
+  const [winningPrize, setWinningPrize] = useState('');
+  
+  // Prize wheel data - correct format for react-custom-roulette
+  const wheelData = [
+    { option: 'No Prize', style: { backgroundColor: '#f3f4f6', textColor: '#171717' } },
+    { option: 'VIP', style: { backgroundColor: '#16a34a', textColor: 'white' } },
+    { option: 'Gift', style: { backgroundColor: '#171717', textColor: 'white' } },
+    { option: '25% Off', style: { backgroundColor: '#ffffff', textColor: '#171717' } },
+    { option: '50% Off', style: { backgroundColor: '#22c55e', textColor: 'white' } },
+    { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#171717' } },
+    { option: '$100 Off', style: { backgroundColor: '#171717', textColor: 'white' } },
+    { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#171717' } },
+  ];
+
+  // Typing animation function
+  const typeText = (text: string, setValue: (value: string) => void, setCompleted: (completed: boolean) => void, delay = 100) => {
+    return new Promise<void>((resolve) => {
+      let index = 0;
+      const interval = setInterval(() => {
+        setValue(text.slice(0, index + 1));
+        index++;
+        if (index >= text.length) {
+          clearInterval(interval);
+          setCompleted(true);
+          setTimeout(resolve, 300); // Small delay before next field
+        }
+      }, delay);
+    });
+  };
+
+  // Simplified typing sequence
+  const startTypingSequence = () => {
+    console.log('startTypingSequence called');
+    setIsTyping(true);
+    
+    // Type name first
+    let nameIndex = 0;
+    const nameText = 'John Anderson';
+    const nameInterval = setInterval(() => {
+      setNameValue(nameText.slice(0, nameIndex + 1));
+      nameIndex++;
+      if (nameIndex >= nameText.length) {
+        clearInterval(nameInterval);
+        setNameCompleted(true);
+        console.log('Name completed');
+        
+        // Start email after delay
+        setTimeout(() => {
+          let emailIndex = 0;
+          const emailText = 'john.anderson@email.com';
+          const emailInterval = setInterval(() => {
+            setEmailValue(emailText.slice(0, emailIndex + 1));
+            emailIndex++;
+            if (emailIndex >= emailText.length) {
+              clearInterval(emailInterval);
+              setEmailCompleted(true);
+              console.log('Email completed');
+              
+              // Start phone after delay
+              setTimeout(() => {
+                let phoneIndex = 0;
+                const phoneText = '(555) 123-4567';
+                const phoneInterval = setInterval(() => {
+                  setPhoneValue(phoneText.slice(0, phoneIndex + 1));
+                  phoneIndex++;
+                  if (phoneIndex >= phoneText.length) {
+                    clearInterval(phoneInterval);
+                    setPhoneCompleted(true);
+                    setIsTyping(false);
+                    console.log('Phone completed - all typing done');
+                  }
+                }, 100);
+              }, 300);
+            }
+          }, 60);
+        }, 300);
+      }
+    }, 80);
+  };
 
   const {
     register,
@@ -49,6 +157,187 @@ export default function BoatTradeshowLanding() {
   } = useForm<LeadFormData>({
     resolver: zodResolver(leadFormSchema),
   });
+
+  // Typing animation when registration step is active
+  useEffect(() => {
+    if (animationStep === 1) {
+      console.log('Registration step active - starting typing');
+      
+      // Reset form
+      setNameValue('');
+      setEmailValue('');
+      setPhoneValue('');
+      setNameCompleted(false);
+      setEmailCompleted(false);
+      setPhoneCompleted(false);
+      setIsTyping(true);
+      
+      // Type name
+      setTimeout(() => {
+        let nameIndex = 0;
+        const nameText = 'John Doe';
+        const nameInterval = setInterval(() => {
+          console.log('Typing name:', nameIndex, nameText.slice(0, nameIndex + 1));
+          setNameValue(nameText.slice(0, nameIndex + 1));
+          nameIndex++;
+          if (nameIndex > nameText.length) {
+            clearInterval(nameInterval);
+            setNameCompleted(true);
+            console.log('Name complete');
+            
+            // Type email
+            setTimeout(() => {
+              let emailIndex = 0;
+              const emailText = 'john@email.com';
+              const emailInterval = setInterval(() => {
+                console.log('Typing email:', emailIndex, emailText.slice(0, emailIndex + 1));
+                setEmailValue(emailText.slice(0, emailIndex + 1));
+                emailIndex++;
+                if (emailIndex > emailText.length) {
+                  clearInterval(emailInterval);
+                  setEmailCompleted(true);
+                  console.log('Email complete');
+                  
+                  // Type phone
+                  setTimeout(() => {
+                    let phoneIndex = 0;
+                    const phoneText = '(555) 123-4567';
+                    const phoneInterval = setInterval(() => {
+                      console.log('Typing phone:', phoneIndex, phoneText.slice(0, phoneIndex + 1));
+                      setPhoneValue(phoneText.slice(0, phoneIndex + 1));
+                      phoneIndex++;
+                      if (phoneIndex > phoneText.length) {
+                        clearInterval(phoneInterval);
+                        setPhoneCompleted(true);
+                        setIsTyping(false);
+                        console.log('All typing complete');
+                      }
+                    }, 80);
+                  }, 300);
+                }
+              }, 60);
+            }, 300);
+          }
+        }, 80);
+      }, 500);
+    }
+  }, [animationStep]);
+
+  // Auto-select role after 1 second when qualification step is active
+  useEffect(() => {
+    if (animationStep === 2 && qualifyStep === 1 && !selectedRole) {
+      setTimeout(() => {
+        console.log('Auto-selecting Manager / Director role');
+        setSelectedRole('Manager / Director');
+      }, 1000);
+    }
+  }, [animationStep, qualifyStep, selectedRole]);
+
+  // Verification code animation - one digit at a time
+  useEffect(() => {
+    if (animationStep === 3) {
+      console.log('Verification step active - starting digit entry');
+      
+      // Reset verification code
+      setVerificationCode(['', '', '', '', '', '']);
+      
+      // Enter digits one by one with delays
+      const digits = ['1', '2', '3', '4', '5', '6'];
+      
+      digits.forEach((digit, index) => {
+        setTimeout(() => {
+          console.log(`Entering digit ${index + 1}: ${digit}`);
+          setVerificationCode(prev => {
+            const newCode = [...prev];
+            newCode[index] = digit;
+            return newCode;
+          });
+        }, 800 + (index * 400)); // Start after 800ms, then 400ms between each digit
+      });
+    }
+  }, [animationStep]);
+
+  // Prize wheel spinning animation
+  useEffect(() => {
+    if (animationStep === 4) {
+      console.log('Prize wheel step active - starting spin');
+      console.log('Current mustSpin:', mustSpin);
+      console.log('Current prizeNumber:', prizeNumber);
+      console.log('WheelData length:', wheelData.length);
+      
+      // Reset wheel state
+      setMustSpin(false);
+      setWinningPrize('');
+      
+      // Start spinning after a delay
+      setTimeout(() => {
+        console.log('Setting mustSpin to true...');
+        console.log('About to spin with prizeNumber:', prizeNumber);
+        setMustSpin(true);
+      }, 500);
+    }
+  }, [animationStep]);
+
+  // Animation effect for phone demo
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setAnimationStep((prev) => {
+        if (prev === 0) {
+          // QR Code scanning
+          setTimeout(() => setQrScanned(true), 1500);
+          return 1;
+        } else if (prev === 1) {
+          // Registration form - extend time if not already extended
+          if (!registrationExtended) {
+            setRegistrationExtended(true);
+            setTimeout(() => {
+              setAnimationStep(2);
+            }, 2000); // Extra 2 seconds for registration
+            return 1; // Stay on registration step
+          }
+          return 2; // Move to next step after extension
+        } else if (prev === 2) {
+          // Qualification questions
+          setTimeout(() => {
+            setSelectedRole('Owner / Executive');
+            setQualifyStep(2);
+          }, 1000);
+          setTimeout(() => {
+            setSelectedTimeline('Actively looking now');
+          }, 2000);
+          return 3;
+        } else if (prev === 3) {
+          // Verification - digit entry handled by separate useEffect
+          return 4;
+        } else if (prev === 4) {
+          // Prize wheel - spinning handled by separate useEffect
+          return 5;
+        } else if (prev === 5) {
+          // Reset to beginning
+          console.log('Resetting animation...');
+          setQrScanned(false);
+          setNameValue('');
+          setEmailValue('');
+          setPhoneValue('');
+          setNameCompleted(false);
+          setEmailCompleted(false);
+          setPhoneCompleted(false);
+          setSelectedRole('');
+          setSelectedTimeline('Actively looking now');
+          setQualifyStep(1);
+          setVerificationCode(['', '', '', '', '', '']);
+          setMustSpin(false);
+          setWinningPrize('');
+          setIsTyping(false);
+          setRegistrationExtended(false); // Reset extension flag
+          return 0;
+        }
+        return prev;
+      });
+    }, 10000); // Change step every 10 seconds to allow wheel spin to complete
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleCTAClick = (location: string) => {
     fireHotjarEvent(`cta_clicked_${location}`);
@@ -197,39 +486,344 @@ export default function BoatTradeshowLanding() {
             ))}
           </div>
           
-          {/* Video Section */}
+          {/* Phone Demo Section */}
           <div className="max-w-4xl mx-auto">
-            {!showVideo ? (
-              <div className="relative">
-                <div className="w-full h-[300px] lg:h-[400px] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-xl overflow-hidden">
-                  <div 
-                    className="absolute inset-0 flex items-center justify-center cursor-pointer group"
-                    onClick={() => handleVideoClick('hero')}
-                  >
-                    <div className="text-center">
-                      <div className="w-20 h-20 bg-[#171717] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#2a2a2a] transition-all duration-300 shadow-2xl group-hover:scale-110">
-                        <Play className="w-8 h-8 text-white ml-1" />
-                      </div>
-                      <p className="text-xl font-bold text-[#171717] mb-2">Watch Demo Video</p>
-                      <p className="text-gray-600">See how we captured 3X more leads at SuperZoo</p>
-                    </div>
-                  </div>
+            <div className="flex justify-center">
+              {/* Phone Device Mockup */}
+              <div className="device-mockup phone relative z-10">
+                <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] bg-[#1a1a1a] p-2 w-[280px] h-[560px] relative">
+                  {/* Phone notch */}
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120px] h-[24px] bg-black rounded-b-[12px] z-50"></div>
                   
-                  <div className="absolute top-4 right-4 bg-[#FFDC35] text-[#171717] px-3 py-1 rounded-full text-sm font-bold">
-                    2 min demo
+                  <div className="bg-white rounded-[42px] w-full h-full overflow-hidden relative">
+                    {/* Background gradient and grid */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white">
+                      <div className="absolute inset-0 viewfinder-grid"></div>
+                    </div>
+                    
+                    {/* Top UI */}
+                    <div className="absolute top-0 left-0 right-0 z-40 pt-8 pb-4 px-4">
+                      <div className="flex justify-end items-center">
+                      </div>
+                    </div>
+                    
+                    {/* Step Titles - Fixed Positon */}
+                    <div className="absolute top-14 left-0 right-0 z-50">
+                      {/* Single title container - all titles in same position */}
+                      <div className="text-center">
+                        <div className="relative h-8">
+                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 0 ? 'opacity-100' : 'opacity-0'}`}>SCAN QR CODE</span>
+                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 1 ? 'opacity-100' : 'opacity-0'}`}>REGISTER</span>
+                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0'}`}>QUALIFY</span>
+                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0'}`}>VERIFY</span>
+                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 4 ? 'opacity-100' : 'opacity-0'}`}>SPIN TO WIN</span>
+                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 5 ? 'opacity-100' : 'opacity-0'}`}>CONGRATULATIONS!</span>
+                        </div>
+                        <div className="w-20 h-1 bg-[#FFDC35] mx-auto rounded-full mt-2"></div>
+                      </div>
+                    </div>
+                    
+                    {/* Phone UI Content */}
+                    <div className="form-ui absolute inset-0 pt-36 p-4 z-30">
+                      <div className="w-full max-w-[220px] mx-auto relative">
+                        
+                        {/* Step 1: QR Code Scanning */}
+                        <div className={`transition-all duration-500 ${animationStep === 0 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="flex flex-col items-center justify-center h-full">
+                            {/* QR Code scanning frame */}
+                            <div className="relative w-48 h-48 rounded-lg flex items-center justify-center">
+                              {/* Corner markers */}
+                              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#FFDC35]"></div>
+                              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#FFDC35]"></div>
+                              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#FFDC35]"></div>
+                              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#FFDC35]"></div>
+                              
+                              {/* Scanning animation */}
+                              <div className="absolute top-0 left-0 right-0 h-1 bg-[#FFDC35] opacity-80 scan-line"></div>
+                              
+                              {/* QR Code placeholder */}
+                              <div className={`transition-opacity duration-500 ${qrScanned ? 'opacity-40' : 'opacity-100'}`}>
+                                <div className="w-36 h-36 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-gray-200">
+                                  <QrCode className="w-24 h-24 text-[#171717]" />
+                                </div>
+                              </div>
+                              
+                            </div>
+                            
+                            <p className="text-gray-600 text-sm mt-4 text-center">
+                              {qrScanned ? 'QR Code Scanned Successfully!' : 'Position QR Code in Frame'}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        {/* Step 2: Registration Form */}
+                        <div className={`transition-all duration-500 ${animationStep === 1 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="pt-2 pb-4">
+                          
+                          <div className="space-y-6 px-2">
+                            {/* Name Field */}
+                            <div className="space-y-3">
+                              <label className="text-[#171717] text-sm font-medium block flex items-center gap-2">
+                                <svg className="w-4 h-4 text-[#FFDC35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                Full Name
+                              </label>
+                              <div className="relative group">
+                                <div className={`bg-gray-50 rounded-xl p-4 border-2 transition-all duration-300 ${
+                                  nameCompleted 
+                                    ? 'border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                    : 'border-gray-200 group-hover:border-[#FFDC35]/50'
+                                } relative overflow-hidden`}>
+                                  <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                  <p className="text-[#171717] text-sm font-medium relative z-10 min-h-[20px]">
+                                    {nameValue}
+                                    {isTyping && !nameCompleted && <span className="animate-pulse ml-1">|</span>}
+                                    {!nameValue && !isTyping && <span className="text-gray-400">|</span>}
+                                  </p>
+                                  {nameCompleted && (
+                                    <div className="absolute right-4 top-4 transition-all duration-500 scale-0 animate-[scale-in_0.3s_ease-out_forwards]">
+                                      <div className="bg-[#FFDC35] rounded-full p-1.5 flex items-center justify-center">
+                                        <Check className="h-3 w-3 text-[#171717]" />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Email Field */}
+                            <div className="space-y-3">
+                              <label className="text-[#171717] text-sm font-medium block flex items-center gap-2">
+                                <svg className="w-4 h-4 text-[#FFDC35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                                Email Address
+                              </label>
+                              <div className="relative group">
+                                <div className={`bg-gray-50 rounded-xl p-4 border-2 transition-all duration-300 ${
+                                  emailCompleted 
+                                    ? 'border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                    : 'border-gray-200 group-hover:border-[#FFDC35]/50'
+                                } relative overflow-hidden`}>
+                                  <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                  <p className="text-[#171717] text-sm font-medium relative z-10 break-all min-h-[20px]">
+                                    {emailValue}
+                                    {isTyping && !emailCompleted && nameCompleted && <span className="animate-pulse ml-1">|</span>}
+                                    {!emailValue && !isTyping && <span className="text-gray-400">|</span>}
+                                  </p>
+                                  {emailCompleted && (
+                                    <div className="absolute right-4 top-4 transition-all duration-500 scale-0 animate-[scale-in_0.3s_ease-out_forwards]">
+                                      <div className="bg-[#FFDC35] rounded-full p-1.5 flex items-center justify-center">
+                                        <Check className="h-3 w-3 text-[#171717]" />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Phone Field */}
+                            <div className="space-y-3">
+                              <label className="text-[#171717] text-sm font-medium block flex items-center gap-2">
+                                <Phone className="w-4 h-4 text-[#FFDC35]" />
+                                Phone Number
+                                <span className="text-gray-500 text-xs">(Optional)</span>
+                              </label>
+                              <div className="relative group">
+                                <div className={`bg-gray-50 rounded-xl p-4 border-2 transition-all duration-300 ${
+                                  phoneCompleted 
+                                    ? 'border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                    : 'border-gray-200 group-hover:border-[#FFDC35]/50'
+                                } relative overflow-hidden`}>
+                                  <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                  <p className="text-[#171717] text-sm font-medium relative z-10 min-h-[20px]">
+                                    {phoneValue}
+                                    {isTyping && !phoneCompleted && emailCompleted && <span className="animate-pulse ml-1">|</span>}
+                                    {!phoneValue && !isTyping && <span className="text-gray-400">|</span>}
+                                  </p>
+                                  {phoneCompleted && (
+                                    <div className="absolute right-4 top-4 transition-all duration-500 scale-0 animate-[scale-in_0.3s_ease-out_forwards]">
+                                      <div className="bg-[#FFDC35] rounded-full p-1.5 flex items-center justify-center">
+                                        <Check className="h-3 w-3 text-[#171717]" />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                        </div>
+                        
+                        {/* Step 3: Qualification Questions */}
+                        <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="pt-2 pb-4">
+                          
+                          <div className="space-y-6 px-2">
+                            {qualifyStep === 1 && (
+                              <div className="space-y-3">
+                                <label className="text-[#171717] text-sm font-medium block flex items-center gap-2">
+                                  <svg className="w-4 h-4 text-[#FFDC35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                  </svg>
+                                  What best describes your role?
+                                </label>
+                                <div className="space-y-3">
+                                  <div className="relative group">
+                                    <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
+                                      selectedRole === 'Owner / Executive' 
+                                        ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                        : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
+                                    } relative overflow-hidden`}>
+                                      <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                      <p className="text-[#171717] text-sm font-medium relative z-10">Owner / Executive</p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="relative group">
+                                    <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
+                                      selectedRole === 'Manager / Director' 
+                                        ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                        : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
+                                    } relative overflow-hidden`}>
+                                      <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                      <p className="text-[#171717] text-sm font-medium relative z-10">Manager / Director</p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="relative group">
+                                    <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
+                                      selectedRole === 'Staff / Student / Other' 
+                                        ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                        : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
+                                    } relative overflow-hidden`}>
+                                      <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                      <p className="text-[#171717] text-sm font-medium relative z-10">Staff / Student / Other</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {qualifyStep === 2 && (
+                              <div className="space-y-3">
+                                <label className="text-[#171717] text-sm font-medium block flex items-center gap-2">
+                                  <svg className="w-4 h-4 text-[#FFDC35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                  </svg>
+                                  Are you currently looking for solutions like ours?
+                                </label>
+                                <div className="space-y-3">
+                                  <div className="relative group">
+                                    <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
+                                      selectedTimeline === 'Actively looking now' 
+                                        ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                        : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
+                                    } relative overflow-hidden`}>
+                                      <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                      <p className="text-[#171717] text-sm font-medium relative z-10">Actively looking now</p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="relative group">
+                                    <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
+                                      selectedTimeline === 'Within 6–12 months' 
+                                        ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                        : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
+                                    } relative overflow-hidden`}>
+                                      <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                      <p className="text-[#171717] text-sm font-medium relative z-10">Within 6–12 months</p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="relative group">
+                                    <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
+                                      selectedTimeline === 'Just browsing' 
+                                        ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                        : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
+                                    } relative overflow-hidden`}>
+                                      <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                      <p className="text-[#171717] text-sm font-medium relative z-10">Just browsing</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          </div>
+                        </div>
+                        
+                        {/* Step 4: Verification Code */}
+                        <div className={`transition-all duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="flex flex-col items-center justify-center h-full">
+                            <div className="space-y-4 text-center">
+                            <p className="text-gray-600 text-sm text-center">Enter the 6-digit code sent to your phone</p>
+                            
+                            <div className="flex justify-between gap-1">
+                              {verificationCode.map((digit, index) => (
+                                <div key={index} className="w-8 h-10 bg-gray-100 rounded-md flex items-center justify-center border border-gray-200">
+                                  <span className="text-[#171717] font-medium">{digit}</span>
+                                </div>
+                              ))}
+                            </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Step 5: Prize Wheel */}
+                        <div className={`transition-all duration-500 ${animationStep === 4 ? 'opacity-100 ' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="flex flex-col items-center justify-center h-full">
+                            
+                            <div style={{ position: "relative", height: "350px", width: "100%" }}>
+                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }}>
+                                <Wheel
+                                  mustStartSpinning={mustSpin}
+                                  prizeNumber={prizeNumber}
+                                  data={wheelData}
+                                  spinDuration={0.9}
+                                  outerBorderColor="#333"
+                                  outerBorderWidth={3}
+                                  innerBorderColor="#333"
+                                  innerBorderWidth={0}
+                                  innerRadius={20}
+                                  radiusLineColor="#ffffff"
+                                  radiusLineWidth={2}
+                                  fontSize={24}
+                                  textDistance={65}
+                                  onStopSpinning={() => {
+                                    console.log('Wheel stopped spinning on prize:', wheelData[prizeNumber].option);
+                                    setWinningPrize(wheelData[prizeNumber].option);
+                                    setMustSpin(false);
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Step 6: Prize Reveal */}
+                        <div className={`transition-all duration-500 ${animationStep === 5 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                          <div className="flex flex-col items-center justify-center h-full">
+                            <div className="text-center">
+                            <div className="text-4xl mb-4">🎉</div>
+                            
+                            <div className="bg-gray-50 rounded-xl p-4 mb-4 border-2 border-gray-200 shadow-lg">
+                              <p className="text-[#171717] font-bold mb-1">You won a</p>
+                              <p className="text-[#FFDC35] text-xl font-bold mb-2">Free Setup Package (Value $500)</p>
+                              <div className="text-3xl mb-1">🏆</div>
+                              <p className="text-gray-600 text-xs">Check your email for details</p>
+                            </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            ) : (
-              <video 
-                className="w-full h-[300px] lg:h-[400px] object-cover rounded-2xl shadow-xl"
-                controls
-                autoPlay
-              >
-                <source src="/videos/customer_prize_wheel_vertical.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            )}
+            </div>
           </div>
         </div>
       </section>
