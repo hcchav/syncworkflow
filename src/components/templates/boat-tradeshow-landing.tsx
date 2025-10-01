@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -54,6 +54,8 @@ export default function BoatTradeshowLanding() {
   
   // Phone animation states
   const [animationStep, setAnimationStep] = useState(0);
+  const [nextStep, setNextStep] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [qrScanned, setQrScanned] = useState(false);
   const [nameValue, setNameValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
@@ -65,6 +67,7 @@ export default function BoatTradeshowLanding() {
   const [registrationExtended, setRegistrationExtended] = useState(false);
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedTimeline, setSelectedTimeline] = useState('Actively looking now');
+  const [selectedSolution, setSelectedSolution] = useState('');
   const [qualifyStep, setQualifyStep] = useState(1);
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [mustSpin, setMustSpin] = useState(false);
@@ -223,15 +226,10 @@ export default function BoatTradeshowLanding() {
     }
   }, [animationStep]);
 
-  // Auto-select role after 1 second when qualification step is active
+  // Debug qualifyStep changes
   useEffect(() => {
-    if (animationStep === 2 && qualifyStep === 1 && !selectedRole) {
-      setTimeout(() => {
-        console.log('Auto-selecting Manager / Director role');
-        setSelectedRole('Manager / Director');
-      }, 1000);
-    }
-  }, [animationStep, qualifyStep, selectedRole]);
+    console.log('QualifyStep changed to:', qualifyStep, 'at animationStep:', animationStep);
+  }, [qualifyStep, animationStep]);
 
   // Verification code animation - one digit at a time
   useEffect(() => {
@@ -278,66 +276,109 @@ export default function BoatTradeshowLanding() {
     }
   }, [animationStep]);
 
-  // Animation effect for phone demo
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setAnimationStep((prev) => {
-        if (prev === 0) {
-          // QR Code scanning
-          setTimeout(() => setQrScanned(true), 1500);
-          return 1;
-        } else if (prev === 1) {
-          // Registration form - extend time if not already extended
-          if (!registrationExtended) {
-            setRegistrationExtended(true);
-            setTimeout(() => {
-              setAnimationStep(2);
-            }, 2000); // Extra 2 seconds for registration
-            return 1; // Stay on registration step
-          }
-          return 2; // Move to next step after extension
-        } else if (prev === 2) {
-          // Qualification questions
-          setTimeout(() => {
-            setSelectedRole('Owner / Executive');
-            setQualifyStep(2);
-          }, 1000);
-          setTimeout(() => {
-            setSelectedTimeline('Actively looking now');
-          }, 2000);
-          return 3;
-        } else if (prev === 3) {
-          // Verification - digit entry handled by separate useEffect
-          return 4;
-        } else if (prev === 4) {
-          // Prize wheel - spinning handled by separate useEffect
-          return 5;
-        } else if (prev === 5) {
-          // Reset to beginning
-          console.log('Resetting animation...');
-          setQrScanned(false);
-          setNameValue('');
-          setEmailValue('');
-          setPhoneValue('');
-          setNameCompleted(false);
-          setEmailCompleted(false);
-          setPhoneCompleted(false);
-          setSelectedRole('');
-          setSelectedTimeline('Actively looking now');
-          setQualifyStep(1);
-          setVerificationCode(['', '', '', '', '', '']);
-          setMustSpin(false);
-          setWinningPrize('');
-          setIsTyping(false);
-          setRegistrationExtended(false); // Reset extension flag
-          return 0;
-        }
-        return prev;
-      });
-    }, 10000); // Change step every 10 seconds to allow wheel spin to complete
-
-    return () => clearInterval(timer);
+  // Step functions with proper timer management
+  const runQRStep = useCallback(() => {
+    console.log('Running QR Step');
+    setAnimationStep(0);
+    setQrScanned(false);
+    
+    // QR scan animation
+    setTimeout(() => setQrScanned(true), 1500);
+    
+    // Move to next step - this should be the LAST thing in the function
+    setTimeout(() => runRegistrationStep(), 5000);
   }, []);
+
+  const runRegistrationStep = useCallback(() => {
+    console.log('Running Registration Step');
+    setAnimationStep(1);
+    if (!registrationExtended) {
+      setRegistrationExtended(true);
+    }
+    
+    // Move to next step - this should be the LAST thing in the function
+    setTimeout(() => runQualificationStep(), 6000);
+  }, [registrationExtended]);
+
+  const runQualificationStep = useCallback(() => {
+    console.log('Running Qualification Step');
+    setAnimationStep(2);
+    setQualifyStep(1);
+    setSelectedRole('');
+    setSelectedSolution('');
+    
+    // Role auto-selection timer
+    setTimeout(() => {
+      console.log('Auto-selecting role');
+      setSelectedRole('Owner / Executive');
+      
+      // Wait 2 seconds to show the selection, then move to next question
+      setTimeout(() => {
+        console.log('Moving to solution question');
+        setQualifyStep(2);
+      }, 2000);
+    }, 1000);
+    
+    // Solution auto-selection timer - wait 1 second after solution question appears
+    setTimeout(() => {
+      console.log('Auto-selecting solution');
+      setSelectedSolution('Actively looking now');
+    }, 4000);
+    
+    // Move to next step - this should be the LAST thing in the function
+    setTimeout(() => runVerificationStep(), 6000);
+  }, []);
+
+  const runVerificationStep = useCallback(() => {
+    console.log('Running Verification Step');
+    setAnimationStep(3);
+    
+    // Move to next step - this should be the LAST thing in the function
+    setTimeout(() => runPrizeWheelStep(), 5000);
+  }, []);
+
+  const runPrizeWheelStep = useCallback(() => {
+    console.log('Running Prize Wheel Step');
+    setAnimationStep(4);
+    
+    // Move to next step - this should be the LAST thing in the function
+    setTimeout(() => runCongratulationsStep(), 12000);
+  }, []);
+
+  const runCongratulationsStep = useCallback(() => {
+    console.log('Running Congratulations Step');
+    setAnimationStep(5);
+    
+    // Reset and restart - this should be the LAST thing in the function
+    setTimeout(() => {
+      console.log('Resetting animation...');
+      setQrScanned(false);
+      setNameValue('');
+      setEmailValue('');
+      setPhoneValue('');
+      setNameCompleted(false);
+      setEmailCompleted(false);
+      setPhoneCompleted(false);
+      setSelectedRole('');
+      setSelectedSolution('');
+      setSelectedTimeline('Actively looking now');
+      setQualifyStep(1);
+      setVerificationCode(['', '', '', '', '', '']);
+      setMustSpin(false);
+      setWinningPrize('');
+      setIsTyping(false);
+      setRegistrationExtended(false);
+      
+      // Restart animation
+      setTimeout(() => runQRStep(), 2000);
+    }, 4000);
+  }, []);
+
+  // Start animation on mount
+  useEffect(() => {
+    runQRStep();
+  }, [runQRStep]);
+
 
   const handleCTAClick = (location: string) => {
     fireHotjarEvent(`cta_clicked_${location}`);
@@ -710,14 +751,14 @@ export default function BoatTradeshowLanding() {
                               <div className="space-y-3">
                                 <label className="text-[#171717] text-sm font-medium block flex items-center gap-2">
                                   <svg className="w-4 h-4 text-[#FFDC35]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                   </svg>
                                   Are you currently looking for solutions like ours?
                                 </label>
                                 <div className="space-y-3">
-                                  <div className="relative group">
+                                  <div className="relative group" onClick={() => setSelectedSolution('Actively looking now')}>
                                     <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
-                                      selectedTimeline === 'Actively looking now' 
+                                      selectedSolution === 'Actively looking now' 
                                         ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
                                         : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
                                     } relative overflow-hidden`}>
@@ -726,20 +767,20 @@ export default function BoatTradeshowLanding() {
                                     </div>
                                   </div>
                                   
-                                  <div className="relative group">
+                                  <div className="relative group" onClick={() => setSelectedSolution('Within 6-12 months')}>
                                     <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
-                                      selectedTimeline === 'Within 6–12 months' 
+                                      selectedSolution === 'Within 6-12 months' 
                                         ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
                                         : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
                                     } relative overflow-hidden`}>
                                       <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                      <p className="text-[#171717] text-sm font-medium relative z-10">Within 6–12 months</p>
+                                      <p className="text-[#171717] text-sm font-medium relative z-10">Within 6-12 months</p>
                                     </div>
                                   </div>
                                   
-                                  <div className="relative group">
+                                  <div className="relative group" onClick={() => setSelectedSolution('Just browsing')}>
                                     <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
-                                      selectedTimeline === 'Just browsing' 
+                                      selectedSolution === 'Just browsing' 
                                         ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
                                         : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
                                     } relative overflow-hidden`}>
@@ -776,7 +817,7 @@ export default function BoatTradeshowLanding() {
                           <div className="flex flex-col items-center justify-center h-full">
                             
                             <div style={{ position: "relative", height: "350px", width: "100%" }}>
-                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }}>
+                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.55)" }}>
                                 <Wheel
                                   mustStartSpinning={mustSpin}
                                   prizeNumber={prizeNumber}
