@@ -1,4 +1,94 @@
-/* Responsive wheel styling */
+/* WheelSpin Component CSS Variables for Theming */
+:root {
+  --wheel-separator: #555;
+  --wheel-label-color: #333;
+  --wheel-hub-fill: #ffe08a;
+  --wheel-hub-stroke: #7a5a1a;
+  --wheel-ring-outer: #8b4513;
+  --wheel-ring-inner: #a0522d;
+  --wheel-handle-fill: #654321;
+  --wheel-glow-color: rgba(255, 220, 53, 0.3);
+}
+
+/* WheelSpin component base styles */
+.wheel-spin {
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive wheel sizing */
+.wheel-spin svg {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  object-fit: contain;
+}
+
+/* Ensure wheel container never overflows */
+.wheel-spin {
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+/* Mobile-specific wheel constraints */
+@media (max-width: 480px) {
+  .wheel-spin {
+    max-width: calc(100vw - 140px) !important; /* Even more restrictive */
+    max-height: calc(100vw - 140px) !important;
+    overflow: hidden !important;
+  }
+  
+  .wheel-spin svg {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+}
+
+.wheel-spin:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+.wheel-spin:hover {
+  transform: scale(1.02);
+}
+
+.wheel-spin[aria-busy="true"] {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 480px) {
+  .wheel-spin:hover {
+    transform: none; /* Disable hover effects on mobile */
+  }
+  
+  .wheel-spin {
+    touch-action: manipulation; /* Improve touch responsiveness */
+  }
+}
+
+/* Accessibility - Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .wheel-spin,
+  .wheel-spin * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Enhanced responsive wheel styling */
 .wheel-container {
   width: 280px;
   height: 280px;
@@ -11,6 +101,7 @@
   justify-content: center;
   align-items: center;
   z-index: 10;
+  filter: drop-shadow(0 15px 35px rgba(0,0,0,0.2));
 }
 
 /* Ensure the wheel fits within the parent container */
@@ -110,12 +201,52 @@
   }
 }
 
-/* Custom pointer styling - target the SVG directly */
+/* Enhanced pointer styling with modern effects */
 .wheel-container svg polygon {
-  fill: #052740 !important;
-  stroke: #052740 !important;
-  stroke-width: 3px !important;
-  transform: scale(1.5) !important;
+  fill: #ff4d4d !important;
+  stroke: #cc0000 !important;
+  stroke-width: 2px !important;
+  transform: scale(1.3) !important;
+  filter: drop-shadow(0 3px 6px rgba(255,77,77,0.4)) !important;
+}
+
+/* Wheel glow animation */
+@keyframes wheelGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 20px rgba(255,220,53,0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(255,220,53,0.6));
+  }
+}
+
+.wheel-glow {
+  animation: wheelGlow 3s ease-in-out infinite;
+}
+
+/* Spinning animation enhancement */
+@keyframes spinEnhanced {
+  0% {
+    transform: rotate(0deg);
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    filter: brightness(1.1) saturate(1.2);
+  }
+  100% {
+    transform: rotate(360deg);
+    filter: brightness(1) saturate(1);
+  }
+}
+
+/* Segment hover effects */
+.wheel-segment {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wheel-segment:hover {
+  filter: brightness(1.1) saturate(1.2);
+  transform: scale(1.02);
 }
 
 /* Viewfinder grid pattern for phone background */
@@ -127,18 +258,73 @@
   opacity: 0.3;
 }
 
-/* Scale-in animation for checkmarks */
+/* Enhanced scale-in animation for checkmarks */
 @keyframes scale-in {
   0% {
-    transform: scale(0);
+    transform: scale(0) rotate(-180deg);
     opacity: 0;
   }
   50% {
-    transform: scale(1.2);
+    transform: scale(1.3) rotate(-90deg);
     opacity: 1;
   }
   100% {
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
     opacity: 1;
   }
+}
+
+/* Prize wheel celebration animation */
+@keyframes celebrate {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.05) rotate(2deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(-2deg);
+  }
+}
+
+.wheel-celebrate {
+  animation: celebrate 0.6s ease-in-out;
+}
+
+/* Floating particles effect */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 0.7;
+  }
+}
+
+.floating-particle {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Gradient text animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(-45deg, #FFDC35, #FFE55C, #FFF2A1, #FFDC35);
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

@@ -250,7 +250,40 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
 
   return (
     <div className="relative inline-block">
-      <svg width={radius * 2} height={radius * 2} className="drop-shadow-lg">
+      {/* Outer glow effect */}
+      <div 
+        className="absolute inset-0 rounded-full opacity-30 animate-pulse"
+        style={{
+          background: 'radial-gradient(circle, rgba(255,220,53,0.4) 0%, rgba(255,220,53,0.1) 50%, transparent 70%)',
+          width: radius * 2 + 40,
+          height: radius * 2 + 40,
+          left: -20,
+          top: -20,
+          filter: 'blur(8px)'
+        }}
+      />
+      
+      {/* Main wheel SVG with enhanced styling */}
+      <svg 
+        width={radius * 2} 
+        height={radius * 2} 
+        className="drop-shadow-2xl relative z-10"
+        style={{
+          filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.3)) drop-shadow(0 0 20px rgba(255,220,53,0.2))'
+        }}
+      >
+        {/* Outer ring gradient */}
+        <defs>
+          <radialGradient id="outerRing" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#e5e5e5" stopOpacity="0.3" />
+          </radialGradient>
+          <linearGradient id="segmentGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.3)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0.1)" />
+          </linearGradient>
+        </defs>
+        
         <g
           style={{
             transform: `rotate(${rotation}deg)`,
@@ -267,14 +300,45 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
             const strokeW = Math.max(1.1, Math.floor(fs / 10));
             const lineHeight = fs * 0.95;
             const needFit = scale < 0.95; // use textLength to fine-tune if scaled down
+            
+            // Enhanced segment colors with gradients
+            const segmentId = `segment-${index}`;
+            const gradientId = `gradient-${index}`;
+            
             return (
               <g key={index}>
+                <defs>
+                  <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor={segment.style.backgroundColor} />
+                    <stop offset="50%" stopColor={segment.style.backgroundColor} stopOpacity="0.9" />
+                    <stop offset="100%" stopColor={segment.style.backgroundColor} stopOpacity="0.7" />
+                  </linearGradient>
+                  <filter id={`shadow-${index}`} x="-50%" y="-50%" width="200%" height="200%">
+                    <feDropShadow dx="2" dy="2" stdDeviation="3" floodColor="rgba(0,0,0,0.2)" />
+                  </filter>
+                </defs>
+                
+                {/* Main segment with gradient and shadow */}
                 <path
                   d={createSegmentPath(index)}
-                  fill={segment.style.backgroundColor}
+                  fill={`url(#${gradientId})`}
                   stroke={radiusLineColor}
                   strokeWidth={radiusLineWidth}
+                  filter={`url(#shadow-${index})`}
+                  style={{
+                    transition: 'all 0.3s ease',
+                  }}
                 />
+                
+                {/* Highlight overlay for premium segments */}
+                {(segment.option.includes('Free Setup') || segment.option.includes('$100 Off')) && (
+                  <path
+                    d={createSegmentPath(index)}
+                    fill="url(#segmentGlow)"
+                    stroke="none"
+                    opacity="0.6"
+                  />
+                )}
                 {lines.length === 1 ? (
                   <text
                     x={pos.x}
@@ -316,41 +380,119 @@ export const CustomWheel: React.FC<CustomWheelProps> = ({
             );
           })}
           
-          {/* Inner circle */}
+          {/* Enhanced inner circle with gradient and shadow */}
+          <defs>
+            <radialGradient id="innerCircleGradient" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="70%" stopColor="#f8f9fa" />
+              <stop offset="100%" stopColor="#e9ecef" />
+            </radialGradient>
+            <filter id="innerShadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="rgba(0,0,0,0.15)" />
+            </filter>
+          </defs>
+          
           <circle
             cx={radius}
             cy={radius}
-            r={innerRadius}
-            fill="white"
+            r={innerRadius + 2}
+            fill="url(#innerCircleGradient)"
             stroke={innerBorderColor}
-            strokeWidth={innerBorderWidth}
+            strokeWidth={innerBorderWidth + 1}
+            filter="url(#innerShadow)"
+          />
+          
+          {/* Inner circle highlight */}
+          <circle
+            cx={radius}
+            cy={radius}
+            r={innerRadius - 2}
+            fill="none"
+            stroke="rgba(255,255,255,0.8)"
+            strokeWidth="1"
           />
         </g>
         
-        {/* Outer border */}
+        {/* Enhanced outer border with gradient */}
+        <defs>
+          <linearGradient id="outerBorderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#2d3748" />
+            <stop offset="50%" stopColor="#4a5568" />
+            <stop offset="100%" stopColor="#2d3748" />
+          </linearGradient>
+        </defs>
+        
         <circle
           cx={radius}
           cy={radius}
-          r={radius}
+          r={radius - outerBorderWidth/2}
           fill="none"
-          stroke={outerBorderColor}
-          strokeWidth={outerBorderWidth}
+          stroke="url(#outerBorderGradient)"
+          strokeWidth={outerBorderWidth + 1}
+        />
+        
+        {/* Outer highlight ring */}
+        <circle
+          cx={radius}
+          cy={radius}
+          r={radius - outerBorderWidth - 2}
+          fill="none"
+          stroke="rgba(255,255,255,0.3)"
+          strokeWidth="1"
         />
       </svg>
       
-      {/* Pointer */}
+      {/* Enhanced Pointer with shadow and glow */}
       <div
-        className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1"
-        style={{ zIndex: 10 }}
+        className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2"
+        style={{ zIndex: 20 }}
       >
-        <div
-          className="w-0 h-0 border-l-6 border-r-6 border-b-10"
+        {/* Pointer glow effect */}
+        <div 
+          className="absolute inset-0 transform -translate-x-1/2 -translate-y-1"
           style={{
-            borderLeftColor: 'transparent',
-            borderRightColor: 'transparent',
-            borderBottomColor: '#3777ff',
+            width: '24px',
+            height: '24px',
+            background: 'radial-gradient(circle, rgba(255,77,77,0.6) 0%, transparent 70%)',
+            filter: 'blur(4px)',
+            zIndex: -1
           }}
         />
+        
+        {/* Main pointer */}
+        <div className="relative">
+          {/* Pointer shadow */}
+          <div
+            className="absolute top-1 left-0 w-0 h-0"
+            style={{
+              borderLeft: '8px solid transparent',
+              borderRight: '8px solid transparent',
+              borderBottom: '16px solid rgba(0,0,0,0.2)',
+              filter: 'blur(1px)'
+            }}
+          />
+          
+          {/* Main pointer body */}
+          <div
+            className="w-0 h-0 relative"
+            style={{
+              borderLeft: '8px solid transparent',
+              borderRight: '8px solid transparent',
+              borderBottom: '16px solid #ff4d4d',
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+            }}
+          />
+          
+          {/* Pointer highlight */}
+          <div
+            className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0 h-0"
+            style={{
+              borderLeft: '4px solid transparent',
+              borderRight: '4px solid transparent',
+              borderBottom: '8px solid rgba(255,255,255,0.6)',
+            }}
+          />
+        </div>
       </div>
     </div>
   );

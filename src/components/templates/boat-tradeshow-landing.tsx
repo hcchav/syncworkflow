@@ -6,16 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import dynamic from 'next/dynamic';
 import Hotjar, { fireHotjarEvent } from '@/components/analytics/Hotjar';
+import { CustomWheel } from '@/components/ui/CustomWheel';
 import '../../styles/wheel.css';
-
-// Dynamically import the Wheel component with SSR disabled
-const Wheel = dynamic(
-  () => import('react-custom-roulette').then((mod) => mod.Wheel),
-  { 
-    ssr: false,
-    loading: () => <div>Loading wheel...</div>
-  }
-);
 import { 
   CheckCircle, 
   Target, 
@@ -74,16 +66,16 @@ export default function BoatTradeshowLanding() {
   const [prizeNumber, setPrizeNumber] = useState(5); // Always land on 'Free Setup' (yellow segment)
   const [winningPrize, setWinningPrize] = useState('');
   
-  // Prize wheel data - correct format for react-custom-roulette
+  // Enhanced prize wheel data with modern colors and gradients
   const wheelData = [
-    { option: 'No Prize', style: { backgroundColor: '#f3f4f6', textColor: '#171717' } },
-    { option: 'VIP', style: { backgroundColor: '#16a34a', textColor: 'white' } },
-    { option: 'Gift', style: { backgroundColor: '#171717', textColor: 'white' } },
-    { option: '25% Off', style: { backgroundColor: '#ffffff', textColor: '#171717' } },
-    { option: '50% Off', style: { backgroundColor: '#22c55e', textColor: 'white' } },
-    { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#171717' } },
-    { option: '$100 Off', style: { backgroundColor: '#171717', textColor: 'white' } },
-    { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#171717' } },
+    { option: 'No Prize', style: { backgroundColor: '#e2e8f0', textColor: '#475569' } },
+    { option: 'VIP Access', style: { backgroundColor: '#7c3aed', textColor: 'white' } },
+    { option: 'Gift Card', style: { backgroundColor: '#1e293b', textColor: 'white' } },
+    { option: '25% Off', style: { backgroundColor: '#f1f5f9', textColor: '#334155' } },
+    { option: '50% Off', style: { backgroundColor: '#059669', textColor: 'white' } },
+    { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#1e293b' } },
+    { option: '$100 Off', style: { backgroundColor: '#dc2626', textColor: 'white' } },
+    { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#1e293b' } },
   ];
 
   // Typing animation function
@@ -437,12 +429,12 @@ export default function BoatTradeshowLanding() {
       {/* Top Navigation Bar */}
       <nav className="bg-[#171717] text-white h-16 flex items-center">
         <div className="w-full flex items-center justify-center gap-4">
-          <span className="text-white text-md font-medium font-[600]">SyncWorkflow AI — Loved by 1M+ Creators</span>
+          <span className="text-white text-md font-medium font-[600]">Turn Boat Show Visitors into Leads Instantly</span>
           <button 
             onClick={() => handleCTAClick('topbar')}
             className="bg-[#FFDC35] text-[#171717] px-4 py-1.5 rounded text-sm font-semibold hover:bg-yellow-400 transition-colors"
           >
-            Start Free Trial
+            Try It Now
           </button>
         </div>
       </nav>
@@ -460,12 +452,12 @@ export default function BoatTradeshowLanding() {
           <div className="text-center max-w-4xl mx-auto">
             {/* Main Headline */}
             <h1 className="text-4xl lg:text-6xl xl:text-7xl font-bold text-[#171717] mb-6 leading-tight">
-              All in 1 Click Lead Capture
+            Boat Show Lead Capture
             </h1>
             
             {/* Subheadline */}
             <p className="text-xl lg:text-2xl text-[#171717]/80 mb-8 font-medium">
-              10X More Qualified Leads with AI-Powered Verification
+            3X More Qualified Leads with QR Codes + Prize Spin
             </p>
             
             {/* Trust Signal */}
@@ -488,15 +480,15 @@ export default function BoatTradeshowLanding() {
                 onClick={() => handleCTAClick('hero')}
                 className="bg-[#171717] text-white px-12 py-4 rounded-full font-bold text-lg hover:bg-[#2a2a2a] transform hover:scale-105 transition-all duration-200 shadow-2xl"
               >
-                Free Trial
+                Get Started Today
               </button>
             </div>
             
             {/* Trust Badges */}
             <div className="flex items-center justify-center gap-6 text-[#171717]/60 text-sm">
               <span>✓ No Credit Card Required</span>
-              <span>✓ Setup in 5 Minutes</span>
-              <span>✓ Used at 100+ Trade Shows</span>
+              <span>✓ Custom Setup</span>
+              <span>✓ Proven at SuperZoo 2025</span>
             </div>
           </div>
         </div>
@@ -557,7 +549,7 @@ export default function BoatTradeshowLanding() {
                           <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 1 ? 'opacity-100' : 'opacity-0'}`}>REGISTER</span>
                           <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0'}`}>QUALIFY</span>
                           <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0'}`}>VERIFY</span>
-                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 4 ? 'opacity-100' : 'opacity-0'}`}>SPIN TO WIN</span>
+                          <span className={`absolute inset-0 text-xl font-bold tracking-wider transition-opacity duration-500 gradient-text ${animationStep === 4 ? 'opacity-100' : 'opacity-0'}`}>SPIN TO WIN</span>
                           <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 5 ? 'opacity-100' : 'opacity-0'}`}>CONGRATULATIONS!</span>
                         </div>
                         <div className="w-20 h-1 bg-[#FFDC35] mx-auto rounded-full mt-2"></div>
@@ -817,21 +809,35 @@ export default function BoatTradeshowLanding() {
                           <div className="flex flex-col items-center justify-center h-full">
                             
                             <div style={{ position: "relative", height: "350px", width: "100%" }}>
-                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.55)" }}>
-                                <Wheel
+                              {/* Floating celebration particles */}
+                              {winningPrize && (
+                                <>
+                                  <div className="absolute top-10 left-10 w-2 h-2 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '0s' }}></div>
+                                  <div className="absolute top-16 right-12 w-1.5 h-1.5 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '0.5s' }}></div>
+                                  <div className="absolute bottom-20 left-16 w-2.5 h-2.5 bg-[#7c3aed] rounded-full floating-particle" style={{ animationDelay: '1s' }}></div>
+                                  <div className="absolute bottom-12 right-8 w-1 h-1 bg-[#dc2626] rounded-full floating-particle" style={{ animationDelay: '1.5s' }}></div>
+                                  <div className="absolute top-1/3 left-8 w-1.5 h-1.5 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '2s' }}></div>
+                                  <div className="absolute top-1/2 right-6 w-2 h-2 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '2.5s' }}></div>
+                                </>
+                              )}
+                              
+                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }} className={winningPrize ? 'wheel-celebrate' : ''}>
+                                <CustomWheel
+                                  data={wheelData}
                                   mustStartSpinning={mustSpin}
                                   prizeNumber={prizeNumber}
-                                  data={wheelData}
-                                  spinDuration={0.9}
-                                  outerBorderColor="#333"
-                                  outerBorderWidth={3}
-                                  innerBorderColor="#333"
-                                  innerBorderWidth={0}
-                                  innerRadius={20}
+                                  spinDuration={3}
+                                  outerBorderColor="#2d3748"
+                                  outerBorderWidth={4}
+                                  innerBorderColor="#4a5568"
+                                  innerBorderWidth={2}
+                                  innerRadius={25}
                                   radiusLineColor="#ffffff"
                                   radiusLineWidth={2}
-                                  fontSize={24}
-                                  textDistance={65}
+                                  fontSize={18}
+                                  textDistance={70}
+                                  fontWeight={600}
+                                  wheelRadius={160}
                                   onStopSpinning={() => {
                                     console.log('Wheel stopped spinning on prize:', wheelData[prizeNumber].option);
                                     setWinningPrize(wheelData[prizeNumber].option);
