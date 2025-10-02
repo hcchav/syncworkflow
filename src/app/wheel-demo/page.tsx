@@ -20,16 +20,51 @@ const getWheelSize = () => {
   const screenWidth = window.innerWidth;
   
   // Simple responsive sizing without complex calculations
-  if (screenWidth < 480) {
-    return 280; // Mobile
+  if (screenWidth < 331) {
+    return 170; // Small mobile screens
+  }
+  if (screenWidth < 342) {
+    return 180; // Small mobile screens
+  }
+  if (screenWidth < 359) {
+    return 190; // Small mobile screens
+  }
+  if (screenWidth < 470) {
+    return 200; // Small mobile screens
   }
   if (screenWidth < 768) {
-    return 320; // Small tablets
+    return 320; // Large mobile/small tablets
   }
   if (screenWidth < 1024) {
     return 400; // Tablets
   }
   return 480; // Desktop
+};
+
+// Calculate container size to accommodate handles
+const getContainerSize = (wheelSize: number) => {
+  // Based on actual handle positioning in woodHelm.tsx:
+  // Left handle: x = centerX - radius - handleLength (starts at this position)
+  // Right handle: x = centerX + radius, width = handleLength (extends to centerX + radius + handleLength)
+  // Total width from leftmost to rightmost point:
+  // From (centerX - radius - handleLength) to (centerX + radius + handleLength)
+  // = 2 * (radius + handleLength)
+  
+  const radius = wheelSize / 2;
+  const handleLength = radius * 0.42; // handleLengthFactor = 0.42
+  const strokeWidth = 2; // Handle stroke width
+  const padding = 30; // Padding for safety and visual spacing
+  
+  // Total width needed = 2 * (radius + handleLength) + strokeWidth + padding
+  const totalWidth = 2 * (radius + handleLength) + strokeWidth + padding;
+  
+  // For height, top and bottom handles extend the same way
+  const totalHeight = 2 * (radius + handleLength) + strokeWidth + padding;
+  
+  // Use the larger dimension for square container
+  const containerSize = Math.max(totalWidth, totalHeight);
+  
+  return Math.ceil(containerSize);
 };
 
 const baseConfig: WheelConfig = {
@@ -68,19 +103,52 @@ export default function WheelDemo() {
   const [result, setResult] = useState<any>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
-  const [wheelSize, setWheelSize] = useState(getWheelSize());
+  const [wheelSize, setWheelSize] = useState(() => {
+    const initialSize = getWheelSize();
+    console.log('Initial wheel size:', initialSize);
+    return initialSize;
+  });
+  const [containerSize, setContainerSize] = useState(() => {
+    const initialWheelSize = getWheelSize();
+    const initialContainerSize = getContainerSize(initialWheelSize);
+    console.log('Initial container size:', initialContainerSize, 'for wheel:', initialWheelSize);
+    return initialContainerSize;
+  });
 
   // Handle window resize for responsive wheel sizing
   useEffect(() => {
     const handleResize = () => {
       const newSize = getWheelSize();
-      setWheelSize(newSize);
-      setConfig(prev => ({ ...prev, size: newSize }));
+      const newContainerSize = getContainerSize(newSize);
+      console.log('Resize triggered:', { 
+        screenWidth: window.innerWidth, 
+        newWheelSize: newSize, 
+        newContainerSize: newContainerSize,
+        currentWheelSize: wheelSize,
+        currentContainerSize: containerSize
+      });
+      
+      // Only update if sizes actually changed
+      if (newSize !== wheelSize || newContainerSize !== containerSize) {
+        setWheelSize(newSize);
+        setContainerSize(newContainerSize);
+        setConfig(prev => ({ ...prev, size: newSize }));
+      }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    // Add debouncing to prevent too many updates
+    let timeoutId: NodeJS.Timeout;
+    const debouncedHandleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleResize, 100);
+    };
+
+    window.addEventListener('resize', debouncedHandleResize);
+    return () => {
+      window.removeEventListener('resize', debouncedHandleResize);
+      clearTimeout(timeoutId);
+    };
+  }, [wheelSize, containerSize]);
 
   const handleResult = (res: any) => {
     setResult(res);
@@ -320,6 +388,19 @@ export default function WheelDemo() {
     }));
   };
 
+  const forceResize = () => {
+    const newSize = getWheelSize();
+    const newContainerSize = getContainerSize(newSize);
+    console.log('Force resize:', { 
+      screenWidth: window.innerWidth, 
+      newWheelSize: newSize, 
+      newContainerSize: newContainerSize 
+    });
+    setWheelSize(newSize);
+    setContainerSize(newContainerSize);
+    setConfig(prev => ({ ...prev, size: newSize }));
+  };
+
   return (
     <>
       <style jsx global>{`
@@ -351,18 +432,19 @@ export default function WheelDemo() {
             <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl">
               <div className="flex justify-center items-center">
                 <div 
-                  className="wheel-container relative"
+                  className="wheel-container relative flex justify-center items-center"
                   style={{ 
-                    width: `${wheelSize}px`, 
-                    height: `${wheelSize}px`,
+                    width: `${containerSize}px`, 
+                    height: `${containerSize}px`,
                     overflow: 'visible'
                   }}
                 >
                   <WheelSpin
                     ref={wheelRef}
                     config={config}
-                    className="w-full h-full"
                     style={{
+                      width: `${wheelSize}px`,
+                      height: `${wheelSize}px`,
                       overflow: 'visible'
                     }}
                   />
@@ -380,7 +462,13 @@ export default function WheelDemo() {
                 
                 {/* Debug info - remove in production */}
                 <div className="mt-2 text-xs text-gray-500">
-                  <div>Wheel: {wheelSize}px | Screen: {typeof window !== 'undefined' ? window.innerWidth : 'SSR'}px</div>
+                  <div>Wheel: {wheelSize}px | Container: {containerSize}px | Screen: {typeof window !== 'undefined' ? window.innerWidth : 'SSR'}px</div>
+                  <button 
+                    onClick={forceResize}
+                    className="mt-1 px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded"
+                  >
+                    Force Resize Check
+                  </button>
                 </div>
               </div>
 
