@@ -1,18 +1,39 @@
 'use client';
-
 import React, { useRef, useState, useEffect } from 'react';
 import { WheelSpin, WheelSpinRef, WheelConfig } from '@/components/wheel';
 
 const demoSegments = [
   { label: 'Coffee', color: '#FFDC35', payload: { type: 'beverage', value: 'coffee' } },
   { label: 'Sticker Pack', color: '#03c4eb', payload: { type: 'merchandise', value: 'stickers' } },
-  { label: '10% Off', color: '#f4f4f4', payload: { type: 'discount', value: 0.1 } },
-  { label: 'Try Again', color: '#ffffff', payload: { type: 'retry', value: null } },
-  { label: 'T-Shirt', color: '#ff6b6b', payload: { type: 'merchandise', value: 'tshirt' } },
-  { label: 'Free Mug', color: '#4ecdc4', payload: { type: 'merchandise', value: 'mug' } },
-  { label: '25% Off', color: '#45b7d1', payload: { type: 'discount', value: 0.25 } },
-  { label: 'Gift Card', color: '#96ceb4', payload: { type: 'giftcard', value: 50 } },
 ];
+
+// Default prize configuration (8 prizes)
+const defaultPrizes = [
+  { label: 'Coffee', color: '#feca57', labelColor: '#000000', payload: { type: 'beverage', value: 'coffee' } },
+  { label: 'Try Again', color: '#ffffff', labelColor: '#000000', payload: { type: 'retry', value: null } },
+  { label: 'T-Shirt', color: '#ff6b6b', labelColor: '#ffffff', payload: { type: 'merchandise', value: 'tshirt' } },
+  { label: 'Free Mug', color: '#4ecdc4', labelColor: '#ffffff', payload: { type: 'merchandise', value: 'mug' } },
+  { label: '25% Off', color: '#45b7d1', labelColor: '#ffffff', payload: { type: 'discount', value: 0.25 } },
+  { label: 'Gift Card', color: '#96ceb4', labelColor: '#000000', payload: { type: 'giftcard', value: 50 } },
+  { label: 'Free Spin', color: '#a55eea', labelColor: '#ffffff', payload: { type: 'bonus', value: 'spin' } },
+  { label: 'No Prize', color: '#ddd', labelColor: '#666666', payload: { type: 'none', value: null } },
+];
+
+// Available background colors - bright vibrant tones
+const backgroundColors = [
+  '#4ecdc4', '#ff6b6b', '#45b7d1', '#feca57', '#a55eea', '#96ceb4',
+  '#fd79a8', '#74b9ff', '#00b894', '#e17055', '#6c5ce7', '#fdcb6e',
+  '#ffffff', '#2d3436', '#636e72', '#ddd'
+];
+
+// Available text colors
+const textColors = [
+  '#000000', '#ffffff', '#333333', '#666666', '#999999',
+  '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'
+];
+
+// Character limit per prize name
+const PRIZE_NAME_LIMIT = 12;
 
 // Simplified responsive wheel size function
 const getWheelSize = () => {
@@ -20,6 +41,9 @@ const getWheelSize = () => {
   const screenWidth = window.innerWidth;
   
   // Simple responsive sizing without complex calculations
+  if (screenWidth < 310) {
+    return 130; // Small mobile screens
+  }
   if (screenWidth < 331) {
     return 170; // Small mobile screens
   }
@@ -29,8 +53,14 @@ const getWheelSize = () => {
   if (screenWidth < 359) {
     return 190; // Small mobile screens
   }
-  if (screenWidth < 470) {
-    return 200; // Small mobile screens
+  if (screenWidth < 400) {
+    return 190; // Small mobile screens
+  }
+  if (screenWidth < 500) {
+    return 225; // Small mobile screens
+  }
+  if (screenWidth < 600) {
+    return 300; // Small mobile screens
   }
   if (screenWidth < 768) {
     return 320; // Large mobile/small tablets
@@ -79,7 +109,7 @@ const baseConfig: WheelConfig = {
     seed: null, // Random by default
     noRepeatUntilExhausted: false,
   },
-  segments: demoSegments,
+  segments: defaultPrizes,
   skin: {
     name: 'wood-helm',
     style: 'wood',
@@ -114,6 +144,10 @@ export default function WheelDemo() {
     console.log('Initial container size:', initialContainerSize, 'for wheel:', initialWheelSize);
     return initialContainerSize;
   });
+  const [prizes, setPrizes] = useState(defaultPrizes);
+  const [editingPrize, setEditingPrize] = useState<number | null>(null);
+  const [customColors, setCustomColors] = useState<{[key: string]: string}>({});
+  const [customTextColors, setCustomTextColors] = useState<{[key: string]: string}>({});
 
   // Handle window resize for responsive wheel sizing
   useEffect(() => {
@@ -149,6 +183,14 @@ export default function WheelDemo() {
       clearTimeout(timeoutId);
     };
   }, [wheelSize, containerSize]);
+
+  // Update config when prizes change
+  useEffect(() => {
+    setConfig(prev => ({
+      ...prev,
+      segments: prizes
+    }));
+  }, [prizes]);
 
   const handleResult = (res: any) => {
     setResult(res);
@@ -401,6 +443,52 @@ export default function WheelDemo() {
     setConfig(prev => ({ ...prev, size: newSize }));
   };
 
+  // Helper function to validate hex color
+  const isValidHexColor = (color: string): boolean => {
+    return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
+  };
+
+  // Prize management functions
+  const updatePrizeName = (index: number, name: string) => {
+    if (name.length > PRIZE_NAME_LIMIT) return;
+    setPrizes(prev => prev.map((prize, i) => 
+      i === index ? { ...prize, label: name } : prize
+    ));
+  };
+
+  const updatePrizeColor = (index: number, color: string) => {
+    setPrizes(prev => prev.map((prize, i) => 
+      i === index ? { ...prize, color } : prize
+    ));
+  };
+
+  const updatePrizeTextColor = (index: number, textColor: string) => {
+    setPrizes(prev => prev.map((prize, i) => 
+      i === index ? { ...prize, labelColor: textColor } : prize
+    ));
+  };
+
+  const updateCustomColor = (index: number, color: string) => {
+    setCustomColors(prev => ({ ...prev, [`bg-${index}`]: color }));
+    if (isValidHexColor(color)) {
+      updatePrizeColor(index, color);
+    }
+  };
+
+  const updateCustomTextColor = (index: number, color: string) => {
+    setCustomTextColors(prev => ({ ...prev, [`text-${index}`]: color }));
+    if (isValidHexColor(color)) {
+      updatePrizeTextColor(index, color);
+    }
+  };
+
+  const resetPrizes = () => {
+    setPrizes([...defaultPrizes]);
+    setEditingPrize(null);
+    setCustomColors({});
+    setCustomTextColors({});
+  };
+
   return (
     <>
       <style jsx global>{`
@@ -524,11 +612,105 @@ export default function WheelDemo() {
               </div>
             </div>
 
+            {/* Prize Configuration */}
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+              <div className="flex justify-between items-center mb-3 sm:mb-4">
+                <h3 className="text-base sm:text-lg font-semibold">Prize Configuration</h3>
+                <button
+                  onClick={resetPrizes}
+                  className="px-3 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded transition-colors"
+                >
+                  Reset
+                </button>
+              </div>
+              
+              <div className="space-y-3">
+                {prizes.map((prize, index) => (
+                  <div key={index} className="border rounded-lg p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-sm font-medium w-12">#{index + 1}</span>
+                      <input
+                        type="text"
+                        value={prize.label}
+                        onChange={(e) => updatePrizeName(index, e.target.value)}
+                        maxLength={PRIZE_NAME_LIMIT}
+                        className="flex-1 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Prize name"
+                      />
+                      <span className="text-xs text-gray-500">
+                        {prize.label.length}/{PRIZE_NAME_LIMIT}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-600 w-16">Background:</span>
+                      <div className="flex gap-1 flex-wrap">
+                        {backgroundColors.slice(0, 8).map(color => (
+                          <button
+                            key={color}
+                            onClick={() => updatePrizeColor(index, color)}
+                            className={`w-6 h-6 rounded border-2 ${
+                              prize.color === color ? 'border-gray-800' : 'border-gray-300'
+                            }`}
+                            style={{ backgroundColor: color }}
+                            title={color}
+                          />
+                        ))}
+                        <input
+                          type="text"
+                          value={customColors[`bg-${index}`] || ''}
+                          onChange={(e) => updateCustomColor(index, e.target.value)}
+                          placeholder="#hex"
+                          className={`w-16 px-1 py-0 text-xs border rounded ${
+                            customColors[`bg-${index}`] && isValidHexColor(customColors[`bg-${index}`]) 
+                              ? 'border-green-500' 
+                              : customColors[`bg-${index}`] 
+                                ? 'border-red-500' 
+                                : 'border-gray-300'
+                          }`}
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="text-xs text-gray-600 w-16">Text:</span>
+                      <div className="flex gap-1">
+                        {textColors.slice(0, 6).map(color => (
+                          <button
+                            key={color}
+                            onClick={() => updatePrizeTextColor(index, color)}
+                            className={`w-6 h-6 rounded border-2 ${
+                              prize.labelColor === color ? 'border-gray-800' : 'border-gray-300'
+                            }`}
+                            style={{ backgroundColor: color }}
+                            title={color}
+                          />
+                        ))}
+                        <input
+                          type="text"
+                          value={customTextColors[`text-${index}`] || ''}
+                          onChange={(e) => updateCustomTextColor(index, e.target.value)}
+                          placeholder="#hex"
+                          className={`w-16 px-1 py-0 text-xs border rounded ${
+                            customTextColors[`text-${index}`] && isValidHexColor(customTextColors[`text-${index}`]) 
+                              ? 'border-green-500' 
+                              : customTextColors[`text-${index}`] 
+                                ? 'border-red-500' 
+                                : 'border-gray-300'
+                          }`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Targeted Spins */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
               <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Targeted Spins</h3>
               <div className="grid grid-cols-2 gap-2">
-                {demoSegments.slice(0, 4).map(segment => (
+                {prizes.slice(0, 4).map(segment => (
                   <button
                     key={segment.label}
                     onClick={() => spinToTarget(segment.label)}

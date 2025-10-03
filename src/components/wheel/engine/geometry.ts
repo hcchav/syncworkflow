@@ -81,7 +81,7 @@ export function calculateGeometry(
   const centerX = radius;
   const centerY = radius;
   const segmentAngle = 360 / segmentCount;
-  const textDist = textDistance || radius * 0.7;
+  const textDist = textDistance || radius * 0.55;
 
   const segments: SegmentGeometry[] = [];
 
