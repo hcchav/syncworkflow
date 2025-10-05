@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Hotjar, { fireHotjarEvent } from '@/components/analytics/Hotjar';
 
-// Form validation schema
 const leadFormSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
@@ -22,72 +21,87 @@ const leadFormSchema = z.object({
 
 type LeadFormData = z.infer<typeof leadFormSchema>;
 
-const valueProps = [
+const heroHighlights = [
   {
-    title: 'Capture Qualified Leads in Seconds',
-    description:
-      'Attendees scan a QR code, answer a few custom questions, and spin to win – you receive verified data instantly.',
+    title: '3x capture rate',
+    description: 'Convert passerby traffic with immersive digital giveaways and show-ready messaging.',
   },
   {
-    title: 'Works at Any Trade Show Booth',
-    description:
-      'From niche industry expos to large consumer shows, tailor the experience to match your brand and lead criteria.',
+    title: 'Live CRM sync',
+    description: 'Pipe enriched attendee data into Salesforce, HubSpot, or spreadsheets instantly.',
   },
   {
-    title: 'Only Pay for Results',
+    title: 'Performance pricing',
+    description: 'Only pay $2 when a lead matches the criteria you define for each show.',
+  },
+];
+
+const featureCards = [
+  {
+    title: 'Immersive attendee journey',
     description:
-      'Our pricing is performance-based. If a lead does not meet your qualification rules, you do not pay for it.',
+      'Launch a glossy mobile experience with motion visuals and game mechanics inspired by premium EV activations.',
+  },
+  {
+    title: 'Qualification built in',
+    description:
+      'Score answers in real time, route hot prospects to on-floor reps, and trigger automated follow-up sequences.',
+  },
+  {
+    title: 'Creative + logistics support',
+    description:
+      'We handle signage, prize sourcing, and brand customization so your team just shows up and closes.',
   },
 ];
 
 const processSteps = [
   {
-    title: '01. Attract & Scan',
+    title: '01 · Launch your digital booth',
     description:
-      'Drive foot traffic with a gamified giveaway. Guests scan your QR code signage using their own phone – no kiosk required.',
+      'We brand the mobile flow to match your show presence, preload qualification rules, and deliver assets within 7 days.',
   },
   {
-    title: '02. Qualify Automatically',
+    title: '02 · Engage & qualify',
     description:
-      'Customize questions by show, role, budget, or product interest. Leads route instantly to your CRM with scoring applied.',
+      'Attendees scan, answer, and spin from their own devices while real-time insights pulse on your team dashboard.',
   },
   {
-    title: '03. Follow Up Faster',
+    title: '03 · Nurture instantly',
     description:
-      'Trigger automated texts and emails before attendees leave the floor so your sales team always stays first in line.',
+      'Sync to your CRM, push automated SMS + email, and share leaderboards to keep sales focused on the next conversation.',
   },
 ];
 
 const faqs = [
   {
     id: 'how-it-works',
-    question: 'How does the system work at trade shows?',
+    question: 'How does the experience run on the show floor?',
     answer:
-      'Attendees scan a QR code, complete a mobile-friendly form, spin a digital prize wheel, and instantly receive rewards. Meanwhile your team gets verified lead data and automated follow-up kicks in immediately.',
+      'Attendees scan a QR code, breeze through a frictionless mobile flow, and spin a digital prize wheel. Everything runs on their phone while your reps see qualification flags instantly.',
   },
   {
     id: 'setup',
-    question: 'What do I need to set up at my booth?',
+    question: 'Do we need hardware or a kiosk?',
     answer:
-      'All you need is the signage we provide. The full experience runs on the attendee\'s phone, but you can also display the live wheel on a tablet or TV if you want to draw a bigger crowd.',
+      'No hardware required. We provide motion signage and visuals that mirror the experience of the evoto.ai homepage styling — tablets or monitors are optional for crowd appeal.',
   },
   {
     id: 'pricing',
-    question: 'Are there any hidden fees or monthly costs?',
+    question: 'What does performance pricing include?',
     answer:
-      'No monthly platform fee, no contracts, and no setup charge. You only pay $2 for each lead that matches the qualification rules you define for the event.',
+      'You pay $2 only for leads that pass your qualification filters. Creative, setup, analytics, and onsite support assets are bundled in.',
   },
   {
-    id: 'integration',
-    question: 'Can you integrate with our CRM or marketing stack?',
+    id: 'integrations',
+    question: 'Can you plug into our CRM or marketing stack?',
     answer:
-      'Yes. We connect with Salesforce, HubSpot, Pipedrive, and most major CRMs. Prefer spreadsheets? We also deliver CSV exports in real time to your team inbox.',
+      'We integrate with Salesforce, HubSpot, Pipedrive, and deliver CSV exports in real time. Zapier and webhooks are available for custom data pushes.',
   },
   {
-    id: 'customization',
-    question: 'Can you customize it for different industries?',
+    id: 'timeline',
+    question: 'How fast can we launch before our next show?',
     answer:
-      'Absolutely. We tailor registration flows, prize inventory, and follow-up messaging for each trade show so you capture the exact personas you want in every market.',
+      'Most teams go live in under a week. We can fast-track within 72 hours for priority events.',
   },
 ];
 
@@ -120,14 +134,9 @@ export default function TradeshowLanding() {
   const onSubmit = async (data: LeadFormData) => {
     try {
       fireHotjarEvent('form_submitted');
-
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-
       setIsSubmitted(true);
       reset();
-
-      // Auto-hide success message after 5 seconds
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error) {
       console.error('Form submission error:', error);
@@ -135,215 +144,215 @@ export default function TradeshowLanding() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#050817] text-white">
       <Hotjar />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#171717] to-[#2a2a2a] text-white overflow-hidden">
-        <div className="container mx-auto px-4 py-16 lg:py-24">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Column - Content */}
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(67,97,238,0.35),_transparent_55%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,_rgba(9,16,40,0.75),_rgba(5,8,23,0.95))]" />
+        <div className="container relative z-10 mx-auto px-4 py-20 lg:py-28">
+          <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
             <div className="space-y-8">
-              <div className="space-y-4">
-                <span className="inline-flex items-center rounded-full bg-[#FFDC35]/10 px-4 py-1 text-sm font-medium text-[#FFDC35]">
-                  Trade Show Lead Engine
-                </span>
-                <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-                  Turn Trade Show Traffic into
-                  <span className="text-[#03c4eb]"> Qualified Leads</span>
-                </h1>
-                <p className="text-xl lg:text-2xl text-gray-300">
-                  Pay only <span className="text-[#FFDC35] font-semibold">$2 per qualified lead</span> with the spin-to-win system trusted across national expos, pop-up events, and industry conferences.
-                </p>
+              <div className="inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm uppercase tracking-[0.3em] text-[#7ef7d4]">
+                Trade Show Lead Engine
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
+              <h1 className="text-4xl font-bold leading-[1.1] text-white sm:text-5xl lg:text-6xl">
+                Transform booth energy into <span className="bg-gradient-to-r from-[#7ef7d4] via-[#50e5ff] to-[#a086ff] bg-clip-text text-transparent">qualified pipeline</span> at every show.
+              </h1>
+              <p className="max-w-xl text-lg text-white/70 sm:text-xl">
+                SyncWorkflow pairs gamified capture with the neon visuals and luxe gradients of evoto.ai so your trade show presence feels premium while delivering $2 qualified leads.
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row">
                 <button
                   onClick={() => handleCTAClick('hero')}
-                  className="bg-[#FFDC35] text-[#171717] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-yellow-400 transform hover:scale-105 transition-all duration-200 shadow-lg"
+                  className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[#7ef7d4] via-[#50e5ff] to-[#a086ff] px-8 py-3 text-lg font-semibold text-[#050817] shadow-[0_20px_60px_rgba(80,229,255,0.35)] transition-transform duration-300 hover:scale-[1.03]"
                 >
-                  Book Your Demo
+                  Book a demo
+                  <svg className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12l-3.75 3.75M21 12H3" />
+                  </svg>
                 </button>
                 <button
                   onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="border-2 border-[#03c4eb] text-[#03c4eb] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#03c4eb] hover:text-white transition-all duration-200"
+                  className="inline-flex items-center justify-center rounded-full border border-white/20 px-8 py-3 text-lg font-semibold text-white transition-colors duration-300 hover:border-white hover:bg-white/10"
                 >
-                  See Pricing
+                  View pricing
                 </button>
               </div>
-
-              <div className="grid gap-6 rounded-2xl bg-white/5 p-6 backdrop-blur lg:grid-cols-3">
-                {valueProps.map(prop => (
-                  <div key={prop.title} className="space-y-2">
-                    <h3 className="text-lg font-semibold text-white">{prop.title}</h3>
-                    <p className="text-sm text-gray-300">{prop.description}</p>
+              <div className="grid gap-6 sm:grid-cols-3">
+                {heroHighlights.map(highlight => (
+                  <div key={highlight.title} className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-[#7ef7d4]">{highlight.title}</h3>
+                    <p className="mt-2 text-sm text-white/70">{highlight.description}</p>
                   </div>
                 ))}
               </div>
             </div>
-
-            {/* Right Column - Video */}
             <div className="relative">
-              {!showVideo ? (
-                <div
-                  className="w-full h-[400px] bg-[#f4f4f4] rounded-2xl flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors shadow-lg"
-                  onClick={() => handleVideoClick('hero')}
-                >
-                  <div className="text-center text-[#171717]">
-                    <div className="w-20 h-20 bg-[#03c4eb] rounded-full flex items-center justify-center mx-auto mb-4 hover:bg-[#0299c7] transition-colors">
-                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="absolute inset-0 rounded-[32px] bg-gradient-to-br from-[#7ef7d4]/40 via-transparent to-[#a086ff]/20 blur-3xl" />
+              <div className="relative rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur">
+                {!showVideo ? (
+                  <button
+                    type="button"
+                    onClick={() => handleVideoClick('hero')}
+                    className="group flex h-full w-full flex-col items-center justify-center rounded-[28px] border border-white/10 bg-[#0a1028]/80 p-10 text-center transition-all duration-300 hover:border-[#7ef7d4]/60 hover:bg-[#0f1738]"
+                  >
+                    <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#7ef7d4] via-[#50e5ff] to-[#a086ff] text-[#050817] shadow-[0_20px_60px_rgba(126,247,212,0.45)]">
+                      <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                       </svg>
                     </div>
-                    <p className="text-lg font-semibold">Watch Demo Video</p>
-                    <p className="text-sm text-gray-600">See the experience attendees love</p>
-                  </div>
-                </div>
-              ) : (
-                <video className="w-full h-[400px] object-cover rounded-2xl shadow-lg" controls autoPlay>
-                  <source src="/videos/customer_prize_wheel_vertical.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              )}
+                    <h3 className="text-2xl font-semibold text-white">Watch the experience</h3>
+                    <p className="mt-3 max-w-sm text-base text-white/60">
+                      Preview the neon spin-to-win flow that mirrors the evoto.ai aesthetic and electrifies your booth.
+                    </p>
+                  </button>
+                ) : (
+                  <video className="h-full w-full rounded-[28px] object-cover" controls autoPlay>
+                    <source src="/videos/customer_prize_wheel_vertical.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Process Section */}
-      <section className="py-16 lg:py-24 bg-[#f4f4f4]">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl lg:text-5xl font-bold text-[#171717] mb-4">A Complete Playbook for Any Trade Show</h2>
-            <p className="text-xl text-gray-600">
-              Launch in under a week and walk into your next event with a proven attraction strategy, qualification workflow, and follow-up automation.
+      {/* Feature grid */}
+      <section className="relative border-t border-white/5 bg-[#050817] py-20">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#7ef7d4]/60 to-transparent" />
+        <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+          <div className="space-y-6">
+            <p className="text-sm uppercase tracking-[0.35em] text-[#7ef7d4]">Why teams choose SyncWorkflow</p>
+            <h2 className="text-3xl font-semibold text-white sm:text-4xl">
+              Built for modern trade show teams chasing premium, electric-brand energy.
+            </h2>
+            <p className="max-w-xl text-lg text-white/70">
+              Every touchpoint mirrors the luminous gradients, glass panels, and fluid typography from evoto.ai so your booth feels futuristic without losing the focus on measurable ROI.
             </p>
           </div>
-          <div className="grid gap-6 lg:grid-cols-3">
-            {processSteps.map(step => (
-              <div key={step.title} className="rounded-2xl bg-white p-8 shadow-lg border border-gray-100">
-                <h3 className="text-xl font-semibold text-[#171717] mb-3">{step.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{step.description}</p>
+          <div className="grid gap-6">
+            {featureCards.map(card => (
+              <div
+                key={card.title}
+                className="rounded-3xl border border-white/10 bg-[linear-gradient(135deg,_rgba(14,23,56,0.9),_rgba(24,33,72,0.6))] p-6 shadow-[0_40px_80px_rgba(5,8,23,0.6)] transition hover:border-[#7ef7d4]/50"
+              >
+                <h3 className="text-xl font-semibold text-white">{card.title}</h3>
+                <p className="mt-3 text-base text-white/65">{card.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-16 lg:py-24 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-5xl font-bold text-[#171717] mb-4">
-              Simple, Results-Based Pricing
-            </h2>
-            <p className="text-xl text-gray-600">
-              No setup fees. No monthly costs. Pay only for qualified leads.
+      {/* Process timeline */}
+      <section className="relative overflow-hidden bg-[#070c26] py-20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(80,229,255,0.15),_transparent_60%)]" />
+        <div className="container relative z-10 mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm uppercase tracking-[0.35em] text-[#7ef7d4]">How it works</p>
+            <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">From briefing to booth in three luminous steps</h2>
+            <p className="mt-4 text-lg text-white/70">
+              We combine software, creative, and fulfillment so you deliver a cinematic attendee experience without spinning up extra headcount.
             </p>
           </div>
-
-          <div className="max-w-lg mx-auto">
-            <div className="bg-white rounded-2xl p-8 shadow-xl border-4 border-[#03c4eb]">
-              <div className="text-center mb-8">
-                <div className="text-6xl font-bold text-[#171717] mb-2">$2</div>
-                <p className="text-xl text-gray-600">per qualified lead</p>
+          <div className="mt-16 grid gap-10 lg:grid-cols-3">
+            {processSteps.map(step => (
+              <div key={step.title} className="relative rounded-3xl border border-white/5 bg-white/5 p-6 backdrop-blur">
+                <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-[#7ef7d4]/0 via-[#7ef7d4]/60 to-[#7ef7d4]/0" />
+                <h3 className="text-lg font-semibold text-[#7ef7d4]">{step.title}</h3>
+                <p className="mt-4 text-base text-white/70">{step.description}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center space-x-3">
-                  <div className="w-6 h-6 bg-[#03c4eb] rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Complete setup & training included</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-6 h-6 bg-[#03c4eb] rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Custom branded forms & follow-up</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-6 h-6 bg-[#03c4eb] rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Real-time lead delivery</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-6 h-6 bg-[#03c4eb] rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">No monthly fees or contracts</span>
-                </div>
+      {/* Pricing */}
+      <section id="pricing" className="relative border-t border-white/5 bg-[#050817] py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-sm uppercase tracking-[0.35em] text-[#7ef7d4]">Pricing</p>
+            <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">Performance based. Simple. Predictable.</h2>
+            <p className="mt-4 text-lg text-white/70">
+              You only invest when we deliver the qualified conversations you need.
+            </p>
+          </div>
+          <div className="mx-auto mt-16 max-w-3xl">
+            <div className="relative rounded-[36px] border border-white/10 bg-[linear-gradient(135deg,_rgba(7,12,38,0.9),_rgba(11,18,48,0.65))] p-10 shadow-[0_40px_120px_rgba(10,20,50,0.65)]">
+              <div className="absolute inset-0 -z-10 rounded-[36px] bg-gradient-to-r from-[#7ef7d4]/20 via-[#50e5ff]/10 to-[#a086ff]/20 blur-3xl" />
+              <div className="text-center">
+                <span className="text-sm uppercase tracking-[0.35em] text-[#7ef7d4]">$2 per qualified lead</span>
+                <h3 className="mt-4 text-5xl font-semibold text-white">All-inclusive activation</h3>
+                <p className="mt-4 text-base text-white/60">
+                  Creative, setup, analytics, and fulfillment included. Unlimited events, no retainers, cancel anytime.
+                </p>
               </div>
-
+              <div className="mt-10 grid gap-4 md:grid-cols-2">
+                {[
+                  'Branded mobile capture + prize wheel',
+                  'Onsite signage & creative direction',
+                  'Real-time CRM sync + analytics dashboard',
+                  'SMS & email automation sequences',
+                ].map(item => (
+                  <div key={item} className="flex items-center space-x-3 rounded-2xl bg-white/5 p-4">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#7ef7d4] to-[#50e5ff] text-[#050817]">
+                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <span className="text-sm text-white/75">{item}</span>
+                  </div>
+                ))}
+              </div>
               <button
                 onClick={() => handleCTAClick('pricing')}
-                className="w-full bg-[#FFDC35] text-[#171717] py-4 rounded-lg font-bold text-lg hover:bg-yellow-400 transition-colors"
+                className="mt-10 inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-[#7ef7d4] via-[#50e5ff] to-[#a086ff] px-6 py-4 text-lg font-semibold text-[#050817] transition-transform duration-300 hover:scale-[1.02]"
               >
-                Get Started Today
+                Start your activation
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-16 lg:py-24 bg-[#171717] text-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-5xl font-bold mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-xl text-gray-300">
-              Everything you need to know about our trade show lead generation system
+      {/* FAQ */}
+      <section className="relative overflow-hidden bg-[#070c26] py-20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(126,247,212,0.18),_transparent_60%)]" />
+        <div className="container relative z-10 mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm uppercase tracking-[0.35em] text-[#7ef7d4]">FAQ</p>
+            <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">Answers for your event team</h2>
+            <p className="mt-4 text-lg text-white/70">
+              Everything you need to know about running high-converting, neon-inspired trade show campaigns.
             </p>
           </div>
-
-          <div className="max-w-4xl mx-auto space-y-4">
+          <div className="mx-auto mt-12 max-w-3xl space-y-4">
             {faqs.map(faq => (
-              <div key={faq.id} className="bg-[#2a2a2a] rounded-lg overflow-hidden">
+              <div key={faq.id} className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur">
                 <button
-                  className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-[#333] transition-colors"
                   onClick={() => setOpenFAQ(openFAQ === faq.id ? null : faq.id)}
+                  className="flex w-full items-center justify-between px-6 py-5 text-left text-lg font-medium text-white transition-colors hover:bg-white/5"
                 >
-                  <span className="text-lg font-semibold">{faq.question}</span>
+                  <span>{faq.question}</span>
                   <svg
-                    className={`w-6 h-6 transform transition-transform ${openFAQ === faq.id ? 'rotate-180' : ''}`}
+                    className={`h-6 w-6 transform transition-transform ${openFAQ === faq.id ? 'rotate-180 text-[#7ef7d4]' : 'text-white/60'}`}
                     fill="none"
                     stroke="currentColor"
+                    strokeWidth={1.5}
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
                 {openFAQ === faq.id && (
-                  <div className="px-6 pb-4">
-                    <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
-                  </div>
+                  <div className="px-6 pb-6 text-base text-white/65">{faq.answer}</div>
                 )}
               </div>
             ))}
@@ -351,23 +360,22 @@ export default function TradeshowLanding() {
         </div>
       </section>
 
-      {/* Final CTA with Form */}
-      <section id="lead-form" className="py-16 lg:py-24 bg-[#03c4eb]">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-5xl font-bold text-white mb-4">
-                Ready to Transform Your Trade Show Results?
-              </h2>
-              <p className="text-xl text-blue-100">
-                Book a demo and see how we can help you capture 3x more qualified conversations at your next event.
-              </p>
-            </div>
-
+      {/* CTA Form */}
+      <section id="lead-form" className="relative border-t border-white/5 bg-[#050817] py-20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(160,134,255,0.25),_transparent_55%)]" />
+        <div className="container relative z-10 mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm uppercase tracking-[0.35em] text-[#7ef7d4]">Let&apos;s talk</p>
+            <h2 className="mt-4 text-3xl font-semibold text-white sm:text-4xl">Schedule your luminous lead activation</h2>
+            <p className="mt-4 text-lg text-white/70">
+              Share a few details and we&apos;ll deliver a tailored walkthrough within one business day.
+            </p>
+          </div>
+          <div className="mx-auto mt-16 max-w-4xl">
             {isSubmitted ? (
-              <div className="bg-white rounded-2xl p-8 text-center">
-                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="rounded-[32px] border border-[#7ef7d4]/40 bg-[#0a1028]/80 p-10 text-center shadow-[0_30px_70px_rgba(10,20,50,0.55)]">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#7ef7d4] via-[#50e5ff] to-[#a086ff] text-[#050817]">
+                  <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -375,62 +383,48 @@ export default function TradeshowLanding() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-[#171717] mb-2">Thank You!</h3>
-                <p className="text-gray-600">We'll reach out within one business day to schedule your walkthrough.</p>
+                <h3 className="mt-6 text-2xl font-semibold text-white">Thank you!</h3>
+                <p className="mt-3 text-base text-white/70">We&apos;ll reach out shortly to lock in your session.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl p-8 shadow-xl">
-                <div className="grid md:grid-cols-2 gap-6">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="rounded-[32px] border border-white/10 bg-white/5 p-10 shadow-[0_40px_90px_rgba(5,8,23,0.6)] backdrop-blur"
+              >
+                <div className="grid gap-6 md:grid-cols-2">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Name *
-                    </label>
+                    <label className="text-sm font-semibold uppercase tracking-widest text-white/60">Name *</label>
                     <input
                       {...register('name')}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#03c4eb] focus:border-transparent"
                       placeholder="Your full name"
+                      className="mt-2 w-full rounded-2xl border border-white/10 bg-[#0a1028]/80 px-4 py-3 text-base text-white shadow-inner focus:border-[#7ef7d4] focus:outline-none focus:ring-2 focus:ring-[#7ef7d4]/40"
                     />
-                    {errors.name && (
-                      <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-                    )}
+                    {errors.name && <p className="mt-2 text-sm text-[#ff89b0]">{errors.name.message}</p>}
                   </div>
-
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email *
-                    </label>
+                    <label className="text-sm font-semibold uppercase tracking-widest text-white/60">Email *</label>
                     <input
                       {...register('email')}
                       type="email"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#03c4eb] focus:border-transparent"
-                      placeholder="your@email.com"
+                      placeholder="you@company.com"
+                      className="mt-2 w-full rounded-2xl border border-white/10 bg-[#0a1028]/80 px-4 py-3 text-base text-white shadow-inner focus:border-[#7ef7d4] focus:outline-none focus:ring-2 focus:ring-[#7ef7d4]/40"
                     />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-                    )}
+                    {errors.email && <p className="mt-2 text-sm text-[#ff89b0]">{errors.email.message}</p>}
                   </div>
-
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Company *
-                    </label>
+                    <label className="text-sm font-semibold uppercase tracking-widest text-white/60">Company *</label>
                     <input
                       {...register('company')}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#03c4eb] focus:border-transparent"
                       placeholder="Your company name"
+                      className="mt-2 w-full rounded-2xl border border-white/10 bg-[#0a1028]/80 px-4 py-3 text-base text-white shadow-inner focus:border-[#7ef7d4] focus:outline-none focus:ring-2 focus:ring-[#7ef7d4]/40"
                     />
-                    {errors.company && (
-                      <p className="mt-1 text-sm text-red-600">{errors.company.message}</p>
-                    )}
+                    {errors.company && <p className="mt-2 text-sm text-[#ff89b0]">{errors.company.message}</p>}
                   </div>
-
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Next Trade Show *
-                    </label>
+                    <label className="text-sm font-semibold uppercase tracking-widest text-white/60">Next trade show *</label>
                     <select
                       {...register('nextShow')}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#03c4eb] focus:border-transparent"
+                      className="mt-2 w-full appearance-none rounded-2xl border border-white/10 bg-[#0a1028]/80 px-4 py-3 text-base text-white shadow-inner focus:border-[#7ef7d4] focus:outline-none focus:ring-2 focus:ring-[#7ef7d4]/40"
                     >
                       <option value="">Select timeline</option>
                       <option value="Soon">Within 30 days</option>
@@ -438,33 +432,25 @@ export default function TradeshowLanding() {
                       <option value="60-90 days">60-90 days</option>
                       <option value="Not scheduled">Not scheduled yet</option>
                     </select>
-                    {errors.nextShow && (
-                      <p className="mt-1 text-sm text-red-600">{errors.nextShow.message}</p>
-                    )}
+                    {errors.nextShow && <p className="mt-2 text-sm text-[#ff89b0]">{errors.nextShow.message}</p>}
                   </div>
                 </div>
-
                 <div className="mt-6">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Additional Notes
-                  </label>
+                  <label className="text-sm font-semibold uppercase tracking-widest text-white/60">Additional notes</label>
                   <textarea
                     {...register('notes')}
                     rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#03c4eb] focus:border-transparent"
                     placeholder="Tell us about your goals or any specific requirements..."
+                    className="mt-2 w-full rounded-2xl border border-white/10 bg-[#0a1028]/80 px-4 py-3 text-base text-white shadow-inner focus:border-[#7ef7d4] focus:outline-none focus:ring-2 focus:ring-[#7ef7d4]/40"
                   />
-                  {errors.notes && (
-                    <p className="mt-1 text-sm text-red-600">{errors.notes.message}</p>
-                  )}
+                  {errors.notes && <p className="mt-2 text-sm text-[#ff89b0]">{errors.notes.message}</p>}
                 </div>
-
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full mt-8 bg-[#FFDC35] text-[#171717] py-4 rounded-lg font-bold text-lg hover:bg-yellow-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-10 inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-[#7ef7d4] via-[#50e5ff] to-[#a086ff] px-6 py-4 text-lg font-semibold text-[#050817] transition-transform duration-300 hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Book My Demo'}
+                  {isSubmitting ? 'Submitting…' : 'Book my demo'}
                 </button>
               </form>
             )}
@@ -472,13 +458,8 @@ export default function TradeshowLanding() {
         </div>
       </section>
 
-      {/* Simple Footer */}
-      <footer className="bg-[#171717] text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-gray-400">
-            © 2024 SyncWorkflow. All rights reserved. | Turning trade show traffic into qualified leads.
-          </p>
-        </div>
+      <footer className="border-t border-white/10 bg-[#040716] py-10 text-center text-sm text-white/50">
+        © {new Date().getFullYear()} SyncWorkflow. Designed with the evoto.ai inspired neon aesthetic for every trade show team.
       </footer>
     </div>
   );
