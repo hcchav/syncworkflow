@@ -39,6 +39,16 @@
   flex-shrink: 0;
 }
 
+/* Allow the boat tradeshow phone wheel skin to render outer rings */
+.wheel-spin.phone-wheel {
+  overflow: visible;
+  border-radius: 0;
+}
+
+.wheel-spin.phone-wheel svg {
+  overflow: visible !important;
+}
+
 /* Mobile-specific wheel constraints */
 @media (max-width: 480px) {
   .wheel-spin {
