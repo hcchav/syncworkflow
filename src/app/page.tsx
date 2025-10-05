@@ -1,19 +1,19 @@
-import HeroSection from '@/components/sections/HeroSection';
-import GrowthPlanSection from '@/components/sections/GrowthPlanSection';
-import ServicesSection from '@/components/sections/ServicesSection';
-import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
-import TestimonialsSection from '@/components/sections/TestimonialsSection';
-import CtaSection from '@/components/sections/CtaSection';
+import TradeshowLanding from '@/components/templates/tradeshow-landing';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Trade Show Lead Generation — $2 per Qualified Lead | SyncWorkflow',
+  description:
+    'Gamified lead capture for every trade show. Spin-to-win activations, instant CRM delivery, and performance-based pricing.',
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export default function Home() {
   return (
     <main className="w-full">
-      <HeroSection />
-      <GrowthPlanSection />
-      <ServicesSection />
-      <CaseStudiesSection />
-      <TestimonialsSection />
-      <CtaSection />
+      <TradeshowLanding />
     </main>
   );
 }
