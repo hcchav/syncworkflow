@@ -1,5 +1,7 @@
 // Main exports
 export { WheelSpin } from './WheelSpin';
+export { default as WheelDemo } from './WheelDemo';
+export type { WheelDemoProps } from './WheelDemo';
 export type { 
   WheelConfig, 
   WheelSpinRef, 
