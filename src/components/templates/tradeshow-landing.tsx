@@ -152,7 +152,7 @@ export default function TradeshowLanding() {
               Trade Show Lead Engine
             </div>
             <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              Turn trade show buzz into <span className="text-[#03c4eb]">qualified pipeline</span> at every event.
+              Turn trade show buzz into <span className="text-[#FFDC35]">qualified pipeline</span> at every event.
             </h1>
             <p className="max-w-xl text-lg text-gray-300 sm:text-xl">
               SyncWorkflow brings the proven boat show playbook to every industry—interactive prize flows, automated follow-up, and $2 qualified leads.
@@ -169,7 +169,7 @@ export default function TradeshowLanding() {
               </button>
               <button
                 onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
-                className="inline-flex items-center justify-center rounded-lg border-2 border-[#03c4eb] px-8 py-3 text-lg font-semibold text-[#03c4eb] transition-colors duration-200 hover:bg-[#03c4eb] hover:text-white"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-3 text-lg font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-white hover:text-[#171717]"
               >
                 View pricing
               </button>
@@ -184,15 +184,15 @@ export default function TradeshowLanding() {
             </div>
           </div>
           <div className="relative">
-            <div className="absolute inset-0 rounded-[32px] bg-[#03c4eb]/20 blur-3xl" />
+            <div className="absolute inset-0 rounded-[32px] bg-[#FFDC35]/10 blur-3xl" />
             <div className="relative rounded-[32px] border border-white/10 bg-[#1f1f1f] p-6">
               {!showVideo ? (
                 <button
                   type="button"
                   onClick={() => handleVideoClick('hero')}
-                  className="group flex h-full w-full flex-col items-center justify-center rounded-[28px] border border-white/10 bg-[#2a2a2a] p-10 text-center transition-all duration-200 hover:border-[#03c4eb]"
+                  className="group flex h-full w-full flex-col items-center justify-center rounded-[28px] border border-white/10 bg-[#2a2a2a] p-10 text-center transition-all duration-200 hover:border-[#FFDC35]"
                 >
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#03c4eb] text-white transition-transform duration-200 group-hover:scale-105">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#FFDC35] text-[#171717] transition-transform duration-200 group-hover:scale-105">
                     <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8.25 5.886a.6.6 0 01.906-.519l7.5 4.114a.6.6 0 010 1.038l-7.5 4.114a.6.6 0 01-.906-.519V5.886z" />
                     </svg>
@@ -226,7 +226,7 @@ export default function TradeshowLanding() {
                 key={card.title}
                 className="rounded-2xl border border-gray-200 bg-white p-8 text-left shadow-lg transition-transform duration-200 hover:-translate-y-2"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#03c4eb]/10 text-[#03c4eb]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFDC35]/20 text-[#171717]">
                   <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                   </svg>
@@ -249,7 +249,7 @@ export default function TradeshowLanding() {
           <div className="mt-16 grid gap-8 md:grid-cols-3">
             {processSteps.map(step => (
               <div key={step.title} className="rounded-2xl border border-transparent bg-white p-8 shadow-lg">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-[#03c4eb]">{step.title}</h3>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-[#FFDC35]">{step.title}</h3>
                 <p className="mt-4 text-sm leading-relaxed text-gray-600">{step.description}</p>
               </div>
             ))}
@@ -262,7 +262,7 @@ export default function TradeshowLanding() {
         <div className="container mx-auto px-4">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div className="space-y-8">
-              <span className="inline-flex items-center rounded-full border border-[#03c4eb]/30 bg-[#03c4eb]/10 px-4 py-1 text-sm uppercase tracking-[0.3em] text-[#03c4eb]">
+              <span className="inline-flex items-center rounded-full border border-[#FFDC35]/40 bg-[#FFDC35]/10 px-4 py-1 text-sm uppercase tracking-[0.3em] text-[#171717]">
                 Pricing
               </span>
               <h2 className="text-3xl font-semibold text-[#171717] sm:text-4xl lg:text-5xl">Performance-based model that de-risks every show</h2>
@@ -271,7 +271,7 @@ export default function TradeshowLanding() {
               </p>
               <div className="space-y-4 text-gray-700">
                 <div className="flex items-start gap-3">
-                  <div className="mt-1 h-6 w-6 rounded-full bg-[#03c4eb] text-white">
+                  <div className="mt-1 h-6 w-6 rounded-full bg-[#FFDC35] text-[#171717]">
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
@@ -279,7 +279,7 @@ export default function TradeshowLanding() {
                   <p>Dedicated creative team to match your booth aesthetic and show theme.</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="mt-1 h-6 w-6 rounded-full bg-[#03c4eb] text-white">
+                  <div className="mt-1 h-6 w-6 rounded-full bg-[#FFDC35] text-[#171717]">
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
@@ -287,7 +287,7 @@ export default function TradeshowLanding() {
                   <p>Real-time qualification scoring with alerts for your hottest prospects.</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="mt-1 h-6 w-6 rounded-full bg-[#03c4eb] text-white">
+                  <div className="mt-1 h-6 w-6 rounded-full bg-[#FFDC35] text-[#171717]">
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
@@ -295,7 +295,7 @@ export default function TradeshowLanding() {
                   <p>Turnkey logistics: signage, prize fulfillment, QR codes, and analytics setup.</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="mt-1 h-6 w-6 rounded-full bg-[#03c4eb] text-white">
+                  <div className="mt-1 h-6 w-6 rounded-full bg-[#FFDC35] text-[#171717]">
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
@@ -304,26 +304,26 @@ export default function TradeshowLanding() {
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border-4 border-[#03c4eb] bg-white p-8 shadow-xl">
+            <div className="rounded-2xl border-4 border-[#FFDC35] bg-white p-8 shadow-xl">
               <div className="text-center">
                 <h3 className="text-5xl font-bold text-[#171717]">$2</h3>
                 <p className="mt-2 text-gray-600">per qualified lead</p>
               </div>
               <div className="mt-6 space-y-4 text-sm text-gray-700">
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-[#03c4eb]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-[#FFDC35]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
                   <span>Includes setup, creative, and optimization support.</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-[#03c4eb]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-[#FFDC35]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
                   <span>CRM integrations + automation templates included.</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <svg className="h-5 w-5 text-[#03c4eb]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-[#FFDC35]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
                   <span>No retainers or subscriptions.</span>
@@ -375,7 +375,7 @@ export default function TradeshowLanding() {
       </section>
 
       {/* CTA + Form Section */}
-      <section id="lead-form" className="bg-[#03c4eb] py-20 lg:py-24">
+      <section id="lead-form" className="bg-[#171717] py-20 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl rounded-3xl bg-white p-10 shadow-xl">
             <div className="mx-auto max-w-2xl text-center">
@@ -388,19 +388,19 @@ export default function TradeshowLanding() {
                   <h3 className="text-xl font-semibold text-[#171717]">What you’ll get</h3>
                   <ul className="mt-4 space-y-3 text-sm leading-relaxed text-gray-600">
                     <li className="flex items-start gap-3">
-                      <svg className="mt-1 h-5 w-5 text-[#03c4eb]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <svg className="mt-1 h-5 w-5 text-[#FFDC35]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                       <span>15-minute strategy session focused on your upcoming shows.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <svg className="mt-1 h-5 w-5 text-[#03c4eb]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <svg className="mt-1 h-5 w-5 text-[#FFDC35]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                       <span>Walkthrough of the capture experience on mobile.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <svg className="mt-1 h-5 w-5 text-[#03c4eb]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <svg className="mt-1 h-5 w-5 text-[#FFDC35]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                       <span>Custom ROI model and foot traffic projections.</span>
@@ -411,19 +411,19 @@ export default function TradeshowLanding() {
                   <h3 className="text-xl font-semibold text-[#171717]">Why teams choose SyncWorkflow</h3>
                   <ul className="mt-4 space-y-3 text-sm leading-relaxed text-gray-600">
                     <li className="flex items-start gap-3">
-                      <svg className="mt-1 h-5 w-5 text-[#03c4eb]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <svg className="mt-1 h-5 w-5 text-[#FFDC35]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                       <span>Battle-tested at consumer and B2B shows across industries.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <svg className="mt-1 h-5 w-5 text-[#03c4eb]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <svg className="mt-1 h-5 w-5 text-[#FFDC35]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                       <span>Hands-on show support from creative to analytics.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <svg className="mt-1 h-5 w-5 text-[#03c4eb]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <svg className="mt-1 h-5 w-5 text-[#FFDC35]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                       <span>Transparent performance pricing with zero risk.</span>
@@ -434,7 +434,7 @@ export default function TradeshowLanding() {
               <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-lg">
                 {isSubmitted ? (
                   <div className="flex flex-col items-center justify-center text-center text-[#171717]">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#03c4eb]/10 text-[#03c4eb]">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#FFDC35]/20 text-[#171717]">
                       <svg className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
@@ -448,7 +448,7 @@ export default function TradeshowLanding() {
                       <label className="block text-sm font-semibold text-[#171717]">Name *</label>
                       <input
                         {...register('name')}
-                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#03c4eb] focus:outline-none focus:ring-2 focus:ring-[#03c4eb]/20"
+                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#FFDC35] focus:outline-none focus:ring-2 focus:ring-[#FFDC35]/40"
                         placeholder="Jane Smith"
                       />
                       {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
@@ -458,7 +458,7 @@ export default function TradeshowLanding() {
                       <input
                         {...register('email')}
                         type="email"
-                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#03c4eb] focus:outline-none focus:ring-2 focus:ring-[#03c4eb]/20"
+                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#FFDC35] focus:outline-none focus:ring-2 focus:ring-[#FFDC35]/40"
                         placeholder="jane@company.com"
                       />
                       {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
@@ -467,7 +467,7 @@ export default function TradeshowLanding() {
                       <label className="block text-sm font-semibold text-[#171717]">Company *</label>
                       <input
                         {...register('company')}
-                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#03c4eb] focus:outline-none focus:ring-2 focus:ring-[#03c4eb]/20"
+                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#FFDC35] focus:outline-none focus:ring-2 focus:ring-[#FFDC35]/40"
                         placeholder="Company name"
                       />
                       {errors.company && <p className="mt-1 text-sm text-red-600">{errors.company.message}</p>}
@@ -476,7 +476,7 @@ export default function TradeshowLanding() {
                       <label className="block text-sm font-semibold text-[#171717]">When is your next show?</label>
                       <select
                         {...register('nextShow')}
-                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#03c4eb] focus:outline-none focus:ring-2 focus:ring-[#03c4eb]/20"
+                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#FFDC35] focus:outline-none focus:ring-2 focus:ring-[#FFDC35]/40"
                         defaultValue=""
                       >
                         <option value="" disabled>
@@ -493,7 +493,7 @@ export default function TradeshowLanding() {
                       <label className="block text-sm font-semibold text-[#171717]">Notes</label>
                       <textarea
                         {...register('notes')}
-                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#03c4eb] focus:outline-none focus:ring-2 focus:ring-[#03c4eb]/20"
+                        className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-[#FFDC35] focus:outline-none focus:ring-2 focus:ring-[#FFDC35]/40"
                         placeholder="Tell us about your booth goals"
                         rows={4}
                       />
