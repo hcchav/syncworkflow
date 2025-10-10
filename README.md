@@ -78,6 +78,15 @@ npm run dev
 
 Then visit [http://localhost:3000/wheel-demo](http://localhost:3000/wheel-demo) (or the port shown in your terminal if you have configured a custom `PORT`).
 
+To hide the decorative helm handles when embedding the wheel elsewhere, pass `showHandles={false}` to the component (this maps to the underlying skin configuration, so you can also control it through `skinOptions`).
+
+```tsx
+<Wheel skin="mahoney" showHandles={false} segments={[
+  { label: 'Grand Prize' },
+  { label: 'Try Again' },
+]} />
+```
+
 ## 📁 Project Structure
 
 ```

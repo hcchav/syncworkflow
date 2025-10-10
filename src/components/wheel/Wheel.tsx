@@ -54,6 +54,8 @@ export type WheelProps = {
   skin?: string;
   /** Additional overrides for the resolved skin */
   skinOptions?: Partial<SkinConfig>;
+  /** Toggle the visibility of helm handles without diving into skinOptions */
+  showHandles?: SkinConfig['showHandles'];
   /** Override the wheel size (defaults to 480) */
   size?: WheelConfig['size'];
   /** Override pointer position (defaults to "top") */
@@ -72,6 +74,7 @@ export const Wheel = forwardRef<WheelSpinRef, WheelProps>(
   ({
     skin,
     skinOptions,
+    showHandles,
     size,
     pointer,
     segments,
@@ -101,6 +104,7 @@ export const Wheel = forwardRef<WheelSpinRef, WheelProps>(
       const resolvedSkin = mergeSkinConfig(resolvedSkinName, {
         ...configSkin,
         ...skinOptions,
+        ...(showHandles !== undefined ? { showHandles } : {}),
       });
 
       const resolvedSegments = segments ?? configSegments ?? DEFAULT_SEGMENTS;
@@ -123,7 +127,17 @@ export const Wheel = forwardRef<WheelSpinRef, WheelProps>(
         },
         skin: resolvedSkin,
       };
-    }, [config, pointer, segments, selection, size, skin, skinOptions, spin]);
+    }, [
+      config,
+      pointer,
+      segments,
+      selection,
+      showHandles,
+      size,
+      skin,
+      skinOptions,
+      spin,
+    ]);
 
     return (
       <WheelSpin
