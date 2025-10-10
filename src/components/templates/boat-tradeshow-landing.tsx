@@ -43,7 +43,7 @@ export default function BoatTradeshowLanding() {
   const [showVideo, setShowVideo] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [openFAQ, setOpenFAQ] = useState<string | null>(null);
-  
+
   // Phone animation states
   const [animationStep, setAnimationStep] = useState(0);
   const [nextStep, setNextStep] = useState(0);
@@ -65,6 +65,8 @@ export default function BoatTradeshowLanding() {
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(5); // Always land on 'Free Setup' (yellow segment)
   const [winningPrize, setWinningPrize] = useState('');
+
+  const currentYear = new Date().getFullYear();
   
   // Enhanced prize wheel data with modern colors and gradients
   const wheelData = [
@@ -427,12 +429,14 @@ export default function BoatTradeshowLanding() {
       <Hotjar />
       
       {/* Top Navigation Bar */}
-      <nav className="bg-[#171717] text-white h-16 flex items-center">
-        <div className="w-full flex items-center justify-center gap-4">
-          <span className="text-white text-md font-medium font-[600]">Turn Boat Show Visitors into Leads Instantly</span>
-          <button 
+      <nav className="bg-[#171717] text-white">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-2 px-4 py-3 sm:flex-row sm:justify-center sm:gap-4">
+          <span className="text-center text-white text-md font-medium font-[600]">
+            Turn Boat Show Visitors into Leads Instantly
+          </span>
+          <button
             onClick={() => handleCTAClick('topbar')}
-            className="bg-[#FFDC35] text-[#171717] px-4 py-1.5 rounded text-sm font-semibold hover:bg-yellow-400 transition-colors"
+            className="w-full rounded bg-[#FFDC35] px-5 py-2 text-sm font-semibold text-[#171717] transition-colors hover:bg-yellow-400 sm:w-auto"
           >
             Try It Now
           </button>
@@ -891,35 +895,35 @@ export default function BoatTradeshowLanding() {
               {/* Left Column - Portrait Video */}
               <div className="lg:order-1">
                 {!showVideo ? (
-                  <div className="relative">
-                    <div className="w-full h-[500px] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-xl overflow-hidden">
-                      <div 
-                        className="absolute inset-0 flex items-center justify-center cursor-pointer group"
+                  <div className="relative mx-auto w-full max-w-sm lg:max-w-md">
+                    <div className="relative aspect-[9/16] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 shadow-xl">
+                      <div
+                        className="absolute inset-0 flex cursor-pointer items-center justify-center group"
                         onClick={() => handleVideoClick('social_proof')}
                       >
                         <div className="text-center">
-                          <div className="w-20 h-20 bg-[#171717] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#2a2a2a] transition-all duration-300 shadow-2xl group-hover:scale-110">
-                            <Play className="w-8 h-8 text-white ml-1" />
+                          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[#171717] shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-[#2a2a2a]">
+                            <Play className="ml-1 h-8 w-8 text-white" />
                           </div>
                           <p className="text-xl font-bold text-[#171717] mb-2">Watch Demo Video</p>
                           <p className="text-gray-600">See SuperZoo results in action</p>
                         </div>
                       </div>
-                      
-                      <div className="absolute top-4 right-4 bg-[#FFDC35] text-[#171717] px-3 py-1 rounded-full text-sm font-bold">
+
+                      <div className="absolute top-4 right-4 rounded-full bg-[#FFDC35] px-3 py-1 text-sm font-bold text-[#171717]">
                         2 min
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <video 
-                    className="w-full h-[500px] object-cover rounded-2xl shadow-xl"
-                    controls
-                    autoPlay
-                  >
-                    <source src="/videos/customer_prize_wheel_vertical.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  <div className="relative mx-auto w-full max-w-sm lg:max-w-md">
+                    <div className="relative aspect-[9/16] w-full overflow-hidden rounded-2xl shadow-xl">
+                      <video className="absolute inset-0 h-full w-full object-cover" controls autoPlay>
+                        <source src="/videos/customer_prize_wheel_vertical.mp4" type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  </div>
                 )}
               </div>
 
@@ -1365,7 +1369,7 @@ export default function BoatTradeshowLanding() {
       <footer className="bg-[#171717] text-white py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-gray-400">
-            © 2024 SyncWorkflow. All rights reserved. | Turning trade show traffic into qualified leads.
+            © {currentYear} SyncWorkflow. All rights reserved. | Turning trade show traffic into qualified leads.
           </p>
         </div>
       </footer>
