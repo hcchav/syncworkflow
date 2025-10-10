@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import dynamic from 'next/dynamic';
 import Hotjar, { fireHotjarEvent } from '@/components/analytics/Hotjar';
-import { CustomWheel } from '@/components/ui/CustomWheel';
+import { WheelSpin, type WheelSpinRef, type WheelConfig } from '@/components/wheel';
 import '../../styles/wheel.css';
 import { 
   CheckCircle, 
@@ -62,21 +62,109 @@ export default function BoatTradeshowLanding() {
   const [selectedSolution, setSelectedSolution] = useState('');
   const [qualifyStep, setQualifyStep] = useState(1);
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
-  const [mustSpin, setMustSpin] = useState(false);
-  const [prizeNumber, setPrizeNumber] = useState(5); // Always land on 'Free Setup' (yellow segment)
+  const prizeNumber = 5; // Always land on 'Free Setup' (yellow segment)
   const [winningPrize, setWinningPrize] = useState('');
-  
-  // Enhanced prize wheel data with modern colors and gradients
-  const wheelData = [
-    { option: 'No Prize', style: { backgroundColor: '#e2e8f0', textColor: '#475569' } },
-    { option: 'VIP Access', style: { backgroundColor: '#7c3aed', textColor: 'white' } },
-    { option: 'Gift Card', style: { backgroundColor: '#1e293b', textColor: 'white' } },
-    { option: '25% Off', style: { backgroundColor: '#f1f5f9', textColor: '#334155' } },
-    { option: '50% Off', style: { backgroundColor: '#059669', textColor: 'white' } },
-    { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#1e293b' } },
-    { option: '$100 Off', style: { backgroundColor: '#dc2626', textColor: 'white' } },
-    { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#1e293b' } },
-  ];
+  const [winningPrizeColor, setWinningPrizeColor] = useState('#FFDC35');
+  const [isWheelSpinning, setIsWheelSpinning] = useState(false);
+  const wheelRef = useRef<WheelSpinRef>(null);
+  const spinTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const wheelSegments = useMemo(() => (
+    [
+      {
+        label: 'No Prize',
+        color: '#f4f4f4',
+        labelColor: '#475569',
+        payload: { accent: '#475569' },
+      },
+      {
+        label: 'VIP Access',
+        color: '#03c4eb',
+        labelColor: '#ffffff',
+        payload: { accent: '#03c4eb' },
+      },
+      {
+        label: 'Gift Card',
+        color: '#171717',
+        labelColor: '#FFDC35',
+        payload: { accent: '#171717' },
+      },
+      {
+        label: '25% Off',
+        color: '#e0f6fe',
+        labelColor: '#0369a1',
+        payload: { accent: '#03c4eb' },
+      },
+      {
+        label: '50% Off',
+        color: '#0284c7',
+        labelColor: '#ffffff',
+        payload: { accent: '#0284c7' },
+      },
+      {
+        label: 'Free Setup',
+        color: '#FFDC35',
+        labelColor: '#171717',
+        payload: { accent: '#FFDC35' },
+      },
+      {
+        label: '$100 Off',
+        color: '#171717',
+        labelColor: '#ffffff',
+        payload: { accent: '#171717' },
+      },
+      {
+        label: 'Free Setup Bonus',
+        color: '#03c4eb',
+        labelColor: '#ffffff',
+        payload: { accent: '#03c4eb' },
+      },
+    ]
+  ), []);
+
+  const wheelConfig = useMemo<WheelConfig>(() => ({
+    size: 320,
+    pointer: 'top',
+    spin: {
+      duration: 4.2,
+      easing: 'power4.out',
+      extraSpins: [6, 7],
+    },
+    selection: {
+      seed: null,
+    },
+    segments: wheelSegments,
+    skin: {
+      name: 'mahogany-helm',
+      style: 'mahogany',
+      showHelm: true,
+      showHandles: false,
+      showSpokes: false,
+      handleWidthFactor: 0.1,
+      handleLengthFactor: 0.38,
+      ringOuterWidthFactor: 0.08,
+      ringInnerWidthFactor: 0.05,
+      separator: { stroke: '#5b3415', strokeWidth: 2 },
+      hub: {
+        show: true,
+        fill: '#f7e3c5',
+        stroke: '#5b3415',
+        text: 'SPIN',
+        textColor: '#5b3415',
+        textSize: 16,
+      },
+      effects: { dropShadow: true, glow: false },
+    },
+  }), [wheelSegments]);
+
+  const defaultPrizeLabel = wheelSegments[prizeNumber]?.label ?? 'Free Setup';
+  const defaultPrizeAccent = (wheelSegments[prizeNumber]?.payload as { accent?: string } | undefined)?.accent ?? '#FFDC35';
+  const displayedPrize = winningPrize || defaultPrizeLabel;
+  const displayedAccent = winningPrize ? winningPrizeColor : defaultPrizeAccent;
+  const isFreeSetupPrize = displayedPrize.toLowerCase().includes('free setup');
+  const formattedPrizeText = isFreeSetupPrize
+    ? `${displayedPrize.toLowerCase().includes('bonus') ? displayedPrize : `${displayedPrize} Package`} (Value $500)`
+    : displayedPrize;
 
   // Typing animation function
   const typeText = (text: string, setValue: (value: string) => void, setCompleted: (completed: boolean) => void, delay = 100) => {
@@ -249,24 +337,54 @@ export default function BoatTradeshowLanding() {
 
   // Prize wheel spinning animation
   useEffect(() => {
-    if (animationStep === 4) {
-      console.log('Prize wheel step active - starting spin');
-      console.log('Current mustSpin:', mustSpin);
-      console.log('Current prizeNumber:', prizeNumber);
-      console.log('WheelData length:', wheelData.length);
-      
-      // Reset wheel state
-      setMustSpin(false);
-      setWinningPrize('');
-      
-      // Start spinning after a delay
-      setTimeout(() => {
-        console.log('Setting mustSpin to true...');
-        console.log('About to spin with prizeNumber:', prizeNumber);
-        setMustSpin(true);
-      }, 500);
+    if (animationStep !== 4) {
+      if (spinTimeoutRef.current) {
+        clearTimeout(spinTimeoutRef.current);
+        spinTimeoutRef.current = null;
+      }
+      setIsWheelSpinning(false);
+      return;
     }
-  }, [animationStep]);
+
+    const targetSegment = wheelSegments[prizeNumber];
+    console.log('Prize wheel step active - starting spin');
+    console.log('Current prizeNumber:', prizeNumber);
+    console.log('Target segment:', targetSegment?.label);
+
+    const defaultAccent = (targetSegment?.payload as { accent?: string } | undefined)?.accent ?? '#FFDC35';
+
+    setWinningPrize('');
+    setWinningPrizeColor(defaultAccent);
+    setIsWheelSpinning(false);
+
+    if (spinTimeoutRef.current) {
+      clearTimeout(spinTimeoutRef.current);
+    }
+
+    spinTimeoutRef.current = setTimeout(() => {
+      if (!wheelRef.current) {
+        console.warn('Wheel reference not available - skipping spin');
+        return;
+      }
+
+      console.log('Triggering wheel spin to index:', prizeNumber, 'label:', targetSegment?.label);
+      setIsWheelSpinning(true);
+
+      wheelRef.current
+        .spin({ targetIndex: prizeNumber })
+        .catch((error) => {
+          console.error('Wheel spin failed:', error);
+          setIsWheelSpinning(false);
+        });
+    }, 500);
+
+    return () => {
+      if (spinTimeoutRef.current) {
+        clearTimeout(spinTimeoutRef.current);
+        spinTimeoutRef.current = null;
+      }
+    };
+  }, [animationStep, prizeNumber, wheelSegments]);
 
   // Step functions with proper timer management
   const runQRStep = useCallback(() => {
@@ -356,8 +474,9 @@ export default function BoatTradeshowLanding() {
       setSelectedTimeline('Actively looking now');
       setQualifyStep(1);
       setVerificationCode(['', '', '', '', '', '']);
-      setMustSpin(false);
+      setIsWheelSpinning(false);
       setWinningPrize('');
+      setWinningPrizeColor('#FFDC35');
       setIsTyping(false);
       setRegistrationExtended(false);
       
@@ -808,42 +927,62 @@ export default function BoatTradeshowLanding() {
                         <div className={`transition-all duration-500 ${animationStep === 4 ? 'opacity-100 ' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="flex flex-col items-center justify-center h-full">
                             
-                            <div style={{ position: "relative", height: "350px", width: "100%" }}>
+                            <div className="relative w-full h-[350px]">
                               {/* Floating celebration particles */}
                               {winningPrize && (
                                 <>
-                                  <div className="absolute top-10 left-10 w-2 h-2 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '0s' }}></div>
-                                  <div className="absolute top-16 right-12 w-1.5 h-1.5 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '0.5s' }}></div>
-                                  <div className="absolute bottom-20 left-16 w-2.5 h-2.5 bg-[#7c3aed] rounded-full floating-particle" style={{ animationDelay: '1s' }}></div>
-                                  <div className="absolute bottom-12 right-8 w-1 h-1 bg-[#dc2626] rounded-full floating-particle" style={{ animationDelay: '1.5s' }}></div>
-                                  <div className="absolute top-1/3 left-8 w-1.5 h-1.5 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '2s' }}></div>
-                                  <div className="absolute top-1/2 right-6 w-2 h-2 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '2.5s' }}></div>
+                                  <div
+                                    className="absolute top-10 left-10 w-2 h-2 rounded-full floating-particle"
+                                    style={{ animationDelay: '0s', backgroundColor: winningPrizeColor, opacity: winningPrizeColor.toLowerCase() === '#171717' ? 0.85 : 1 }}
+                                  ></div>
+                                  <div
+                                    className="absolute top-16 right-12 w-1.5 h-1.5 rounded-full floating-particle"
+                                    style={{ animationDelay: '0.45s', backgroundColor: '#03c4eb' }}
+                                  ></div>
+                                  <div
+                                    className="absolute bottom-20 left-16 w-2.5 h-2.5 rounded-full floating-particle"
+                                    style={{ animationDelay: '0.9s', backgroundColor: '#171717', opacity: 0.65 }}
+                                  ></div>
+                                  <div
+                                    className="absolute bottom-12 right-8 w-1 h-1 rounded-full floating-particle"
+                                    style={{ animationDelay: '1.35s', backgroundColor: '#FFDC35' }}
+                                  ></div>
+                                  <div
+                                    className="absolute top-1/3 left-8 w-1.5 h-1.5 rounded-full floating-particle"
+                                    style={{ animationDelay: '1.8s', backgroundColor: '#9feaff' }}
+                                  ></div>
+                                  <div
+                                    className="absolute top-1/2 right-6 w-2 h-2 rounded-full floating-particle"
+                                    style={{ animationDelay: '2.25s', backgroundColor: '#171717', opacity: 0.45 }}
+                                  ></div>
                                 </>
                               )}
-                              
-                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }} className={winningPrize ? 'wheel-celebrate' : ''}>
-                                <CustomWheel
-                                  data={wheelData}
-                                  mustStartSpinning={mustSpin}
-                                  prizeNumber={prizeNumber}
-                                  spinDuration={3}
-                                  outerBorderColor="#2d3748"
-                                  outerBorderWidth={4}
-                                  innerBorderColor="#4a5568"
-                                  innerBorderWidth={2}
-                                  innerRadius={25}
-                                  radiusLineColor="#ffffff"
-                                  radiusLineWidth={2}
-                                  fontSize={18}
-                                  textDistance={70}
-                                  fontWeight={600}
-                                  wheelRadius={160}
-                                  onStopSpinning={() => {
-                                    console.log('Wheel stopped spinning on prize:', wheelData[prizeNumber].option);
-                                    setWinningPrize(wheelData[prizeNumber].option);
-                                    setMustSpin(false);
+
+                              <div className={`phone-wheel-container ${winningPrize ? 'wheel-celebrate' : ''}`}>
+                                <WheelSpin
+                                  ref={wheelRef}
+                                  config={wheelConfig}
+                                  className="wheel-spin phone-wheel"
+                                  style={{ pointerEvents: 'none' }}
+                                  onResult={({ segment }) => {
+                                    console.log('Wheel stopped spinning on prize:', segment.label);
+                                    setWinningPrize(segment.label);
+                                    const accent = (segment.payload as { accent?: string } | undefined)?.accent;
+                                    if (accent) {
+                                      setWinningPrizeColor(accent);
+                                    }
+                                    setIsWheelSpinning(false);
                                   }}
                                 />
+                                <div className="absolute inset-x-0 -bottom-10 text-center">
+                                  <p className="text-[10px] uppercase tracking-[0.35em] text-[#171717]/60 font-semibold">
+                                    {isWheelSpinning
+                                      ? 'Spinning…'
+                                      : winningPrize
+                                        ? `Winner: ${winningPrize}`
+                                        : 'Branded Prize Wheel'}
+                                  </p>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -853,14 +992,16 @@ export default function BoatTradeshowLanding() {
                         <div className={`transition-all duration-500 ${animationStep === 5 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="flex flex-col items-center justify-center h-full">
                             <div className="text-center">
-                            <div className="text-4xl mb-4">🎉</div>
-                            
-                            <div className="bg-gray-50 rounded-xl p-4 mb-4 border-2 border-gray-200 shadow-lg">
-                              <p className="text-[#171717] font-bold mb-1">You won a</p>
-                              <p className="text-[#FFDC35] text-xl font-bold mb-2">Free Setup Package (Value $500)</p>
-                              <div className="text-3xl mb-1">🏆</div>
-                              <p className="text-gray-600 text-xs">Check your email for details</p>
-                            </div>
+                              <div className="text-4xl mb-4">🎉</div>
+
+                              <div className="bg-white/90 rounded-xl p-5 mb-4 border border-[#03c4eb]/10 shadow-lg">
+                                <p className="text-[#171717] font-semibold mb-1 uppercase tracking-[0.25em] text-xs">Prize Unlocked</p>
+                                <p className="text-xl font-extrabold mb-2" style={{ color: displayedAccent }}>{formattedPrizeText}</p>
+                                <p className="text-[#171717]/60 text-xs font-medium mb-3">
+                                  {isFreeSetupPrize ? 'Value delivered instantly to their phone & email' : 'Check your email for prize details'}
+                                </p>
+                                <div className="text-3xl">🏆</div>
+                              </div>
                             </div>
                           </div>
                         </div>
