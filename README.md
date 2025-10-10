@@ -66,6 +66,18 @@ npm run dev
 - Demo page: [http://localhost:3001/demo](http://localhost:3001/demo)
 - Boat show: [http://localhost:3001/boat-show](http://localhost:3001/boat-show)
 
+### View the wheel component locally
+
+Once the development server is running you can preview the wheel experience on its dedicated route:
+
+```bash
+# from the project root
+npm install        # only needed the first time
+npm run dev
+```
+
+Then visit [http://localhost:3000/wheel-demo](http://localhost:3000/wheel-demo) (or the port shown in your terminal if you have configured a custom `PORT`).
+
 ## 📁 Project Structure
 
 ```
