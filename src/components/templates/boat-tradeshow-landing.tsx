@@ -73,6 +73,18 @@ export default function BoatTradeshowLanding() {
   const typingTimerRef = React.useRef<NodeJS.Timeout | null>(null);
   const demoSectionRef = React.useRef<HTMLDivElement>(null);
   const [isDemoVisible, setIsDemoVisible] = useState(true);
+  
+  // Detect mobile device for performance optimization
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const currentYear = new Date().getFullYear();
   
@@ -95,36 +107,44 @@ export default function BoatTradeshowLanding() {
     text: item.style.textColor
   })), [wheelData]);
 
-  // Optimized typing animation with requestAnimationFrame for smoother performance
-  const typeText = useCallback((text: string, setValue: (value: string) => void, delay = 80) => {
+  // Optimized typing animation - faster on mobile, uses simpler approach
+  const typeText = useCallback((text: string, setValue: (value: string) => void, baseDelay = 80) => {
     return new Promise<void>((resolve) => {
-      let index = 0;
-      let lastUpdate = Date.now();
-      let animationFrameId: number;
-      
-      const animate = () => {
-        const now = Date.now();
-        if (now - lastUpdate >= delay) {
-          if (index < text.length) {
-            setValue(text.slice(0, index + 1));
-            index++;
-            lastUpdate = now;
+      // On mobile: show text faster with fewer updates
+      if (isMobile) {
+        // Skip character-by-character, show in chunks for better performance
+        const chunkSize = 3;
+        let index = 0;
+        const interval = setInterval(() => {
+          index += chunkSize;
+          if (index >= text.length) {
+            setValue(text);
+            clearInterval(interval);
+            setTimeout(resolve, 200);
           } else {
-            cancelAnimationFrame(animationFrameId);
-            setTimeout(resolve, 300);
-            return;
+            setValue(text.slice(0, index));
           }
-        }
-        animationFrameId = requestAnimationFrame(animate);
-      };
-      
-      animationFrameId = requestAnimationFrame(animate);
-      
-      // Store for cleanup
-      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
-      typingTimerRef.current = animationFrameId as any;
+        }, 50); // Much faster on mobile
+        
+        if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+        typingTimerRef.current = interval as any;
+      } else {
+        // Desktop: smooth character-by-character
+        let index = 0;
+        const interval = setInterval(() => {
+          setValue(text.slice(0, index + 1));
+          index++;
+          if (index >= text.length) {
+            clearInterval(interval);
+            setTimeout(resolve, 300);
+          }
+        }, baseDelay);
+        
+        if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+        typingTimerRef.current = interval as any;
+      }
     });
-  }, []);
+  }, [isMobile]);
 
   const {
     register,
@@ -147,13 +167,13 @@ export default function BoatTradeshowLanding() {
       setPhoneCompleted(false);
       setIsTyping(true);
       
-      // Sequential typing with async/await
+      // Sequential typing with async/await - faster on mobile
       const runTyping = async () => {
-        await typeText('John Doe', setNameValue, 80);
+        await typeText('John Doe', setNameValue, isMobile ? 40 : 80);
         setNameCompleted(true);
-        await typeText('john@email.com', setEmailValue, 60);
+        await typeText('john@email.com', setEmailValue, isMobile ? 30 : 60);
         setEmailCompleted(true);
-        await typeText('(555) 123-4567', setPhoneValue, 100);
+        await typeText('(555) 123-4567', setPhoneValue, isMobile ? 40 : 100);
         setPhoneCompleted(true);
         setIsTyping(false);
       };
@@ -161,7 +181,7 @@ export default function BoatTradeshowLanding() {
       const timer = setTimeout(runTyping, 500);
       return () => clearTimeout(timer);
     }
-  }, [animationStep, isAnimationPlaying]);
+  }, [animationStep, isAnimationPlaying, typeText, isMobile]);
 
 
   // Verification code animation - one digit at a time
@@ -178,13 +198,13 @@ export default function BoatTradeshowLanding() {
             newCode[index] = digit;
             return newCode;
           });
-        }, 800 + (index * 400));
+        }, isMobile ? 400 + (index * 200) : 800 + (index * 400));
         timers.push(timer);
       });
       
       return () => timers.forEach(timer => clearTimeout(timer));
     }
-  }, [animationStep, isAnimationPlaying]);
+  }, [animationStep, isAnimationPlaying, isMobile]);
 
   // Prize wheel spinning animation
   useEffect(() => {
@@ -215,21 +235,24 @@ export default function BoatTradeshowLanding() {
     }
   }, [pixiWheelLoaded]);
 
-  // Step functions with proper timer management and cleanup
+  // Step functions with proper timer management and cleanup - faster on mobile
   const runQRStep = useCallback(() => {
     if (!isAnimationPlaying) return;
     setAnimationStep(0);
     setQrScanned(false);
     
-    const timer1 = setTimeout(() => setQrScanned(true), 1500);
-    const timer2 = setTimeout(() => runRegistrationStep(), 5000);
+    const scanDelay = isMobile ? 1000 : 1500;
+    const nextDelay = isMobile ? 3000 : 5000;
+    
+    const timer1 = setTimeout(() => setQrScanned(true), scanDelay);
+    const timer2 = setTimeout(() => runRegistrationStep(), nextDelay);
     
     animationTimerRef.current = timer2;
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
-  }, [isAnimationPlaying]);
+  }, [isAnimationPlaying, isMobile]);
 
   const runRegistrationStep = useCallback(() => {
     if (!isAnimationPlaying) return;
@@ -238,9 +261,10 @@ export default function BoatTradeshowLanding() {
       setRegistrationExtended(true);
     }
     
-    const timer = setTimeout(() => runQualificationStep(), 6000);
+    const delay = isMobile ? 4000 : 6000;
+    const timer = setTimeout(() => runQualificationStep(), delay);
     animationTimerRef.current = timer;
-  }, [registrationExtended, isAnimationPlaying]);
+  }, [registrationExtended, isAnimationPlaying, isMobile]);
 
   const runQualificationStep = useCallback(() => {
     if (!isAnimationPlaying) return;
@@ -249,36 +273,43 @@ export default function BoatTradeshowLanding() {
     setSelectedRole('');
     setSelectedSolution('');
     
+    const delays = isMobile ? [500, 1000, 2000, 3500] : [1000, 2000, 4000, 6000];
+    
     const timer1 = setTimeout(() => {
       setSelectedRole('Owner / Executive');
-      setTimeout(() => setQualifyStep(2), 2000);
-    }, 1000);
+      setTimeout(() => setQualifyStep(2), delays[1]);
+    }, delays[0]);
     
-    const timer2 = setTimeout(() => setSelectedSolution('Actively looking now'), 4000);
-    const timer3 = setTimeout(() => runVerificationStep(), 6000);
+    const timer2 = setTimeout(() => setSelectedSolution('Actively looking now'), delays[2]);
+    const timer3 = setTimeout(() => runVerificationStep(), delays[3]);
     
     animationTimerRef.current = timer3;
-  }, [isAnimationPlaying]);
+  }, [isAnimationPlaying, isMobile]);
 
   const runVerificationStep = useCallback(() => {
     if (!isAnimationPlaying) return;
     setAnimationStep(3);
     
-    const timer = setTimeout(() => runPrizeWheelStep(), 5000);
+    const delay = isMobile ? 3500 : 5000;
+    const timer = setTimeout(() => runPrizeWheelStep(), delay);
     animationTimerRef.current = timer;
-  }, [isAnimationPlaying]);
+  }, [isAnimationPlaying, isMobile]);
 
   const runPrizeWheelStep = useCallback(() => {
     if (!isAnimationPlaying) return;
     setAnimationStep(4);
     
-    const timer = setTimeout(() => runCongratulationsStep(), 12000);
+    const delay = isMobile ? 8000 : 12000;
+    const timer = setTimeout(() => runCongratulationsStep(), delay);
     animationTimerRef.current = timer;
-  }, [isAnimationPlaying]);
+  }, [isAnimationPlaying, isMobile]);
 
   const runCongratulationsStep = useCallback(() => {
     if (!isAnimationPlaying) return;
     setAnimationStep(5);
+    
+    const displayDelay = isMobile ? 2500 : 4000;
+    const restartDelay = isMobile ? 1000 : 2000;
     
     const timer = setTimeout(() => {
       // Reset all state
@@ -301,12 +332,12 @@ export default function BoatTradeshowLanding() {
       
       // Restart animation only if still playing
       if (isAnimationPlaying) {
-        setTimeout(() => runQRStep(), 2000);
+        setTimeout(() => runQRStep(), restartDelay);
       }
-    }, 4000);
+    }, displayDelay);
     
     animationTimerRef.current = timer;
-  }, [isAnimationPlaying]);
+  }, [isAnimationPlaying, isMobile]);
 
   // Intersection Observer to pause animation when not visible
   useEffect(() => {
@@ -623,13 +654,13 @@ export default function BoatTradeshowLanding() {
             </div>
             
             <div className="flex justify-center">
-              {/* Phone Device Mockup */}
-              <div className="device-mockup phone relative z-10">
+              {/* Phone Device Mockup - optimized for mobile performance */}
+              <div className="device-mockup phone relative z-10" style={{ willChange: isMobile && isAnimationPlaying ? 'transform' : 'auto' }}>
                 <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] bg-[#1a1a1a] p-2 w-[280px] h-[560px] relative">
                   {/* Phone notch */}
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120px] h-[24px] bg-black rounded-b-[12px] z-50"></div>
                   
-                  <div className="bg-white rounded-[42px] w-full h-full overflow-hidden relative">
+                  <div className="bg-white rounded-[42px] w-full h-full overflow-hidden relative" style={{ transform: 'translateZ(0)' }}>
                     {/* Background gradient with subtle animation */}
                     <div className={`absolute inset-0 bg-gradient-to-br from-gray-50 to-white transition-all duration-1000 ${
                       isAnimationPlaying ? 'opacity-100' : 'opacity-50'
