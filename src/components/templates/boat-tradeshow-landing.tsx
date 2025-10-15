@@ -5,6 +5,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import dynamic from 'next/dynamic';
+
+// Lazy load PixiJS wheel - only when needed
+const PixiWheelLoader = dynamic(() => Promise.resolve(() => null), { ssr: false });
 import Hotjar, { fireHotjarEvent } from '@/components/analytics/Hotjar';
 import Script from 'next/script';
 import { 
@@ -45,7 +48,7 @@ export default function BoatTradeshowLanding() {
 
   // Phone animation states
   const [animationStep, setAnimationStep] = useState(0);
-  const [nextStep, setNextStep] = useState(0);
+  const [isAnimationPlaying, setIsAnimationPlaying] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [qrScanned, setQrScanned] = useState(false);
   const [nameValue, setNameValue] = useState('');
@@ -66,6 +69,8 @@ export default function BoatTradeshowLanding() {
   const [winningPrize, setWinningPrize] = useState('');
   const [pixiWheelLoaded, setPixiWheelLoaded] = useState(false);
   const pixiWheelRef = React.useRef<any>(null);
+  const animationTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const typingTimerRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const currentYear = new Date().getFullYear();
   
@@ -88,8 +93,8 @@ export default function BoatTradeshowLanding() {
     text: item.style.textColor
   }));
 
-  // Typing animation function
-  const typeText = (text: string, setValue: (value: string) => void, setCompleted: (completed: boolean) => void, delay = 100) => {
+  // Consolidated typing animation - single implementation
+  const typeText = (text: string, setValue: (value: string) => void, delay = 80) => {
     return new Promise<void>((resolve) => {
       let index = 0;
       const interval = setInterval(() => {
@@ -97,61 +102,13 @@ export default function BoatTradeshowLanding() {
         index++;
         if (index >= text.length) {
           clearInterval(interval);
-          setCompleted(true);
-          setTimeout(resolve, 300); // Small delay before next field
+          setTimeout(resolve, 300);
         }
       }, delay);
+      // Store interval for cleanup
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+      typingTimerRef.current = interval as any;
     });
-  };
-
-  // Simplified typing sequence
-  const startTypingSequence = () => {
-    console.log('startTypingSequence called');
-    setIsTyping(true);
-    
-    // Type name first
-    let nameIndex = 0;
-    const nameText = 'John Anderson';
-    const nameInterval = setInterval(() => {
-      setNameValue(nameText.slice(0, nameIndex + 1));
-      nameIndex++;
-      if (nameIndex >= nameText.length) {
-        clearInterval(nameInterval);
-        setNameCompleted(true);
-        console.log('Name completed');
-        
-        // Start email after delay
-        setTimeout(() => {
-          let emailIndex = 0;
-          const emailText = 'john.anderson@email.com';
-          const emailInterval = setInterval(() => {
-            setEmailValue(emailText.slice(0, emailIndex + 1));
-            emailIndex++;
-            if (emailIndex >= emailText.length) {
-              clearInterval(emailInterval);
-              setEmailCompleted(true);
-              console.log('Email completed');
-              
-              // Start phone after delay
-              setTimeout(() => {
-                let phoneIndex = 0;
-                const phoneText = '(555) 123-4567';
-                const phoneInterval = setInterval(() => {
-                  setPhoneValue(phoneText.slice(0, phoneIndex + 1));
-                  phoneIndex++;
-                  if (phoneIndex >= phoneText.length) {
-                    clearInterval(phoneInterval);
-                    setPhoneCompleted(true);
-                    setIsTyping(false);
-                    console.log('Phone completed - all typing done');
-                  }
-                }, 100);
-              }, 300);
-            }
-          }, 60);
-        }, 300);
-      }
-    }, 80);
   };
 
   const {
@@ -165,9 +122,7 @@ export default function BoatTradeshowLanding() {
 
   // Typing animation when registration step is active
   useEffect(() => {
-    if (animationStep === 1) {
-      console.log('Registration step active - starting typing');
-      
+    if (animationStep === 1 && isAnimationPlaying) {
       // Reset form
       setNameValue('');
       setEmailValue('');
@@ -177,102 +132,58 @@ export default function BoatTradeshowLanding() {
       setPhoneCompleted(false);
       setIsTyping(true);
       
-      // Type name
-      setTimeout(() => {
-        let nameIndex = 0;
-        const nameText = 'John Doe';
-        const nameInterval = setInterval(() => {
-          console.log('Typing name:', nameIndex, nameText.slice(0, nameIndex + 1));
-          setNameValue(nameText.slice(0, nameIndex + 1));
-          nameIndex++;
-          if (nameIndex > nameText.length) {
-            clearInterval(nameInterval);
-            setNameCompleted(true);
-            console.log('Name complete');
-            
-            // Type email
-            setTimeout(() => {
-              let emailIndex = 0;
-              const emailText = 'john@email.com';
-              const emailInterval = setInterval(() => {
-                console.log('Typing email:', emailIndex, emailText.slice(0, emailIndex + 1));
-                setEmailValue(emailText.slice(0, emailIndex + 1));
-                emailIndex++;
-                if (emailIndex > emailText.length) {
-                  clearInterval(emailInterval);
-                  setEmailCompleted(true);
-                  console.log('Email complete');
-                  
-                  // Type phone
-                  setTimeout(() => {
-                    let phoneIndex = 0;
-                    const phoneText = '(555) 123-4567';
-                    const phoneInterval = setInterval(() => {
-                      console.log('Typing phone:', phoneIndex, phoneText.slice(0, phoneIndex + 1));
-                      setPhoneValue(phoneText.slice(0, phoneIndex + 1));
-                      phoneIndex++;
-                      if (phoneIndex > phoneText.length) {
-                        clearInterval(phoneInterval);
-                        setPhoneCompleted(true);
-                        setIsTyping(false);
-                        console.log('All typing complete');
-                      }
-                    }, 80);
-                  }, 300);
-                }
-              }, 60);
-            }, 300);
-          }
-        }, 80);
-      }, 500);
+      // Sequential typing with async/await
+      const runTyping = async () => {
+        await typeText('John Doe', setNameValue, 80);
+        setNameCompleted(true);
+        await typeText('john@email.com', setEmailValue, 60);
+        setEmailCompleted(true);
+        await typeText('(555) 123-4567', setPhoneValue, 100);
+        setPhoneCompleted(true);
+        setIsTyping(false);
+      };
+      
+      const timer = setTimeout(runTyping, 500);
+      return () => clearTimeout(timer);
     }
-  }, [animationStep]);
+  }, [animationStep, isAnimationPlaying]);
 
-  // Debug qualifyStep changes
-  useEffect(() => {
-    console.log('QualifyStep changed to:', qualifyStep, 'at animationStep:', animationStep);
-  }, [qualifyStep, animationStep]);
 
   // Verification code animation - one digit at a time
   useEffect(() => {
-    if (animationStep === 3) {
-      console.log('Verification step active - starting digit entry');
-      
-      // Reset verification code
+    if (animationStep === 3 && isAnimationPlaying) {
       setVerificationCode(['', '', '', '', '', '']);
-      
-      // Enter digits one by one with delays
       const digits = ['1', '2', '3', '4', '5', '6'];
+      const timers: NodeJS.Timeout[] = [];
       
       digits.forEach((digit, index) => {
-        setTimeout(() => {
-          console.log(`Entering digit ${index + 1}: ${digit}`);
+        const timer = setTimeout(() => {
           setVerificationCode(prev => {
             const newCode = [...prev];
             newCode[index] = digit;
             return newCode;
           });
-        }, 800 + (index * 400)); // Start after 800ms, then 400ms between each digit
+        }, 800 + (index * 400));
+        timers.push(timer);
       });
+      
+      return () => timers.forEach(timer => clearTimeout(timer));
     }
-  }, [animationStep]);
+  }, [animationStep, isAnimationPlaying]);
 
   // Prize wheel spinning animation
   useEffect(() => {
-    if (animationStep === 4 && pixiWheelLoaded && pixiWheelRef.current) {
-      console.log('Prize wheel step active - starting spin');
-      
-      // Reset wheel state
+    if (animationStep === 4 && pixiWheelLoaded && pixiWheelRef.current && isAnimationPlaying) {
       setWinningPrize('');
       
-      // Start spinning after a delay
-      setTimeout(() => {
-        console.log('Spinning PixiJS wheel to prize:', wheelData[prizeNumber].option);
+      const timer = setTimeout(() => {
         pixiWheelRef.current.setAttribute('target-prize', wheelData[prizeNumber].option);
         pixiWheelRef.current.spin();
       }, 500);
+      
+      return () => clearTimeout(timer);
     }
-  }, [animationStep, pixiWheelLoaded]);
+  }, [animationStep, pixiWheelLoaded, isAnimationPlaying]);
 
   // Setup PixiJS wheel event listeners
   useEffect(() => {
@@ -281,91 +192,81 @@ export default function BoatTradeshowLanding() {
       wheel.segments = pixiSegments;
 
       const handleSpinEnd = (e: any) => {
-        console.log('Wheel stopped spinning on prize:', e.detail.prize);
         setWinningPrize(e.detail.prize);
       };
 
       wheel.addEventListener('spinend', handleSpinEnd);
       return () => wheel.removeEventListener('spinend', handleSpinEnd);
     }
-  }, [pixiWheelLoaded, pixiSegments]);
+  }, [pixiWheelLoaded]);
 
-  // Step functions with proper timer management
+  // Step functions with proper timer management and cleanup
   const runQRStep = useCallback(() => {
-    console.log('Running QR Step');
+    if (!isAnimationPlaying) return;
     setAnimationStep(0);
     setQrScanned(false);
     
-    // QR scan animation
-    setTimeout(() => setQrScanned(true), 1500);
+    const timer1 = setTimeout(() => setQrScanned(true), 1500);
+    const timer2 = setTimeout(() => runRegistrationStep(), 5000);
     
-    // Move to next step - this should be the LAST thing in the function
-    setTimeout(() => runRegistrationStep(), 5000);
-  }, []);
+    animationTimerRef.current = timer2;
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [isAnimationPlaying]);
 
   const runRegistrationStep = useCallback(() => {
-    console.log('Running Registration Step');
+    if (!isAnimationPlaying) return;
     setAnimationStep(1);
     if (!registrationExtended) {
       setRegistrationExtended(true);
     }
     
-    // Move to next step - this should be the LAST thing in the function
-    setTimeout(() => runQualificationStep(), 6000);
-  }, [registrationExtended]);
+    const timer = setTimeout(() => runQualificationStep(), 6000);
+    animationTimerRef.current = timer;
+  }, [registrationExtended, isAnimationPlaying]);
 
   const runQualificationStep = useCallback(() => {
-    console.log('Running Qualification Step');
+    if (!isAnimationPlaying) return;
     setAnimationStep(2);
     setQualifyStep(1);
     setSelectedRole('');
     setSelectedSolution('');
     
-    // Role auto-selection timer
-    setTimeout(() => {
-      console.log('Auto-selecting role');
+    const timer1 = setTimeout(() => {
       setSelectedRole('Owner / Executive');
-      
-      // Wait 2 seconds to show the selection, then move to next question
-      setTimeout(() => {
-        console.log('Moving to solution question');
-        setQualifyStep(2);
-      }, 2000);
+      setTimeout(() => setQualifyStep(2), 2000);
     }, 1000);
     
-    // Solution auto-selection timer - wait 1 second after solution question appears
-    setTimeout(() => {
-      console.log('Auto-selecting solution');
-      setSelectedSolution('Actively looking now');
-    }, 4000);
+    const timer2 = setTimeout(() => setSelectedSolution('Actively looking now'), 4000);
+    const timer3 = setTimeout(() => runVerificationStep(), 6000);
     
-    // Move to next step - this should be the LAST thing in the function
-    setTimeout(() => runVerificationStep(), 6000);
-  }, []);
+    animationTimerRef.current = timer3;
+  }, [isAnimationPlaying]);
 
   const runVerificationStep = useCallback(() => {
-    console.log('Running Verification Step');
+    if (!isAnimationPlaying) return;
     setAnimationStep(3);
     
-    // Move to next step - this should be the LAST thing in the function
-    setTimeout(() => runPrizeWheelStep(), 5000);
-  }, []);
+    const timer = setTimeout(() => runPrizeWheelStep(), 5000);
+    animationTimerRef.current = timer;
+  }, [isAnimationPlaying]);
 
   const runPrizeWheelStep = useCallback(() => {
-    console.log('Running Prize Wheel Step');
+    if (!isAnimationPlaying) return;
     setAnimationStep(4);
     
-    // Move to next step - this should be the LAST thing in the function
-    setTimeout(() => runCongratulationsStep(), 12000);
-  }, []);
+    const timer = setTimeout(() => runCongratulationsStep(), 12000);
+    animationTimerRef.current = timer;
+  }, [isAnimationPlaying]);
 
   const runCongratulationsStep = useCallback(() => {
-    console.log('Running Congratulations Step');
+    if (!isAnimationPlaying) return;
     setAnimationStep(5);
     
-    // Reset and restart - this should be the LAST thing in the function
-    setTimeout(() => {
-      console.log('Resetting animation...');
+    const timer = setTimeout(() => {
+      // Reset all state
       setQrScanned(false);
       setNameValue('');
       setEmailValue('');
@@ -383,15 +284,35 @@ export default function BoatTradeshowLanding() {
       setIsTyping(false);
       setRegistrationExtended(false);
       
-      // Restart animation
-      setTimeout(() => runQRStep(), 2000);
+      // Restart animation only if still playing
+      if (isAnimationPlaying) {
+        setTimeout(() => runQRStep(), 2000);
+      }
     }, 4000);
-  }, []);
+    
+    animationTimerRef.current = timer;
+  }, [isAnimationPlaying]);
 
-  // Start animation on mount
+  // Control animation playback
   useEffect(() => {
-    runQRStep();
-  }, [runQRStep]);
+    if (isAnimationPlaying) {
+      runQRStep();
+    } else {
+      // Stop animation - clear all timers
+      if (animationTimerRef.current) {
+        clearTimeout(animationTimerRef.current);
+      }
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+    };
+  }, [isAnimationPlaying, runQRStep]);
 
 
   const handleCTAClick = (location: string) => {
@@ -446,18 +367,21 @@ export default function BoatTradeshowLanding() {
 
   return (
     <>
-      {/* Load PixiJS from CDN */}
-      <Script 
-        src="https://cdn.jsdelivr.net/npm/pixi.js@7.3.2/dist/pixi.min.js"
-        strategy="beforeInteractive"
-      />
-      
-      {/* Load PixiJS Wheel Component */}
-      <Script 
-        src="/wheel-pixi.js"
-        onLoad={() => setPixiWheelLoaded(true)}
-        strategy="afterInteractive"
-      />
+      {/* Load PixiJS scripts only when animation is playing */}
+      {isAnimationPlaying && (
+        <>
+          <Script 
+            src="https://cdn.jsdelivr.net/npm/pixi.js@7.3.2/dist/pixi.min.js"
+            strategy="lazyOnload"
+          />
+          
+          <Script 
+            src="/wheel-pixi.js"
+            onLoad={() => setPixiWheelLoaded(true)}
+            strategy="lazyOnload"
+          />
+        </>
+      )}
       
       <div className="min-h-screen bg-white">
         <Hotjar />
@@ -559,6 +483,30 @@ export default function BoatTradeshowLanding() {
           
           {/* Phone Demo Section */}
           <div className="max-w-4xl mx-auto">
+            {/* Animation Control Button */}
+            <div className="flex justify-center mb-6">
+              <button
+                onClick={() => setIsAnimationPlaying(!isAnimationPlaying)}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#171717] text-white rounded-full font-semibold hover:bg-[#2a2a2a] transition-all duration-200 shadow-lg"
+              >
+                {isAnimationPlaying ? (
+                  <>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    Pause Demo
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                    </svg>
+                    Play Demo
+                  </>
+                )}
+              </button>
+            </div>
+            
             <div className="flex justify-center">
               {/* Phone Device Mockup */}
               <div className="device-mockup phone relative z-10">
