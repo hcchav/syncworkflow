@@ -6,8 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import dynamic from 'next/dynamic';
 import Hotjar, { fireHotjarEvent } from '@/components/analytics/Hotjar';
-import { CustomWheel } from '@/components/ui/CustomWheel';
-import '../../styles/wheel.css';
+import Script from 'next/script';
 import { 
   CheckCircle, 
   Target, 
@@ -65,6 +64,8 @@ export default function BoatTradeshowLanding() {
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(5); // Always land on 'Free Setup' (yellow segment)
   const [winningPrize, setWinningPrize] = useState('');
+  const [pixiWheelLoaded, setPixiWheelLoaded] = useState(false);
+  const pixiWheelRef = React.useRef<any>(null);
 
   const currentYear = new Date().getFullYear();
   
@@ -79,6 +80,13 @@ export default function BoatTradeshowLanding() {
     { option: '$100 Off', style: { backgroundColor: '#dc2626', textColor: 'white' } },
     { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#1e293b' } },
   ];
+
+  // Convert wheelData to PixiJS format
+  const pixiSegments = wheelData.map(item => ({
+    label: item.option,
+    bg: item.style.backgroundColor,
+    text: item.style.textColor
+  }));
 
   // Typing animation function
   const typeText = (text: string, setValue: (value: string) => void, setCompleted: (completed: boolean) => void, delay = 100) => {
@@ -251,24 +259,36 @@ export default function BoatTradeshowLanding() {
 
   // Prize wheel spinning animation
   useEffect(() => {
-    if (animationStep === 4) {
+    if (animationStep === 4 && pixiWheelLoaded && pixiWheelRef.current) {
       console.log('Prize wheel step active - starting spin');
-      console.log('Current mustSpin:', mustSpin);
-      console.log('Current prizeNumber:', prizeNumber);
-      console.log('WheelData length:', wheelData.length);
       
       // Reset wheel state
-      setMustSpin(false);
       setWinningPrize('');
       
       // Start spinning after a delay
       setTimeout(() => {
-        console.log('Setting mustSpin to true...');
-        console.log('About to spin with prizeNumber:', prizeNumber);
-        setMustSpin(true);
+        console.log('Spinning PixiJS wheel to prize:', wheelData[prizeNumber].option);
+        pixiWheelRef.current.setAttribute('target-prize', wheelData[prizeNumber].option);
+        pixiWheelRef.current.spin();
       }, 500);
     }
-  }, [animationStep]);
+  }, [animationStep, pixiWheelLoaded]);
+
+  // Setup PixiJS wheel event listeners
+  useEffect(() => {
+    if (pixiWheelLoaded && pixiWheelRef.current) {
+      const wheel = pixiWheelRef.current;
+      wheel.segments = pixiSegments;
+
+      const handleSpinEnd = (e: any) => {
+        console.log('Wheel stopped spinning on prize:', e.detail.prize);
+        setWinningPrize(e.detail.prize);
+      };
+
+      wheel.addEventListener('spinend', handleSpinEnd);
+      return () => wheel.removeEventListener('spinend', handleSpinEnd);
+    }
+  }, [pixiWheelLoaded, pixiSegments]);
 
   // Step functions with proper timer management
   const runQRStep = useCallback(() => {
@@ -425,8 +445,22 @@ export default function BoatTradeshowLanding() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      <Hotjar />
+    <>
+      {/* Load PixiJS from CDN */}
+      <Script 
+        src="https://cdn.jsdelivr.net/npm/pixi.js@7.3.2/dist/pixi.min.js"
+        strategy="beforeInteractive"
+      />
+      
+      {/* Load PixiJS Wheel Component */}
+      <Script 
+        src="/wheel-pixi.js"
+        onLoad={() => setPixiWheelLoaded(true)}
+        strategy="afterInteractive"
+      />
+      
+      <div className="min-h-screen bg-white">
+        <Hotjar />
       
       {/* Top Navigation Bar */}
       <nav className="bg-[#171717] text-white">
@@ -533,9 +567,8 @@ export default function BoatTradeshowLanding() {
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120px] h-[24px] bg-black rounded-b-[12px] z-50"></div>
                   
                   <div className="bg-white rounded-[42px] w-full h-full overflow-hidden relative">
-                    {/* Background gradient and grid */}
+                    {/* Background gradient */}
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white">
-                      <div className="absolute inset-0 viewfinder-grid"></div>
                     </div>
                     
                     {/* Top UI */}
@@ -809,45 +842,37 @@ export default function BoatTradeshowLanding() {
                         </div>
                         
                         {/* Step 5: Prize Wheel */}
-                        <div className={`transition-all duration-500 ${animationStep === 4 ? 'opacity-100 ' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
-                          <div className="flex flex-col items-center justify-center h-full">
+                        <div className={`transition-all duration-500  ${animationStep === 4 ? 'opacity-100 ' : 'opacity-0 absolute pointer-events-none  '}`} 
+                            style={{ top: 0, left: 0, right: 0, bottom: 0 }}>
+                          <div className="flex flex-col items-center h-full">
                             
-                            <div style={{ position: "relative", height: "350px", width: "100%" }}>
+                            <div className="space-y-4 text-center">
                               {/* Floating celebration particles */}
                               {winningPrize && (
                                 <>
-                                  <div className="absolute top-10 left-10 w-2 h-2 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '0s' }}></div>
-                                  <div className="absolute top-16 right-12 w-1.5 h-1.5 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '0.5s' }}></div>
-                                  <div className="absolute bottom-20 left-16 w-2.5 h-2.5 bg-[#7c3aed] rounded-full floating-particle" style={{ animationDelay: '1s' }}></div>
-                                  <div className="absolute bottom-12 right-8 w-1 h-1 bg-[#dc2626] rounded-full floating-particle" style={{ animationDelay: '1.5s' }}></div>
-                                  <div className="absolute top-1/3 left-8 w-1.5 h-1.5 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '2s' }}></div>
-                                  <div className="absolute top-1/2 right-6 w-2 h-2 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '2.5s' }}></div>
+                                  <div className="absolute top-2 left-10 w-1.5 h-1.5 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '0s' }}></div>
+                                  <div className="absolute top-8 right-12 w-1 h-1 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '0.5s' }}></div>
+                                  <div className="absolute bottom-8 left-16 w-2 h-2 bg-[#7c3aed] rounded-full floating-particle" style={{ animationDelay: '1s' }}></div>
+                                  <div className="absolute bottom-2 right-8 w-1 h-1 bg-[#dc2626] rounded-full floating-particle" style={{ animationDelay: '1.5s' }}></div>
+                                  <div className="absolute top-1/3 left-8 w-1 h-1 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '2s' }}></div>
+                                  <div className="absolute top-1/2 right-6 w-1.5 h-1.5 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '2.5s' }}></div>
                                 </>
                               )}
                               
-                              <div style={{ position: "absolute", left: "50%", top: "50%", transform: "translate(-50%, -50%) scale(0.65)" }} className={winningPrize ? 'wheel-celebrate' : ''}>
-                                <CustomWheel
-                                  data={wheelData}
-                                  mustStartSpinning={mustSpin}
-                                  prizeNumber={prizeNumber}
-                                  spinDuration={3}
-                                  outerBorderColor="#2d3748"
-                                  outerBorderWidth={4}
-                                  innerBorderColor="#4a5568"
-                                  innerBorderWidth={2}
-                                  innerRadius={25}
-                                  radiusLineColor="#ffffff"
-                                  radiusLineWidth={2}
-                                  fontSize={18}
-                                  textDistance={70}
-                                  fontWeight={600}
-                                  wheelRadius={160}
-                                  onStopSpinning={() => {
-                                    console.log('Wheel stopped spinning on prize:', wheelData[prizeNumber].option);
-                                    setWinningPrize(wheelData[prizeNumber].option);
-                                    setMustSpin(false);
-                                  }}
-                                />
+                              <div style={{ position: "absolute", left: "50%", top: 50, transform: "translate(-50%, -50%) scale(0.34)" }} 
+                                    className={winningPrize ? 'wheel-celebrate' : ''}>
+                                {pixiWheelLoaded ? (
+                                  <lucky-wheel-pixi
+                                    ref={pixiWheelRef}
+                                    spin-duration="3000"
+                                    target-prize="random"
+                                    style={{ width: '240px', height: '240px', maxWidth: '240px', maxHeight: '240px' }}
+                                  />
+                                ) : (
+                                  <div style={{ width: '240px', height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-purple-500"></div>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -1373,6 +1398,7 @@ export default function BoatTradeshowLanding() {
           </p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }

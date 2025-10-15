@@ -1,6 +1,7 @@
 'use client';
 import React, { useRef, useState, useEffect } from 'react';
 import { WheelSpin, WheelSpinRef, WheelConfig } from '@/components/wheel';
+import Script from 'next/script';
 
 const demoSegments = [
   { label: 'Coffee', color: '#FFDC35', payload: { type: 'beverage', value: 'coffee' } },
@@ -129,7 +130,10 @@ const baseConfig: WheelConfig = {
 
 export default function WheelDemo() {
   const wheelRef = useRef<WheelSpinRef>(null);
+  const webComponentRef = useRef<any>(null);
   const [config, setConfig] = useState<WheelConfig>(baseConfig);
+  const [activeDemo, setActiveDemo] = useState<'react' | 'webcomponent'>('react');
+  const [webComponentLoaded, setWebComponentLoaded] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
@@ -489,8 +493,66 @@ export default function WheelDemo() {
     setCustomTextColors({});
   };
 
+  // Web Component event handlers
+  useEffect(() => {
+    if (webComponentLoaded && webComponentRef.current) {
+      const wheel = webComponentRef.current;
+      
+      // Set segments
+      wheel.segments = prizes.map(prize => ({
+        label: prize.label,
+        bg: prize.color,
+        text: prize.labelColor
+      }));
+
+      // Add event listeners
+      const handleSpinEnd = (e: any) => {
+        setResult({
+          index: e.detail.index,
+          segment: prizes[e.detail.index]
+        });
+        setIsSpinning(false);
+        setHistory(prev => [{
+          index: e.detail.index,
+          segment: prizes[e.detail.index]
+        }, ...prev.slice(0, 9)]);
+      };
+
+      wheel.addEventListener('spinend', handleSpinEnd);
+      return () => wheel.removeEventListener('spinend', handleSpinEnd);
+    }
+  }, [webComponentLoaded, prizes]);
+
+  const spinWebComponent = async () => {
+    if (isSpinning || !webComponentRef.current) return;
+    setIsSpinning(true);
+    setResult(null);
+    try {
+      await webComponentRef.current.spin();
+    } catch (error) {
+      console.error('Web component spin failed:', error);
+      setIsSpinning(false);
+    }
+  };
+
+  const spinWebComponentToTarget = async (targetLabel: string) => {
+    if (isSpinning || !webComponentRef.current) return;
+    setIsSpinning(true);
+    setResult(null);
+    try {
+      await webComponentRef.current.spin({ targetLabel });
+    } catch (error) {
+      console.error('Web component targeted spin failed:', error);
+      setIsSpinning(false);
+    }
+  };
+
   return (
     <>
+      <Script 
+        src="/wheel.js" 
+        onLoad={() => setWebComponentLoaded(true)}
+      />
       <style jsx global>{`
         .wheel-container {
           overflow: visible !important;
@@ -506,58 +568,113 @@ export default function WheelDemo() {
         <div className="container mx-auto px-6 sm:px-4">
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
-            WheelSpin Component Demo
+            Wheel Component Demo
           </h1>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-            A production-ready, skinnable, and fully configurable wheel spinner for React applications.
-            Try different configurations and see the results!
+            Compare the React component vs Web Component implementations.
+            Both offer the same functionality with different integration approaches.
           </p>
+          
+          {/* Demo Type Selector */}
+          <div className="flex justify-center mt-6">
+            <div className="bg-white rounded-lg p-1 shadow-md">
+              <button
+                onClick={() => setActiveDemo('react')}
+                className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                  activeDemo === 'react'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                React Component
+              </button>
+              <button
+                onClick={() => setActiveDemo('webcomponent')}
+                className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                  activeDemo === 'webcomponent'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Web Component
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Wheel */}
           <div className="lg:col-span-2 flex justify-center w-full">
             <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-2xl">
+              <div className="mb-4 text-center">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  {activeDemo === 'react' ? 'React Component' : 'Web Component'}
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  {activeDemo === 'react' 
+                    ? 'Full React integration with TypeScript support'
+                    : 'Framework-agnostic Web Component with HTML attributes'
+                  }
+                </p>
+              </div>
+              
               <div className="flex justify-center items-center">
-                <div 
-                  className="wheel-container relative flex justify-center items-center"
-                  style={{ 
-                    width: `${containerSize}px`, 
-                    height: `${containerSize}px`,
-                    overflow: 'visible'
-                  }}
-                >
-                  <WheelSpin
-                    ref={wheelRef}
-                    config={config}
-                    style={{
-                      width: `${wheelSize}px`,
-                      height: `${wheelSize}px`,
+                {activeDemo === 'react' ? (
+                  <div 
+                    className="wheel-container relative flex justify-center items-center"
+                    style={{ 
+                      width: `${containerSize}px`, 
+                      height: `${containerSize}px`,
                       overflow: 'visible'
                     }}
-                  />
-                </div>
+                  >
+                    <WheelSpin
+                      ref={wheelRef}
+                      config={config}
+                      style={{
+                        width: `${wheelSize}px`,
+                        height: `${wheelSize}px`,
+                        overflow: 'visible'
+                      }}
+                    />
+                  </div>
+                ) : (
+                  webComponentLoaded && (
+                    <lucky-wheel
+                      ref={webComponentRef}
+                      skin="minimal"
+                      theme="light"
+                      target-prize="random"
+                      spin-duration="3000"
+                      size={wheelSize.toString()}
+                      easing="easeOutCubic"
+                      min-rotations="3"
+                      style={{ display: 'block' }}
+                    />
+                  )
+                )}
               </div>
               
               <div className="mt-4 sm:mt-6 text-center">
                 <button
-                  onClick={spin}
-                  disabled={isSpinning}
+                  onClick={activeDemo === 'react' ? spin : spinWebComponent}
+                  disabled={isSpinning || (activeDemo === 'webcomponent' && !webComponentLoaded)}
                   className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-semibold py-3 px-6 sm:px-8 rounded-lg transition-colors duration-200 text-sm sm:text-base w-full sm:w-auto min-h-[44px]"
                 >
                   {isSpinning ? 'Spinning...' : 'Spin the Wheel!'}
                 </button>
                 
-                {/* Debug info - remove in production */}
-                <div className="mt-2 text-xs text-gray-500">
-                  <div>Wheel: {wheelSize}px | Container: {containerSize}px | Screen: {typeof window !== 'undefined' ? window.innerWidth : 'SSR'}px</div>
-                  <button 
-                    onClick={forceResize}
-                    className="mt-1 px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded"
-                  >
-                    Force Resize Check
-                  </button>
-                </div>
+                {activeDemo === 'react' && (
+                  <div className="mt-2 text-xs text-gray-500">
+                    <div>Wheel: {wheelSize}px | Container: {containerSize}px | Screen: {typeof window !== 'undefined' ? window.innerWidth : 'SSR'}px</div>
+                    <button 
+                      onClick={forceResize}
+                      className="mt-1 px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded"
+                    >
+                      Force Resize Check
+                    </button>
+                  </div>
+                )}
               </div>
 
               {result && (
@@ -713,8 +830,8 @@ export default function WheelDemo() {
                 {prizes.slice(0, 4).map(segment => (
                   <button
                     key={segment.label}
-                    onClick={() => spinToTarget(segment.label)}
-                    disabled={isSpinning}
+                    onClick={() => activeDemo === 'react' ? spinToTarget(segment.label) : spinWebComponentToTarget(segment.label)}
+                    disabled={isSpinning || (activeDemo === 'webcomponent' && !webComponentLoaded)}
                     className="p-2 sm:p-3 text-xs sm:text-sm rounded border border-gray-300 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 transition-colors min-h-[44px]"
                   >
                     {segment.label}

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuckyWheel Web Component - Quick Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .wheel-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .controls-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .control-group select,
+        .control-group input[type="range"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .control-group input[type="range"] {
+            padding: 0;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #218838;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .target-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .target-btn {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .target-btn:hover:not(:disabled) {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .target-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-display {
+            margin-top: 20px;
+            padding: 15px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            color: #155724;
+        }
+
+        .result-display.hidden {
+            display: none;
+        }
+
+        .event-log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .event-log .event {
+            margin-bottom: 4px;
+            padding: 2px 0;
+        }
+
+        .event.start { color: #007bff; }
+        .event.tick { color: #6c757d; }
+        .event.end { color: #28a745; font-weight: bold; }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.loaded { background: #28a745; }
+        .status-dot.loading { background: #ffc107; animation: pulse 1s infinite; }
+        .status-dot.spinning { background: #007bff; animation: spin 1s linear infinite; }
+        .status-dot.idle { background: #6c757d; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .range-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 LuckyWheel Quick Test</h1>
+            <p>Test the Web Component directly in your browser</p>
+        </div>
+
+        <div class="test-grid">
+            <!-- Wheel Display -->
+            <div class="wheel-section">
+                <div class="status-bar">
+                    <div class="status-indicator">
+                        <div class="status-dot loading" id="loadStatus"></div>
+                        <span id="loadText">Loading...</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot idle" id="spinStatus"></div>
+                        <span id="spinText">Ready</span>
+                    </div>
+                </div>
+
+                <lucky-wheel 
+                    id="test-wheel"
+                    skin="minimal"
+                    theme="light"
+                    target-prize="random"
+                    spin-duration="3000"
+                    easing="easeOutCubic"
+                    min-rotations="3"
+                    style="width: 100%; max-width: 400px; margin: 0 auto;">
+                </lucky-wheel>
+
+                <div class="button-grid">
+                    <button class="btn btn-primary" onclick="spinWheel()" id="spinBtn" disabled>
+                        Spin Random
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetWheel()" id="resetBtn" disabled>
+                        Reset
+                    </button>
+                </div>
+
+                <div>
+                    <strong>Target Spins:</strong>
+                    <div class="target-buttons" id="targetButtons">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div id="result" class="result-display hidden">
+                    <strong>Result:</strong> <span id="resultText"></span>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls-section">
+                <h3 style="margin-bottom: 20px;">⚙️ Configuration</h3>
+
+                <div class="control-group">
+                    <label for="skinSelect">Skin:</label>
+                    <select id="skinSelect" onchange="updateConfig()">
+                        <option value="minimal">Minimal</option>
+                        <option value="wood">Wood</option>
+                        <option value="chrome">Chrome</option>
+                        <option value="casino">Casino</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="themeSelect">Theme:</label>
+                    <select id="themeSelect" onchange="updateConfig()">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="durationRange">Duration: <span id="durationValue">3000ms</span></label>
+                    <input type="range" id="durationRange" min="1000" max="8000" step="500" value="3000" onchange="updateConfig()">
+                    <div class="range-display">
+                        <span>1s</span>
+                        <span>8s</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="sizeRange">Size: <span id="sizeValue">350px</span></label>
+                    <input type="range" id="sizeRange" min="200" max="500" step="25" value="350" onchange="updateConfig()">
+                    <div class="range-display">
+                        <span>200px</span>
+                        <span>500px</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="easingSelect">Easing:</label>
+                    <select id="easingSelect" onchange="updateConfig()">
+                        <option value="linear">Linear</option>
+                        <option value="easeOutCubic" selected>Ease Out Cubic</option>
+                        <option value="easeOutQuint">Ease Out Quint</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="rotationsRange">Min Rotations: <span id="rotationsValue">3</span></label>
+                    <input type="range" id="rotationsRange" min="1" max="8" step="1" value="3" onchange="updateConfig()">
+                    <div class="range-display">
+                        <span>1</span>
+                        <span>8</span>
+                    </div>
+                </div>
+
+                <h4 style="margin: 20px 0 10px 0;">📋 Event Log</h4>
+                <div class="event-log" id="eventLog">
+                    <div class="event">Waiting for component to load...</div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="clearLog()" style="width: 100%; margin-top: 10px;">
+                    Clear Log
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="wheel.js"></script>
+    <script>
+        // Test segments
+        const testSegments = [
+            { label: "Coffee", bg: "#F5C451", text: "#111" },
+            { label: "Try Again", bg: "#E6E6E6", text: "#222" },
+            { label: "T-Shirt", bg: "#FF7B8B", text: "#fff" },
+            { label: "Free Mug", bg: "#67D6CD", text: "#073B3A" },
+            { label: "25% Off", bg: "#59B6E6", text: "#072B42" },
+            { label: "Gift Card", bg: "#9BD7C2", text: "#072B3A" }
+        ];
+
+        let wheel = null;
+        let isSpinning = false;
+
+        // Wait for component to be defined
+        customElements.whenDefined('lucky-wheel').then(() => {
+            wheel = document.getElementById('test-wheel');
+            
+            // Set segments
+            wheel.segments = testSegments;
+            
+            // Update status
+            document.getElementById('loadStatus').className = 'status-dot loaded';
+            document.getElementById('loadText').textContent = 'Loaded';
+            document.getElementById('spinBtn').disabled = false;
+            document.getElementById('resetBtn').disabled = false;
+            
+            // Create target buttons
+            createTargetButtons();
+            
+            // Add event listeners
+            wheel.addEventListener('spinstart', (e) => {
+                isSpinning = true;
+                document.getElementById('spinStatus').className = 'status-dot spinning';
+                document.getElementById('spinText').textContent = 'Spinning';
+                updateButtonStates();
+                addToLog(`🎯 Spin started - Target: ${e.detail.targetPrize?.label || 'Random'}`, 'start');
+            });
+
+            wheel.addEventListener('spintick', (e) => {
+                const segment = testSegments[e.detail.segmentIndex];
+                addToLog(`⚡ Tick - ${segment?.label || 'Unknown'}`, 'tick');
+            });
+
+            wheel.addEventListener('spinend', (e) => {
+                isSpinning = false;
+                document.getElementById('spinStatus').className = 'status-dot idle';
+                document.getElementById('spinText').textContent = 'Ready';
+                updateButtonStates();
+                
+                // Show result
+                document.getElementById('resultText').textContent = `${e.detail.prize} (Index: ${e.detail.index})`;
+                document.getElementById('result').classList.remove('hidden');
+                
+                addToLog(`🏆 Winner: ${e.detail.prize}`, 'end');
+            });
+
+            addToLog('✅ Web Component ready!', 'start');
+        });
+
+        function createTargetButtons() {
+            const container = document.getElementById('targetButtons');
+            container.innerHTML = '';
+            
+            testSegments.forEach(segment => {
+                const btn = document.createElement('button');
+                btn.className = 'target-btn';
+                btn.textContent = segment.label;
+                btn.onclick = () => spinToTarget(segment.label);
+                btn.style.borderColor = segment.bg;
+                container.appendChild(btn);
+            });
+        }
+
+        function updateButtonStates() {
+            const buttons = document.querySelectorAll('.btn, .target-btn');
+            buttons.forEach(btn => {
+                btn.disabled = isSpinning;
+            });
+        }
+
+        function spinWheel() {
+            if (!wheel || isSpinning) return;
+            
+            wheel.spin().then(result => {
+                console.log('Spin result:', result);
+            }).catch(error => {
+                addToLog(`❌ Error: ${error.message}`, 'end');
+            });
+        }
+
+        function spinToTarget(target) {
+            if (!wheel || isSpinning) return;
+            
+            wheel.spin({ targetLabel: target }).then(result => {
+                console.log('Targeted spin result:', result);
+            }).catch(error => {
+                addToLog(`❌ Error: ${error.message}`, 'end');
+            });
+        }
+
+        function resetWheel() {
+            if (!wheel) return;
+            
+            wheel.reset();
+            document.getElementById('result').classList.add('hidden');
+            addToLog('🔄 Wheel reset', 'start');
+        }
+
+        function updateConfig() {
+            if (!wheel) return;
+
+            const skin = document.getElementById('skinSelect').value;
+            const theme = document.getElementById('themeSelect').value;
+            const duration = document.getElementById('durationRange').value;
+            const size = document.getElementById('sizeRange').value;
+            const easing = document.getElementById('easingSelect').value;
+            const rotations = document.getElementById('rotationsRange').value;
+
+            // Update display values
+            document.getElementById('durationValue').textContent = duration + 'ms';
+            document.getElementById('sizeValue').textContent = size + 'px';
+            document.getElementById('rotationsValue').textContent = rotations;
+
+            // Update wheel attributes
+            wheel.setAttribute('skin', skin);
+            wheel.setAttribute('theme', theme);
+            wheel.setAttribute('spin-duration', duration);
+            wheel.setAttribute('size', size);
+            wheel.setAttribute('easing', easing);
+            wheel.setAttribute('min-rotations', rotations);
+
+            addToLog(`⚙️ Config updated: ${skin}, ${theme}, ${duration}ms`, 'tick');
+        }
+
+        function addToLog(message, type = 'tick') {
+            const log = document.getElementById('eventLog');
+            const timestamp = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.className = `event ${type}`;
+            div.textContent = `[${timestamp}] ${message}`;
+            log.insertBefore(div, log.firstChild);
+            
+            // Keep only last 50 entries
+            while (log.children.length > 50) {
+                log.removeChild(log.lastChild);
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('eventLog').innerHTML = '';
+            addToLog('Log cleared', 'start');
+        }
+    </script>
+</body>
+</html>

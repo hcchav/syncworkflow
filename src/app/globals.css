@@ -178,6 +178,30 @@
   }
 }
 
+.scan-line {
+  animation: scanAnimation 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(255, 220, 53, 0.8);
+}
+
+@keyframes scanAnimation {
+  0% {
+    top: 0;
+    opacity: 0.8;
+  }
+  50% {
+    top: calc(100% - 4px);
+    opacity: 0.5;
+  }
+  50.1% {
+    top: 0;
+    opacity: 0;
+  }
+  100% {
+    top: 0;
+    opacity: 0.8;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

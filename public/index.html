@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuckyWheel Web Component Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .demo-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .demo-card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .control-group label {
+            min-width: 120px;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .control-group select,
+        .control-group input {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .control-group button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .control-group button:hover {
+            background: #5a6fd8;
+        }
+
+        .result-display {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-display.hidden {
+            display: none;
+        }
+
+        .code-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+        }
+
+        .code-section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .api-table th,
+        .api-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .api-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .api-table code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+        }
+
+        .event-log {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+        }
+
+        .event-log .event {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .event-log .event.spinstart {
+            background: #e3f2fd;
+        }
+
+        .event-log .event.spintick {
+            background: #f3e5f5;
+        }
+
+        .event-log .event.spinend {
+            background: #e8f5e8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 LuckyWheel Web Component</h1>
+            <p>A framework-agnostic spinning wheel component that works everywhere</p>
+        </div>
+
+        <div class="demo-grid">
+            <!-- Basic Demo -->
+            <div class="demo-card">
+                <h2>Basic Wheel</h2>
+                <lucky-wheel 
+                    id="basic-wheel"
+                    skin="minimal"
+                    theme="light"
+                    target-prize="random"
+                    spin-duration="3000"
+                    size="300"
+                    easing="easeOutCubic"
+                    min-rotations="3">
+                </lucky-wheel>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Skin:</label>
+                        <select id="skin-select">
+                            <option value="minimal">Minimal</option>
+                            <option value="wood">Wood</option>
+                            <option value="chrome">Chrome</option>
+                            <option value="casino">Casino</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Theme:</label>
+                        <select id="theme-select">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Duration:</label>
+                        <input type="range" id="duration-slider" min="1000" max="6000" value="3000" step="500">
+                        <span id="duration-value">3000ms</span>
+                    </div>
+                    <div class="control-group">
+                        <button onclick="spinBasicWheel()">Spin Wheel</button>
+                        <button onclick="resetBasicWheel()">Reset</button>
+                    </div>
+                </div>
+
+                <div id="basic-result" class="result-display hidden">
+                    <strong>Result:</strong> <span id="basic-result-text"></span>
+                </div>
+            </div>
+
+            <!-- Advanced Demo -->
+            <div class="demo-card">
+                <h2>Advanced Wheel</h2>
+                <lucky-wheel 
+                    id="advanced-wheel"
+                    skin="wood"
+                    theme="light"
+                    target-prize="Gift Card"
+                    spin-duration="4000"
+                    size="300"
+                    easing="easeOutQuint"
+                    min-rotations="4">
+                </lucky-wheel>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Target Prize:</label>
+                        <select id="target-select">
+                            <option value="random">Random</option>
+                            <option value="Coffee">Coffee</option>
+                            <option value="Try Again">Try Again</option>
+                            <option value="T-Shirt">T-Shirt</option>
+                            <option value="Free Mug">Free Mug</option>
+                            <option value="25% Off">25% Off</option>
+                            <option value="Gift Card">Gift Card</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Easing:</label>
+                        <select id="easing-select">
+                            <option value="easeOutCubic">Ease Out Cubic</option>
+                            <option value="easeOutQuint">Ease Out Quint</option>
+                            <option value="linear">Linear</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <button onclick="spinAdvancedWheel()">Spin to Target</button>
+                        <button onclick="spinRandomAdvanced()">Spin Random</button>
+                    </div>
+                </div>
+
+                <div id="advanced-result" class="result-display hidden">
+                    <strong>Result:</strong> <span id="advanced-result-text"></span>
+                </div>
+
+                <div class="event-log" id="event-log">
+                    <div><strong>Event Log:</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation -->
+        <div class="code-section">
+            <h2>📖 Quick Start</h2>
+            
+            <h3>1. Include the Script</h3>
+            <div class="code-block">
+                <pre>&lt;script src="wheel.js">&lt;/script></pre>
+            </div>
+
+            <h3>2. Add the Element</h3>
+            <div class="code-block">
+                <pre>&lt;lucky-wheel
+  skin="wood"
+  theme="light"
+  target-prize="Gift Card"
+  spin-duration="3500"
+  size="420"
+  easing="easeOutCubic"
+  min-rotations="3"
+>&lt;/lucky-wheel></pre>
+            </div>
+
+            <h3>3. Configure Segments</h3>
+            <div class="code-block">
+                <pre>&lt;script>
+  const wheel = document.querySelector('lucky-wheel');
+  wheel.segments = [
+    { label: "Coffee",   bg:"#F5C451", text:"#111" },
+    { label: "Try Again",bg:"#E6E6E6", text:"#222" },
+    { label: "T-Shirt",  bg:"#FF7B8B", text:"#fff" },
+    { label: "Free Mug", bg:"#67D6CD", text:"#073B3A" },
+    { label: "25% Off",  bg:"#59B6E6", text:"#072B42" },
+    { label: "Gift Card",bg:"#9BD7C2", text:"#072B3A" },
+  ];
+
+  wheel.addEventListener('spinend', (e) => {
+    const { prize, index } = e.detail;
+    console.log('Winner:', prize, index);
+  });
+&lt;/script></pre>
+            </div>
+        </div>
+
+        <!-- API Reference -->
+        <div class="code-section">
+            <h2>🔧 API Reference</h2>
+            
+            <h3>Attributes</h3>
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>skin</code></td>
+                        <td>string</td>
+                        <td>"minimal"</td>
+                        <td>Visual theme: minimal | wood | chrome | casino</td>
+                    </tr>
+                    <tr>
+                        <td><code>theme</code></td>
+                        <td>string</td>
+                        <td>"light"</td>
+                        <td>Color scheme: light | dark</td>
+                    </tr>
+                    <tr>
+                        <td><code>target-prize</code></td>
+                        <td>string</td>
+                        <td>"random"</td>
+                        <td>Prize label to land on, or "random"</td>
+                    </tr>
+                    <tr>
+                        <td><code>spin-duration</code></td>
+                        <td>number</td>
+                        <td>3000</td>
+                        <td>Spin duration in milliseconds (500-10000)</td>
+                    </tr>
+                    <tr>
+                        <td><code>size</code></td>
+                        <td>number</td>
+                        <td>420</td>
+                        <td>Wheel diameter in pixels (200-800)</td>
+                    </tr>
+                    <tr>
+                        <td><code>easing</code></td>
+                        <td>string</td>
+                        <td>"easeOutCubic"</td>
+                        <td>Animation easing: linear | easeOutCubic | easeOutQuint</td>
+                    </tr>
+                    <tr>
+                        <td><code>min-rotations</code></td>
+                        <td>number</td>
+                        <td>3</td>
+                        <td>Minimum full rotations before stopping (1-10)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Methods</h3>
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Parameters</th>
+                        <th>Returns</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>spin(options)</code></td>
+                        <td>{ targetIndex?, targetLabel? }</td>
+                        <td>Promise&lt;{prize, index}&gt;</td>
+                        <td>Spin the wheel to a target or random</td>
+                    </tr>
+                    <tr>
+                        <td><code>reset()</code></td>
+                        <td>none</td>
+                        <td>void</td>
+                        <td>Reset wheel to initial position</td>
+                    </tr>
+                    <tr>
+                        <td><code>getState()</code></td>
+                        <td>none</td>
+                        <td>{spinning, lastResult, angle}</td>
+                        <td>Get current wheel state</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Events</h3>
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Detail</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>spinstart</code></td>
+                        <td>{ targetIndex, targetPrize }</td>
+                        <td>Fired when spin begins</td>
+                    </tr>
+                    <tr>
+                        <td><code>spintick</code></td>
+                        <td>{ segmentIndex }</td>
+                        <td>Fired when pointer crosses segment boundary</td>
+                    </tr>
+                    <tr>
+                        <td><code>spinend</code></td>
+                        <td>{ prize, index }</td>
+                        <td>Fired when spin completes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="wheel.js"></script>
+    <script>
+        // Initialize wheels with default segments
+        const defaultSegments = [
+            { label: "Coffee", bg: "#F5C451", text: "#111" },
+            { label: "Try Again", bg: "#E6E6E6", text: "#222" },
+            { label: "T-Shirt", bg: "#FF7B8B", text: "#fff" },
+            { label: "Free Mug", bg: "#67D6CD", text: "#073B3A" },
+            { label: "25% Off", bg: "#59B6E6", text: "#072B42" },
+            { label: "Gift Card", bg: "#9BD7C2", text: "#072B3A" }
+        ];
+
+        const basicWheel = document.getElementById('basic-wheel');
+        const advancedWheel = document.getElementById('advanced-wheel');
+
+        // Set segments for both wheels
+        basicWheel.segments = defaultSegments;
+        advancedWheel.segments = defaultSegments;
+
+        // Basic wheel controls
+        document.getElementById('skin-select').addEventListener('change', (e) => {
+            basicWheel.setAttribute('skin', e.target.value);
+        });
+
+        document.getElementById('theme-select').addEventListener('change', (e) => {
+            basicWheel.setAttribute('theme', e.target.value);
+        });
+
+        document.getElementById('duration-slider').addEventListener('input', (e) => {
+            const value = e.target.value;
+            basicWheel.setAttribute('spin-duration', value);
+            document.getElementById('duration-value').textContent = value + 'ms';
+        });
+
+        // Advanced wheel controls
+        document.getElementById('target-select').addEventListener('change', (e) => {
+            advancedWheel.setAttribute('target-prize', e.target.value);
+        });
+
+        document.getElementById('easing-select').addEventListener('change', (e) => {
+            advancedWheel.setAttribute('easing', e.target.value);
+        });
+
+        // Spin functions
+        function spinBasicWheel() {
+            basicWheel.spin().then(result => {
+                const resultDiv = document.getElementById('basic-result');
+                const resultText = document.getElementById('basic-result-text');
+                resultText.textContent = `${result.prize} (Index: ${result.index})`;
+                resultDiv.classList.remove('hidden');
+            });
+        }
+
+        function resetBasicWheel() {
+            basicWheel.reset();
+            document.getElementById('basic-result').classList.add('hidden');
+        }
+
+        function spinAdvancedWheel() {
+            const target = document.getElementById('target-select').value;
+            const options = target === 'random' ? {} : { targetLabel: target };
+            
+            advancedWheel.spin(options).then(result => {
+                const resultDiv = document.getElementById('advanced-result');
+                const resultText = document.getElementById('advanced-result-text');
+                resultText.textContent = `${result.prize} (Index: ${result.index})`;
+                resultDiv.classList.remove('hidden');
+            });
+        }
+
+        function spinRandomAdvanced() {
+            advancedWheel.spin().then(result => {
+                const resultDiv = document.getElementById('advanced-result');
+                const resultText = document.getElementById('advanced-result-text');
+                resultText.textContent = `${result.prize} (Index: ${result.index})`;
+                resultDiv.classList.remove('hidden');
+            });
+        }
+
+        // Event logging for advanced wheel
+        const eventLog = document.getElementById('event-log');
+        
+        function logEvent(type, detail) {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = `event ${type}`;
+            eventDiv.textContent = `${new Date().toLocaleTimeString()}: ${type} - ${JSON.stringify(detail)}`;
+            eventLog.appendChild(eventDiv);
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+
+        advancedWheel.addEventListener('spinstart', (e) => {
+            logEvent('spinstart', e.detail);
+        });
+
+        advancedWheel.addEventListener('spintick', (e) => {
+            logEvent('spintick', e.detail);
+        });
+
+        advancedWheel.addEventListener('spinend', (e) => {
+            logEvent('spinend', e.detail);
+        });
+    </script>
+</body>
+</html>
