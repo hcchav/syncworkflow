@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -71,11 +71,13 @@ export default function BoatTradeshowLanding() {
   const pixiWheelRef = React.useRef<any>(null);
   const animationTimerRef = React.useRef<NodeJS.Timeout | null>(null);
   const typingTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const demoSectionRef = React.useRef<HTMLDivElement>(null);
+  const [isDemoVisible, setIsDemoVisible] = useState(true);
 
   const currentYear = new Date().getFullYear();
   
-  // Enhanced prize wheel data with modern colors and gradients
-  const wheelData = [
+  // Memoize static wheel data - never changes
+  const wheelData = useMemo(() => [
     { option: 'No Prize', style: { backgroundColor: '#e2e8f0', textColor: '#475569' } },
     { option: 'VIP Access', style: { backgroundColor: '#7c3aed', textColor: 'white' } },
     { option: 'Gift Card', style: { backgroundColor: '#1e293b', textColor: 'white' } },
@@ -84,32 +86,45 @@ export default function BoatTradeshowLanding() {
     { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#1e293b' } },
     { option: '$100 Off', style: { backgroundColor: '#dc2626', textColor: 'white' } },
     { option: 'Free Setup', style: { backgroundColor: '#FFDC35', textColor: '#1e293b' } },
-  ];
+  ], []);
 
-  // Convert wheelData to PixiJS format
-  const pixiSegments = wheelData.map(item => ({
+  // Memoize PixiJS segments conversion
+  const pixiSegments = useMemo(() => wheelData.map(item => ({
     label: item.option,
     bg: item.style.backgroundColor,
     text: item.style.textColor
-  }));
+  })), [wheelData]);
 
-  // Consolidated typing animation - single implementation
-  const typeText = (text: string, setValue: (value: string) => void, delay = 80) => {
+  // Optimized typing animation with requestAnimationFrame for smoother performance
+  const typeText = useCallback((text: string, setValue: (value: string) => void, delay = 80) => {
     return new Promise<void>((resolve) => {
       let index = 0;
-      const interval = setInterval(() => {
-        setValue(text.slice(0, index + 1));
-        index++;
-        if (index >= text.length) {
-          clearInterval(interval);
-          setTimeout(resolve, 300);
+      let lastUpdate = Date.now();
+      let animationFrameId: number;
+      
+      const animate = () => {
+        const now = Date.now();
+        if (now - lastUpdate >= delay) {
+          if (index < text.length) {
+            setValue(text.slice(0, index + 1));
+            index++;
+            lastUpdate = now;
+          } else {
+            cancelAnimationFrame(animationFrameId);
+            setTimeout(resolve, 300);
+            return;
+          }
         }
-      }, delay);
-      // Store interval for cleanup
+        animationFrameId = requestAnimationFrame(animate);
+      };
+      
+      animationFrameId = requestAnimationFrame(animate);
+      
+      // Store for cleanup
       if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
-      typingTimerRef.current = interval as any;
+      typingTimerRef.current = animationFrameId as any;
     });
-  };
+  }, []);
 
   const {
     register,
@@ -293,9 +308,33 @@ export default function BoatTradeshowLanding() {
     animationTimerRef.current = timer;
   }, [isAnimationPlaying]);
 
+  // Intersection Observer to pause animation when not visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsDemoVisible(entry.isIntersecting);
+        // Auto-pause when scrolled out of view
+        if (!entry.isIntersecting && isAnimationPlaying) {
+          setIsAnimationPlaying(false);
+        }
+      },
+      { threshold: 0.3 } // Trigger when 30% visible
+    );
+
+    if (demoSectionRef.current) {
+      observer.observe(demoSectionRef.current);
+    }
+
+    return () => {
+      if (demoSectionRef.current) {
+        observer.unobserve(demoSectionRef.current);
+      }
+    };
+  }, [isAnimationPlaying]);
+
   // Control animation playback
   useEffect(() => {
-    if (isAnimationPlaying) {
+    if (isAnimationPlaying && isDemoVisible) {
       runQRStep();
     } else {
       // Stop animation - clear all timers
@@ -312,20 +351,21 @@ export default function BoatTradeshowLanding() {
       if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
       if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
     };
-  }, [isAnimationPlaying, runQRStep]);
+  }, [isAnimationPlaying, isDemoVisible, runQRStep]);
 
 
-  const handleCTAClick = (location: string) => {
+  // Memoize event handlers to prevent recreation on every render
+  const handleCTAClick = useCallback((location: string) => {
     fireHotjarEvent(`cta_clicked_${location}`);
     document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
-  const handleVideoClick = (location: string) => {
+  const handleVideoClick = useCallback((location: string) => {
     fireHotjarEvent(`video_clicked_${location}`);
     setShowVideo(true);
-  };
+  }, []);
 
-  const onSubmit = async (data: LeadFormData) => {
+  const onSubmit = useCallback(async (data: LeadFormData) => {
     try {
       console.log('Form submitted:', data);
       fireHotjarEvent('form_submitted');
@@ -335,9 +375,10 @@ export default function BoatTradeshowLanding() {
     } catch (error) {
       console.error('Form submission error:', error);
     }
-  };
+  }, []);
 
-  const faqs = [
+  // Memoize static FAQ data
+  const faqs = useMemo(() => [
     {
       id: 'how-it-works',
       question: 'How does the system work at boat shows?',
@@ -363,7 +404,7 @@ export default function BoatTradeshowLanding() {
       question: 'Can you customize it for boat shows specifically?',
       answer: 'Absolutely! We customize the registration forms, prize wheel, and follow-up emails to match your boat brand and target the specific types of leads you want (boat buyers, service customers, etc.).'
     }
-  ];
+  ], []);
 
   return (
     <>
@@ -474,20 +515,63 @@ export default function BoatTradeshowLanding() {
           
           {/* Feature Pills */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {['QR Scan', 'Verify Contact', 'Qualify Leads', 'Gamify Experience', 'Auto-Export'].map((feature, index) => (
+            {useMemo(() => ['QR Scan', 'Verify Contact', 'Qualify Leads', 'Gamify Experience', 'Auto-Export'].map((feature, index) => (
               <div key={index} className="px-6 py-3 bg-gray-100 rounded-full text-[#171717] font-medium hover:bg-gray-200 transition-colors">
                 {feature}
               </div>
-            ))}
+            )), [])}
           </div>
           
           {/* Phone Demo Section */}
-          <div className="max-w-4xl mx-auto">
-            {/* Animation Control Button */}
-            <div className="flex justify-center mb-6">
+          <div className="max-w-4xl mx-auto" ref={demoSectionRef}>
+            {/* Step Progress Indicator */}
+            <div className="mb-8">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                {['QR Scan', 'Register', 'Qualify', 'Verify', 'Spin', 'Win'].map((step, index) => (
+                  <div key={index} className="flex items-center">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 ${
+                      animationStep === index 
+                        ? 'bg-[#FFDC35] text-[#171717] scale-110 shadow-lg' 
+                        : animationStep > index
+                        ? 'bg-green-500 text-white'
+                        : 'bg-gray-200 text-gray-500'
+                    }`}>
+                      {animationStep > index ? (
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                        </svg>
+                      ) : (
+                        index + 1
+                      )}
+                    </div>
+                    {index < 5 && (
+                      <div className={`w-8 h-1 transition-all duration-300 ${
+                        animationStep > index ? 'bg-green-500' : 'bg-gray-200'
+                      }`}></div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-center text-gray-600 text-sm">
+                {useMemo(() => {
+                  const descriptions = [
+                    'Visitor scans QR code at your booth',
+                    'Quick registration with contact info',
+                    'Smart qualification questions',
+                    'Phone verification for quality leads',
+                    'Gamified prize wheel experience',
+                    'Instant reward & lead captured!'
+                  ];
+                  return descriptions[animationStep] || '';
+                }, [animationStep])}
+              </p>
+            </div>
+            
+            {/* Animation Control Buttons */}
+            <div className="flex justify-center gap-3 mb-6">
               <button
                 onClick={() => setIsAnimationPlaying(!isAnimationPlaying)}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#171717] text-white rounded-full font-semibold hover:bg-[#2a2a2a] transition-all duration-200 shadow-lg"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#171717] text-white rounded-full font-semibold hover:bg-[#2a2a2a] transition-all duration-200 shadow-lg hover:scale-105"
               >
                 {isAnimationPlaying ? (
                   <>
@@ -505,6 +589,37 @@ export default function BoatTradeshowLanding() {
                   </>
                 )}
               </button>
+              
+              {isAnimationPlaying && (
+                <button
+                  onClick={() => {
+                    setIsAnimationPlaying(false);
+                    setTimeout(() => {
+                      setAnimationStep(0);
+                      setQrScanned(false);
+                      setNameValue('');
+                      setEmailValue('');
+                      setPhoneValue('');
+                      setNameCompleted(false);
+                      setEmailCompleted(false);
+                      setPhoneCompleted(false);
+                      setSelectedRole('');
+                      setSelectedSolution('');
+                      setQualifyStep(1);
+                      setVerificationCode(['', '', '', '', '', '']);
+                      setWinningPrize('');
+                      setIsTyping(false);
+                      setIsAnimationPlaying(true);
+                    }, 100);
+                  }}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-full font-semibold hover:bg-gray-700 transition-all duration-200 shadow-lg hover:scale-105"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                  </svg>
+                  Restart
+                </button>
+              )}
             </div>
             
             <div className="flex justify-center">
@@ -515,9 +630,25 @@ export default function BoatTradeshowLanding() {
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120px] h-[24px] bg-black rounded-b-[12px] z-50"></div>
                   
                   <div className="bg-white rounded-[42px] w-full h-full overflow-hidden relative">
-                    {/* Background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white">
+                    {/* Background gradient with subtle animation */}
+                    <div className={`absolute inset-0 bg-gradient-to-br from-gray-50 to-white transition-all duration-1000 ${
+                      isAnimationPlaying ? 'opacity-100' : 'opacity-50'
+                    }`}>
                     </div>
+                    
+                    {/* Subtle pulse effect when not playing */}
+                    {!isAnimationPlaying && (
+                      <div className="absolute inset-0 flex items-center justify-center z-50 bg-white/80 backdrop-blur-sm">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-[#FFDC35] rounded-full flex items-center justify-center mx-auto mb-3 animate-pulse">
+                            <svg className="w-8 h-8 text-[#171717]" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <p className="text-sm font-semibold text-[#171717]">Click Play to Start Demo</p>
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Top UI */}
                     <div className="absolute top-0 left-0 right-0 z-40 pt-8 pb-4 px-4">
@@ -568,8 +699,15 @@ export default function BoatTradeshowLanding() {
                               
                             </div>
                             
-                            <p className="text-gray-600 text-sm mt-4 text-center">
-                              {qrScanned ? 'QR Code Scanned Successfully!' : 'Position QR Code in Frame'}
+                            <p className="text-gray-600 text-sm mt-4 text-center font-medium">
+                              {qrScanned ? (
+                                <span className="text-green-600 flex items-center justify-center gap-1">
+                                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                                  </svg>
+                                  Scanned Successfully!
+                                </span>
+                              ) : 'Position QR Code in Frame'}
                             </p>
                           </div>
                         </div>
@@ -832,11 +970,12 @@ export default function BoatTradeshowLanding() {
                             <div className="text-center">
                             <div className="text-4xl mb-4">🎉</div>
                             
-                            <div className="bg-gray-50 rounded-xl p-4 mb-4 border-2 border-gray-200 shadow-lg">
-                              <p className="text-[#171717] font-bold mb-1">You won a</p>
-                              <p className="text-[#FFDC35] text-xl font-bold mb-2">Free Setup Package (Value $500)</p>
+                            <div className="bg-gradient-to-br from-[#FFDC35] to-[#FFE55C] rounded-xl p-4 mb-4 border-2 border-[#FFDC35] shadow-2xl animate-[bounce_1s_ease-in-out_3]">
+                              <p className="text-[#171717] font-bold mb-1">🎊 Congratulations! 🎊</p>
+                              <p className="text-[#171717] text-xl font-bold mb-2">Free Setup Package</p>
+                              <p className="text-[#171717]/80 text-sm font-semibold mb-2">(Value $500)</p>
                               <div className="text-3xl mb-1">🏆</div>
-                              <p className="text-gray-600 text-xs">Check your email for details</p>
+                              <p className="text-[#171717]/70 text-xs font-medium">Check your email for details</p>
                             </div>
                             </div>
                           </div>
