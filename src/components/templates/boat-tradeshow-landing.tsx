@@ -667,11 +667,11 @@ export default function BoatTradeshowLanding() {
                     }`}>
                     </div>
                     
-                    {/* Subtle pulse effect when not playing */}
+                    {/* Subtle pulse effect when not playing - simplified for mobile */}
                     {!isAnimationPlaying && (
-                      <div className="absolute inset-0 flex items-center justify-center z-50 bg-white/80 backdrop-blur-sm">
+                      <div className={`absolute inset-0 flex items-center justify-center z-50 ${isMobile ? 'bg-white/90' : 'bg-white/80 backdrop-blur-sm'}`}>
                         <div className="text-center">
-                          <div className="w-16 h-16 bg-[#FFDC35] rounded-full flex items-center justify-center mx-auto mb-3 animate-pulse">
+                          <div className={`w-16 h-16 bg-[#FFDC35] rounded-full flex items-center justify-center mx-auto mb-3 ${isMobile ? '' : 'animate-pulse'}`}>
                             <svg className="w-8 h-8 text-[#171717]" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                             </svg>
@@ -707,8 +707,9 @@ export default function BoatTradeshowLanding() {
                     <div className="form-ui absolute inset-0 pt-36 p-4 z-30">
                       <div className="w-full max-w-[220px] mx-auto relative">
                         
-                        {/* Step 1: QR Code Scanning */}
-                        <div className={`transition-all duration-500 ${animationStep === 0 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                        {/* Step 1: QR Code Scanning - conditionally render on mobile for performance */}
+                        {(!isMobile || animationStep === 0) && (
+                        <div className={`${isMobile ? 'transition-opacity duration-300' : 'transition-all duration-500'} ${animationStep === 0 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="flex flex-col items-center justify-center h-full">
                             {/* QR Code scanning frame */}
                             <div className="relative w-48 h-48 rounded-lg flex items-center justify-center">
@@ -742,9 +743,11 @@ export default function BoatTradeshowLanding() {
                             </p>
                           </div>
                         </div>
+                        )}
                         
-                        {/* Step 2: Registration Form */}
-                        <div className={`transition-all duration-500 ${animationStep === 1 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                        {/* Step 2: Registration Form - conditionally render on mobile */}
+                        {(!isMobile || animationStep === 1) && (
+                        <div className={`${isMobile ? 'transition-opacity duration-300' : 'transition-all duration-500'} ${animationStep === 1 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="pt-2 pb-4">
                           
                           <div className="space-y-6 px-2">
@@ -757,15 +760,15 @@ export default function BoatTradeshowLanding() {
                                 Full Name
                               </label>
                               <div className="relative group">
-                                <div className={`bg-gray-50 rounded-xl p-4 border-2 transition-all duration-300 ${
+                                <div className={`bg-gray-50 rounded-xl p-4 border-2 ${isMobile ? 'transition-colors duration-200' : 'transition-all duration-300'} ${
                                   nameCompleted 
-                                    ? 'border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                    ? `border-[#FFDC35] ${isMobile ? '' : 'shadow-[0_0_20px_rgba(255,220,53,0.3)]'}` 
                                     : 'border-gray-200 group-hover:border-[#FFDC35]/50'
                                 } relative overflow-hidden`}>
-                                  <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                  {!isMobile && <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
                                   <p className="text-[#171717] text-sm font-medium relative z-10 min-h-[20px]">
                                     {nameValue}
-                                    {isTyping && !nameCompleted && <span className="animate-pulse ml-1">|</span>}
+                                    {isTyping && !nameCompleted && <span className={isMobile ? 'ml-1' : 'animate-pulse ml-1'}>|</span>}
                                     {!nameValue && !isTyping && <span className="text-gray-400">|</span>}
                                   </p>
                                   {nameCompleted && (
@@ -788,15 +791,15 @@ export default function BoatTradeshowLanding() {
                                 Email Address
                               </label>
                               <div className="relative group">
-                                <div className={`bg-gray-50 rounded-xl p-4 border-2 transition-all duration-300 ${
+                                <div className={`bg-gray-50 rounded-xl p-4 border-2 ${isMobile ? 'transition-colors duration-200' : 'transition-all duration-300'} ${
                                   emailCompleted 
-                                    ? 'border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                    ? `border-[#FFDC35] ${isMobile ? '' : 'shadow-[0_0_20px_rgba(255,220,53,0.3)]'}` 
                                     : 'border-gray-200 group-hover:border-[#FFDC35]/50'
                                 } relative overflow-hidden`}>
-                                  <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                  {!isMobile && <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
                                   <p className="text-[#171717] text-sm font-medium relative z-10 break-all min-h-[20px]">
                                     {emailValue}
-                                    {isTyping && !emailCompleted && nameCompleted && <span className="animate-pulse ml-1">|</span>}
+                                    {isTyping && !emailCompleted && nameCompleted && <span className={isMobile ? 'ml-1' : 'animate-pulse ml-1'}>|</span>}
                                     {!emailValue && !isTyping && <span className="text-gray-400">|</span>}
                                   </p>
                                   {emailCompleted && (
@@ -818,15 +821,15 @@ export default function BoatTradeshowLanding() {
                                 <span className="text-gray-500 text-xs">(Optional)</span>
                               </label>
                               <div className="relative group">
-                                <div className={`bg-gray-50 rounded-xl p-4 border-2 transition-all duration-300 ${
+                                <div className={`bg-gray-50 rounded-xl p-4 border-2 ${isMobile ? 'transition-colors duration-200' : 'transition-all duration-300'} ${
                                   phoneCompleted 
-                                    ? 'border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                    ? `border-[#FFDC35] ${isMobile ? '' : 'shadow-[0_0_20px_rgba(255,220,53,0.3)]'}` 
                                     : 'border-gray-200 group-hover:border-[#FFDC35]/50'
                                 } relative overflow-hidden`}>
-                                  <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                  {!isMobile && <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
                                   <p className="text-[#171717] text-sm font-medium relative z-10 min-h-[20px]">
                                     {phoneValue}
-                                    {isTyping && !phoneCompleted && emailCompleted && <span className="animate-pulse ml-1">|</span>}
+                                    {isTyping && !phoneCompleted && emailCompleted && <span className={isMobile ? 'ml-1' : 'animate-pulse ml-1'}>|</span>}
                                     {!phoneValue && !isTyping && <span className="text-gray-400">|</span>}
                                   </p>
                                   {phoneCompleted && (
@@ -842,9 +845,11 @@ export default function BoatTradeshowLanding() {
                           </div>
                           </div>
                         </div>
+                        )}
                         
-                        {/* Step 3: Qualification Questions */}
-                        <div className={`transition-all duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                        {/* Step 3: Qualification Questions - conditionally render on mobile */}
+                        {(!isMobile || animationStep === 2) && (
+                        <div className={`${isMobile ? 'transition-opacity duration-300' : 'transition-all duration-500'} ${animationStep === 2 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="pt-2 pb-4">
                           
                           <div className="space-y-6 px-2">
@@ -858,12 +863,12 @@ export default function BoatTradeshowLanding() {
                                 </label>
                                 <div className="space-y-3">
                                   <div className="relative group">
-                                    <div className={`rounded-xl p-4 border-2 transition-all duration-300 cursor-pointer ${
+                                    <div className={`rounded-xl p-4 border-2 ${isMobile ? 'transition-colors duration-200' : 'transition-all duration-300'} cursor-pointer ${
                                       selectedRole === 'Owner / Executive' 
-                                        ? 'bg-[#FFDC35] border-[#FFDC35] shadow-[0_0_20px_rgba(255,220,53,0.3)]' 
+                                        ? `bg-[#FFDC35] border-[#FFDC35] ${isMobile ? '' : 'shadow-[0_0_20px_rgba(255,220,53,0.3)]'}` 
                                         : 'bg-gray-50 border-gray-200 group-hover:border-[#FFDC35]/50'
                                     } relative overflow-hidden`}>
-                                      <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                      {!isMobile && <div className="absolute inset-0 bg-gradient-to-r from-[#FFDC35]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
                                       <p className="text-[#171717] text-sm font-medium relative z-10">Owner / Executive</p>
                                     </div>
                                   </div>
@@ -940,9 +945,11 @@ export default function BoatTradeshowLanding() {
                           </div>
                           </div>
                         </div>
+                        )}
                         
-                        {/* Step 4: Verification Code */}
-                        <div className={`transition-all duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                        {/* Step 4: Verification Code - conditionally render on mobile */}
+                        {(!isMobile || animationStep === 3) && (
+                        <div className={`${isMobile ? 'transition-opacity duration-300' : 'transition-all duration-500'} ${animationStep === 3 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="flex flex-col items-center justify-center h-full">
                             <div className="space-y-4 text-center">
                             <p className="text-gray-600 text-sm text-center">Enter the 6-digit code sent to your phone</p>
@@ -957,9 +964,11 @@ export default function BoatTradeshowLanding() {
                             </div>
                           </div>
                         </div>
+                        )}
                         
-                        {/* Step 5: Prize Wheel */}
-                        <div className={`transition-all duration-500  ${animationStep === 4 ? 'opacity-100 ' : 'opacity-0 absolute pointer-events-none  '}`} 
+                        {/* Step 5: Prize Wheel - conditionally render on mobile */}
+                        {(!isMobile || animationStep === 4) && (
+                        <div className={`${isMobile ? 'transition-opacity duration-300' : 'transition-all duration-500'}  ${animationStep === 4 ? 'opacity-100 ' : 'opacity-0 absolute pointer-events-none  '}`} 
                             style={{ top: 0, left: 0, right: 0, bottom: 0 }}>
                           <div className="flex flex-col items-center h-full">
                             
@@ -994,9 +1003,11 @@ export default function BoatTradeshowLanding() {
                             </div>
                           </div>
                         </div>
+                        )}
                         
-                        {/* Step 6: Prize Reveal */}
-                        <div className={`transition-all duration-500 ${animationStep === 5 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
+                        {/* Step 6: Prize Reveal - conditionally render on mobile */}
+                        {(!isMobile || animationStep === 5) && (
+                        <div className={`${isMobile ? 'transition-opacity duration-300' : 'transition-all duration-500'} ${animationStep === 5 ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'}`}>
                           <div className="flex flex-col items-center justify-center h-full">
                             <div className="text-center">
                             <div className="text-4xl mb-4">🎉</div>
@@ -1011,6 +1022,7 @@ export default function BoatTradeshowLanding() {
                             </div>
                           </div>
                         </div>
+                        )}
                         
                       </div>
                     </div>
