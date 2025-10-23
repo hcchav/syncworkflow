@@ -43,6 +43,16 @@ class LuckyWheelPixi extends HTMLElement {
     this.wheelContainer = null;
     this.segmentGraphics = [];
     this.glowFilters = [];
+    this.textCache = new Map(); // Cache text textures for reuse
+    
+    // Mobile detection
+    this._isMobile = this._detectMobile();
+    this._animationsEnabled = false; // Only animate during spin
+  }
+  
+  _detectMobile() {
+    if (typeof window === 'undefined') return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
   }
 
   async connectedCallback() {
@@ -52,6 +62,9 @@ class LuckyWheelPixi extends HTMLElement {
   }
 
   disconnectedCallback() {
+    // Clear text cache
+    this.textCache.clear();
+    
     if (this.app) {
       this.app.destroy(true, { children: true, texture: true, baseTexture: true });
     }
@@ -170,14 +183,18 @@ class LuckyWheelPixi extends HTMLElement {
   _initPixi() {
     const canvas = this.shadowRoot.getElementById('wheel-canvas');
     
+    // Mobile-optimized sizing and resolution
+    const size = this._isMobile ? 500 : 700;
+    const resolution = this._isMobile ? 1 : (window.devicePixelRatio || 1);
+    
     // Create PixiJS application with larger size to accommodate handles
     this.app = new PIXI.Application({
       view: canvas,
-      width: 700,  // Increased from 600 to fit extended handles
-      height: 700, // Increased from 600 to fit extended handles
+      width: size,
+      height: size,
       backgroundColor: 0x1a1a2e,
-      antialias: true,
-      resolution: window.devicePixelRatio || 1,
+      antialias: !this._isMobile, // Disable antialiasing on mobile for performance
+      resolution: resolution,
       autoDensity: true,
     });
 
@@ -229,8 +246,10 @@ class LuckyWheelPixi extends HTMLElement {
     rim.endFill();
     
     // Add prominent wood grain texture with darker, thicker lines
-    rim.lineStyle(2, 0x4a2511, 0.8); // Much darker and more visible
-    for (let i = 0; i < 360; i += 4) {
+    // Reduce grain density on mobile for performance
+    const grainStep = this._isMobile ? 12 : 4;
+    rim.lineStyle(2, 0x4a2511, 0.8);
+    for (let i = 0; i < 360; i += grainStep) {
       const angle = (i * Math.PI) / 180;
       const x1 = Math.cos(angle) * innerRadius;
       const y1 = Math.sin(angle) * innerRadius;
@@ -240,32 +259,40 @@ class LuckyWheelPixi extends HTMLElement {
       rim.lineTo(x2, y2);
     }
     
-    // Add secondary lighter grain lines for texture
-    rim.lineStyle(1, 0x6B3410, 0.5);
-    for (let i = 2; i < 360; i += 4) {
-      const angle = (i * Math.PI) / 180;
-      const x1 = Math.cos(angle) * (innerRadius + 5);
-      const y1 = Math.sin(angle) * (innerRadius + 5);
-      const x2 = Math.cos(angle) * (outerRadius - 5);
-      const y2 = Math.sin(angle) * (outerRadius - 5);
-      rim.moveTo(x1, y1);
-      rim.lineTo(x2, y2);
+    // Skip secondary grain on mobile
+    if (!this._isMobile) {
+      rim.lineStyle(1, 0x6B3410, 0.5);
+      for (let i = 2; i < 360; i += 4) {
+        const angle = (i * Math.PI) / 180;
+        const x1 = Math.cos(angle) * (innerRadius + 5);
+        const y1 = Math.sin(angle) * (innerRadius + 5);
+        const x2 = Math.cos(angle) * (outerRadius - 5);
+        const y2 = Math.sin(angle) * (outerRadius - 5);
+        rim.moveTo(x1, y1);
+        rim.lineTo(x2, y2);
+      }
     }
     
-    // Add inner edge shadow for depth
+    // Reduced inner edge shadow to prevent flickering
     const innerShadow = new PIXI.Graphics();
-    innerShadow.lineStyle(8, 0x000000, 0.4);
+    innerShadow.lineStyle(4, 0x000000, 0.15);
     innerShadow.drawCircle(0, 0, innerRadius + 4);
     
-    // Add outer edge highlight
+    // Reduced outer edge highlight to prevent flickering
     const outerHighlight = new PIXI.Graphics();
-    outerHighlight.lineStyle(3, 0xA0522D, 0.6);
+    outerHighlight.lineStyle(2, 0xA0522D, 0.3);
     outerHighlight.drawCircle(0, 0, outerRadius - 2);
     
-    // Add outer edge shadow
+    // Reduced outer edge shadow to prevent flickering
     const outerShadow = new PIXI.Graphics();
-    outerShadow.lineStyle(4, 0x3e2723, 0.5);
+    outerShadow.lineStyle(2, 0x3e2723, 0.2);
     outerShadow.drawCircle(0, 0, innerRadius + 1);
+    
+    // Cache rim as bitmap for better performance (static element)
+    rim.cacheAsBitmap = true;
+    innerShadow.cacheAsBitmap = true;
+    outerHighlight.cacheAsBitmap = true;
+    outerShadow.cacheAsBitmap = true;
     
     this.wheelContainer.addChild(innerShadow);
     this.wheelContainer.addChild(rim);
@@ -294,30 +321,30 @@ class LuckyWheelPixi extends HTMLElement {
       segmentGraphic.lineTo(0, 0);
       segmentGraphic.endFill();
 
-      // Add darker, more visible border
-      segmentGraphic.lineStyle(4, 0x2c3e50, 1.0);
-      segmentGraphic.moveTo(0, 0);
-      segmentGraphic.lineTo(
-        Math.cos(startAngle) * radius,
-        Math.sin(startAngle) * radius
-      );
+      // Removed darker border to prevent flickering
+      // segmentGraphic.lineStyle(4, 0x2c3e50, 1.0);
+      // segmentGraphic.moveTo(0, 0);
+      // segmentGraphic.lineTo(
+      //   Math.cos(startAngle) * radius,
+      //   Math.sin(startAngle) * radius
+      // );
       
-      // Add inner white highlight for depth
-      segmentGraphic.lineStyle(2, 0xffffff, 0.3);
-      const innerStart = radius * 0.3;
-      segmentGraphic.moveTo(
-        Math.cos(startAngle) * innerStart,
-        Math.sin(startAngle) * innerStart
-      );
-      segmentGraphic.lineTo(
-        Math.cos(startAngle) * radius,
-        Math.sin(startAngle) * radius
-      );
+      // Removed inner white highlight to prevent flickering
+      // segmentGraphic.lineStyle(2, 0xffffff, 0.3);
+      // const innerStart = radius * 0.3;
+      // segmentGraphic.moveTo(
+      //   Math.cos(startAngle) * innerStart,
+      //   Math.sin(startAngle) * innerStart
+      // );
+      // segmentGraphic.lineTo(
+      //   Math.cos(startAngle) * radius,
+      //   Math.sin(startAngle) * radius
+      // );
 
-      // Add blur filter for glow effect
+      // Add blur filter for glow effect (reduced quality on mobile)
       const blurFilter = new PIXI.BlurFilter();
-      blurFilter.blur = 3;
-      blurFilter.quality = 4;
+      blurFilter.blur = this._isMobile ? 2 : 3;
+      blurFilter.quality = this._isMobile ? 1 : 4;
       
       segmentGraphic.filters = [blurFilter];
       this.glowFilters.push(blurFilter);
@@ -353,21 +380,26 @@ class LuckyWheelPixi extends HTMLElement {
       spoke.drawRect(-spokeWidth / 2, innerRadius, spokeWidth, outerRadius - innerRadius);
       spoke.endFill();
       
-      // Add wood grain lines
-      spoke.lineStyle(1, 0x6B3410, 0.4);
-      for (let j = innerRadius; j < outerRadius; j += 10) {
-        spoke.moveTo(-spokeWidth / 2, j);
-        spoke.lineTo(spokeWidth / 2, j);
+      // Add wood grain lines (skip on mobile for performance)
+      if (!this._isMobile) {
+        spoke.lineStyle(1, 0x6B3410, 0.4);
+        for (let j = innerRadius; j < outerRadius; j += 10) {
+          spoke.moveTo(-spokeWidth / 2, j);
+          spoke.lineTo(spokeWidth / 2, j);
+        }
       }
       
-      // Decorative rings (turned details) - adjusted for longer spoke
-      const ringPositions = [0.12, 0.3, 0.48, 0.66, 0.84];
-      ringPositions.forEach(pos => {
-        const ringY = innerRadius + (outerRadius - innerRadius) * pos;
-        spoke.beginFill(0x6B3410);
-        spoke.drawRect(-spokeWidth / 2 - 3, ringY - 5, spokeWidth + 6, 10);
-        spoke.endFill();
-      });
+      // Decorative rings (turned details) - reduced for performance
+      // Only add rings on desktop for visual quality
+      if (!this._isMobile) {
+        const ringPositions = [0.3, 0.66]; // Reduced from 5 to 2 rings
+        ringPositions.forEach(pos => {
+          const ringY = innerRadius + (outerRadius - innerRadius) * pos;
+          spoke.beginFill(0x6B3410);
+          spoke.drawRect(-spokeWidth / 2 - 3, ringY - 5, spokeWidth + 6, 10);
+          spoke.endFill();
+        });
+      }
       
       // Handle grip at end - positioned where red circles are
       const gripRadius = 18;
@@ -388,26 +420,30 @@ class LuckyWheelPixi extends HTMLElement {
       spoke.drawRect(-spokeWidth / 2 - 1, innerRadius, 2, outerRadius - innerRadius);
       
       spoke.rotation = angle;
+      // Cache spoke as bitmap (static element)
+      spoke.cacheAsBitmap = true;
       this.wheelContainer.addChild(spoke);
     }
   }
 
   _addSegmentText(text, startAngle, endAngle, radius) {
     const centerAngle = (startAngle + endAngle) / 2;
-    const textRadius = radius * 0.78; // Moved further out (was 0.65)
+    const textRadius = radius * 0.78;
 
+    // Simplified text style for better performance
     const textStyle = new PIXI.TextStyle({
       fontFamily: 'Arial',
-      fontSize: 22, // Slightly smaller to fit better
+      fontSize: this._isMobile ? 18 : 22,
       fontWeight: 'bold',
       fill: '#ffffff',
       stroke: '#000000',
-      strokeThickness: 5, // Thicker stroke for better visibility
-      dropShadow: true,
+      strokeThickness: this._isMobile ? 3 : 5,
+      // Simplified shadow on mobile
+      dropShadow: !this._isMobile,
       dropShadowColor: '#000000',
-      dropShadowBlur: 6,
+      dropShadowBlur: 4,
       dropShadowAngle: Math.PI / 6,
-      dropShadowDistance: 3,
+      dropShadowDistance: 2,
     });
 
     const label = new PIXI.Text(text, textStyle);
@@ -415,6 +451,9 @@ class LuckyWheelPixi extends HTMLElement {
     label.x = Math.cos(centerAngle) * textRadius;
     label.y = Math.sin(centerAngle) * textRadius;
     label.rotation = centerAngle + Math.PI / 2;
+    
+    // Cache text as bitmap for better rendering performance
+    label.cacheAsBitmap = true;
 
     this.wheelContainer.addChild(label);
   }
@@ -460,12 +499,21 @@ class LuckyWheelPixi extends HTMLElement {
       lines.lineTo(Math.cos(angle) * endR, Math.sin(angle) * endR);
     }
     
-    // Add glow to hub
-    const hubBlur = new PIXI.BlurFilter();
-    hubBlur.blur = 5;
-    hubBlur.quality = 4;
-    outerDisc.filters = [hubBlur];
+    // Add glow to hub (reduced on mobile)
+    if (!this._isMobile) {
+      const hubBlur = new PIXI.BlurFilter();
+      hubBlur.blur = 5;
+      hubBlur.quality = 2;
+      outerDisc.filters = [hubBlur];
+    }
 
+    // Cache hub elements as bitmaps (static)
+    outerDisc.cacheAsBitmap = true;
+    middleRing.cacheAsBitmap = true;
+    innerRing.cacheAsBitmap = true;
+    lines.cacheAsBitmap = true;
+    centerHole.cacheAsBitmap = true;
+    
     this.wheelContainer.addChild(outerDisc);
     this.wheelContainer.addChild(middleRing);
     this.wheelContainer.addChild(innerRing);
@@ -474,6 +522,12 @@ class LuckyWheelPixi extends HTMLElement {
   }
 
   _animate() {
+    // Only animate during spin or if explicitly enabled
+    if (!this._animationsEnabled && !this._isSpinning) return;
+    
+    // Skip animations entirely on mobile for better performance
+    if (this._isMobile) return;
+    
     const time = performance.now() * 0.001;
 
     // Animate blur filters for glow effect
@@ -500,6 +554,7 @@ class LuckyWheelPixi extends HTMLElement {
     if (this._isSpinning) return;
 
     this._isSpinning = true;
+    this._animationsEnabled = true; // Enable animations during spin
     const button = this.shadowRoot.getElementById('spin-btn');
     button.disabled = true;
 
@@ -553,34 +608,12 @@ class LuckyWheelPixi extends HTMLElement {
     
     // Calculate final target rotation
     this._targetRotation = this._currentRotation + extraRotations + rotationNeeded + randomOffset;
-    
-    // Debug logging
-    console.log('🎯 Targeting Debug (PixiJS Wheel - FIXED):');
-    console.log(`  Total segments: ${this._segments.length}`);
-    console.log(`  Target index: ${targetIndex} ("${this._segments[targetIndex].label}")`);
-    console.log(`  Segment angle: ${segmentAngle.toFixed(2)}°`);
-    console.log(`  Segment center in drawing: ${segmentCenterInDrawing.toFixed(2)}°`);
-    console.log(`  Pointer angle: ${pointerAngle}°`);
-    console.log(`  Target absolute angle: ${targetAngle.toFixed(2)}°`);
-    console.log(`  Current rotation: ${this._currentRotation.toFixed(2)}° (normalized: ${currentNormalized.toFixed(2)}°)`);
-    console.log(`  Rotation needed: ${rotationNeeded.toFixed(2)}°`);
-    console.log(`  Extra rotations: ${extraRotations}°`);
-    console.log(`  Final target rotation: ${this._targetRotation.toFixed(2)}°`);
-    console.log(`  Note: Segments drawn at index*${segmentAngle.toFixed(1)}° - 90°`);
 
     // Animate spin
     await this._animateSpin();
 
     // Normalize rotation for next spin
     this._currentRotation = targetAngle;
-    
-    // Verify final position
-    const finalRotationRadians = (this._currentRotation * Math.PI) / 180;
-    const finalRotationDegrees = ((this._currentRotation % 360) + 360) % 360;
-    console.log('🏁 Final State:');
-    console.log(`  Final rotation: ${this._currentRotation.toFixed(2)}° (${finalRotationRadians.toFixed(4)} rad)`);
-    console.log(`  Normalized: ${finalRotationDegrees.toFixed(2)}°`);
-    console.log(`  Expected prize: "${this._segments[targetIndex].label}"`);
 
     // Dispatch spin end event
     this.dispatchEvent(new CustomEvent('spinend', {
@@ -593,6 +626,7 @@ class LuckyWheelPixi extends HTMLElement {
     }));
 
     this._isSpinning = false;
+    this._animationsEnabled = false; // Disable animations when idle
     button.disabled = false;
   }
 

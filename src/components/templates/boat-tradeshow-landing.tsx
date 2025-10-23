@@ -220,10 +220,12 @@ export default function BoatTradeshowLanding() {
     }
   }, [animationStep, pixiWheelLoaded, isAnimationPlaying]);
 
-  // Setup PixiJS wheel event listeners
+  // Setup PixiJS wheel event listeners - reinitialize when step changes on mobile
   useEffect(() => {
     if (pixiWheelLoaded && pixiWheelRef.current) {
       const wheel = pixiWheelRef.current;
+      
+      // Always set segments when wheel is available (important for mobile re-renders)
       wheel.segments = pixiSegments;
 
       const handleSpinEnd = (e: any) => {
@@ -233,7 +235,7 @@ export default function BoatTradeshowLanding() {
       wheel.addEventListener('spinend', handleSpinEnd);
       return () => wheel.removeEventListener('spinend', handleSpinEnd);
     }
-  }, [pixiWheelLoaded]);
+  }, [pixiWheelLoaded, animationStep, pixiSegments]);
 
   // Step functions with proper timer management and cleanup - faster on mobile
   const runQRStep = useCallback(() => {
@@ -473,8 +475,8 @@ export default function BoatTradeshowLanding() {
         </div>
       </nav>
       
-      {/* Hero Section - Evoto Style */}
-      <section className="relative bg-gradient-to-br from-[#FFDC35] via-[#FFE55C] to-[#FFF2A1] overflow-hidden h-[500px] flex items-center">
+      {/* Hero Section - Evoto Style - simplified gradient on mobile */}
+      <section className={`relative overflow-hidden h-[500px] flex items-center ${isMobile ? 'bg-[#FFDC35]' : 'bg-gradient-to-br from-[#FFDC35] via-[#FFE55C] to-[#FFF2A1]'}`}>
         {/* Decorative curved elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -left-40 w-80 h-80 border-2 border-white/20 rounded-full"></div>
@@ -656,13 +658,13 @@ export default function BoatTradeshowLanding() {
             <div className="flex justify-center">
               {/* Phone Device Mockup - optimized for mobile performance */}
               <div className="device-mockup phone relative z-10" style={{ willChange: isMobile && isAnimationPlaying ? 'transform' : 'auto' }}>
-                <div className="rounded-[40px] border border-gray-700 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] bg-[#1a1a1a] p-2 w-[280px] h-[560px] relative">
+                <div className={`rounded-[40px] border border-gray-700 bg-[#1a1a1a] p-2 w-[280px] h-[560px] relative ${isMobile ? 'shadow-lg' : 'shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)]'}`}>
                   {/* Phone notch */}
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120px] h-[24px] bg-black rounded-b-[12px] z-50"></div>
                   
                   <div className="bg-white rounded-[42px] w-full h-full overflow-hidden relative" style={{ transform: 'translateZ(0)' }}>
-                    {/* Background gradient with subtle animation */}
-                    <div className={`absolute inset-0 bg-gradient-to-br from-gray-50 to-white transition-all duration-1000 ${
+                    {/* Background gradient with subtle animation - simplified on mobile */}
+                    <div className={`absolute inset-0 ${isMobile ? 'bg-gray-50' : 'bg-gradient-to-br from-gray-50 to-white'} ${isMobile ? '' : 'transition-all duration-1000'} ${
                       isAnimationPlaying ? 'opacity-100' : 'opacity-50'
                     }`}>
                     </div>
@@ -687,17 +689,16 @@ export default function BoatTradeshowLanding() {
                       </div>
                     </div>
                     
-                    {/* Step Titles - Fixed Positon */}
+                    {/* Step Titles - Fixed Position - No flickering */}
                     <div className="absolute top-14 left-0 right-0 z-50">
-                      {/* Single title container - all titles in same position */}
                       <div className="text-center">
-                        <div className="relative h-8">
-                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 0 ? 'opacity-100' : 'opacity-0'}`}>SCAN QR CODE</span>
-                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 1 ? 'opacity-100' : 'opacity-0'}`}>REGISTER</span>
-                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 2 ? 'opacity-100' : 'opacity-0'}`}>QUALIFY</span>
-                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 3 ? 'opacity-100' : 'opacity-0'}`}>VERIFY</span>
-                          <span className={`absolute inset-0 text-xl font-bold tracking-wider transition-opacity duration-500 gradient-text ${animationStep === 4 ? 'opacity-100' : 'opacity-0'}`}>SPIN TO WIN</span>
-                          <span className={`absolute inset-0 text-[#171717] text-xl font-bold tracking-wider transition-opacity duration-500 ${animationStep === 5 ? 'opacity-100' : 'opacity-0'}`}>CONGRATULATIONS!</span>
+                        <div className="h-8 flex items-center justify-center">
+                          {animationStep === 0 && <span className="text-[#171717] text-xl font-bold tracking-wider">SCAN QR CODE</span>}
+                          {animationStep === 1 && <span className="text-[#171717] text-xl font-bold tracking-wider">REGISTER</span>}
+                          {animationStep === 2 && <span className="text-[#171717] text-xl font-bold tracking-wider">QUALIFY</span>}
+                          {animationStep === 3 && <span className="text-[#171717] text-xl font-bold tracking-wider">VERIFY</span>}
+                          {animationStep === 4 && <span className="text-xl font-bold tracking-wider gradient-text">SPIN TO WIN</span>}
+                          {animationStep === 5 && <span className="text-[#171717] text-xl font-bold tracking-wider">CONGRATULATIONS!</span>}
                         </div>
                         <div className="w-20 h-1 bg-[#FFDC35] mx-auto rounded-full mt-2"></div>
                       </div>
@@ -968,36 +969,41 @@ export default function BoatTradeshowLanding() {
                         
                         {/* Step 5: Prize Wheel - conditionally render on mobile */}
                         {(!isMobile || animationStep === 4) && (
-                        <div className={`${isMobile ? 'transition-opacity duration-300' : 'transition-all duration-500'}  ${animationStep === 4 ? 'opacity-100 ' : 'opacity-0 absolute pointer-events-none  '}`} 
+                        <div className={`${animationStep === 4 ? 'opacity-100' : 'opacity-0 absolute pointer-events-none'}`} 
                             style={{ top: 0, left: 0, right: 0, bottom: 0 }}>
                           <div className="flex flex-col items-center h-full">
                             
                             <div className="space-y-4 text-center">
-                              {/* Floating celebration particles */}
-                              {winningPrize && (
-                                <>
-                                  <div className="absolute top-2 left-10 w-1.5 h-1.5 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '0s' }}></div>
-                                  <div className="absolute top-8 right-12 w-1 h-1 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '0.5s' }}></div>
-                                  <div className="absolute bottom-8 left-16 w-2 h-2 bg-[#7c3aed] rounded-full floating-particle" style={{ animationDelay: '1s' }}></div>
-                                  <div className="absolute bottom-2 right-8 w-1 h-1 bg-[#dc2626] rounded-full floating-particle" style={{ animationDelay: '1.5s' }}></div>
-                                  <div className="absolute top-1/3 left-8 w-1 h-1 bg-[#FFDC35] rounded-full floating-particle" style={{ animationDelay: '2s' }}></div>
-                                  <div className="absolute top-1/2 right-6 w-1.5 h-1.5 bg-[#059669] rounded-full floating-particle" style={{ animationDelay: '2.5s' }}></div>
-                                </>
-                              )}
+                              {/* Celebration particles removed for cleaner UI */}
                               
-                              <div style={{ position: "absolute", left: "50%", top: 50, transform: "translate(-50%, -50%) scale(0.34)" }} 
+                              <div style={{ 
+                                position: "absolute", 
+                                left: "50%", 
+                                top: 50, 
+                                transform: "translate(-50%, -50%) scale(0.34) translateZ(0)",
+                                backfaceVisibility: "hidden",
+                                WebkitBackfaceVisibility: "hidden",
+                                perspective: 1000,
+                                WebkitPerspective: 1000
+                              }} 
                                     className={winningPrize ? 'wheel-celebrate' : ''}>
-                                {pixiWheelLoaded ? (
+                                {pixiWheelLoaded && (
                                   <lucky-wheel-pixi
                                     ref={pixiWheelRef}
                                     spin-duration="3000"
                                     target-prize="random"
-                                    style={{ width: '240px', height: '240px', maxWidth: '240px', maxHeight: '240px' }}
+                                    style={{ 
+                                      width: '240px', 
+                                      height: '240px', 
+                                      maxWidth: '240px', 
+                                      maxHeight: '240px',
+                                      transform: 'translateZ(0)',
+                                      backfaceVisibility: 'hidden',
+                                      WebkitBackfaceVisibility: 'hidden',
+                                      imageRendering: 'crisp-edges',
+                                      WebkitFontSmoothing: 'antialiased'
+                                    }}
                                   />
-                                ) : (
-                                  <div style={{ width: '240px', height: '240px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-purple-500"></div>
-                                  </div>
                                 )}
                               </div>
                             </div>
@@ -1012,7 +1018,7 @@ export default function BoatTradeshowLanding() {
                             <div className="text-center">
                             <div className="text-4xl mb-4">🎉</div>
                             
-                            <div className="bg-gradient-to-br from-[#FFDC35] to-[#FFE55C] rounded-xl p-4 mb-4 border-2 border-[#FFDC35] shadow-2xl animate-[bounce_1s_ease-in-out_3]">
+                            <div className={`rounded-xl p-4 mb-4 border-2 border-[#FFDC35] ${isMobile ? 'bg-[#FFDC35] shadow-lg' : 'bg-gradient-to-br from-[#FFDC35] to-[#FFE55C] shadow-2xl'}`}>
                               <p className="text-[#171717] font-bold mb-1">🎊 Congratulations! 🎊</p>
                               <p className="text-[#171717] text-xl font-bold mb-2">Free Setup Package</p>
                               <p className="text-[#171717]/80 text-sm font-semibold mb-2">(Value $500)</p>
@@ -1084,8 +1090,8 @@ export default function BoatTradeshowLanding() {
 
               {/* Right Column - Case Study + Stats */}
               <div className="lg:order-2 space-y-6">
-                {/* Case Study Highlight */}
-                <div className="bg-gradient-to-r from-[#FFDC35]/5 to-[#FFDC35]/10 rounded-2xl p-6 lg:p-8 border border-gray-100">
+                {/* Case Study Highlight - simplified gradient on mobile */}
+                <div className={`rounded-2xl p-6 lg:p-8 border border-gray-100 ${isMobile ? 'bg-[#FFDC35]/10' : 'bg-gradient-to-r from-[#FFDC35]/5 to-[#FFDC35]/10'}`}>
                   <div className="inline-flex items-center px-3 py-1 bg-[#FFDC35]/20 text-[#171717] rounded-full text-sm font-semibold mb-4 gap-2">
                     <BarChart3 className="w-4 h-4" />
                     CASE STUDY HIGHLIGHT
@@ -1097,7 +1103,7 @@ export default function BoatTradeshowLanding() {
 
                 {/* Stats */}
                 <div className="space-y-4">
-                  <div className="flex items-center p-4 bg-white rounded-xl shadow-lg border border-gray-100">
+                  <div className={`flex items-center p-4 bg-white rounded-xl border border-gray-100 ${isMobile ? 'shadow-md' : 'shadow-lg'}`}>
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
                       <Users className="w-6 h-6 text-green-600" />
                     </div>
@@ -1108,7 +1114,7 @@ export default function BoatTradeshowLanding() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center p-4 bg-white rounded-xl shadow-lg border border-gray-100">
+                  <div className={`flex items-center p-4 bg-white rounded-xl border border-gray-100 ${isMobile ? 'shadow-md' : 'shadow-lg'}`}>
                     <div className="w-12 h-12 bg-[#FFDC35]/20 rounded-full flex items-center justify-center mr-4">
                       <Award className="w-6 h-6 text-[#FFDC35]" />
                     </div>
@@ -1133,8 +1139,8 @@ export default function BoatTradeshowLanding() {
         </div>
       </section>
 
-      {/* III. Value Proposition Section */}
-      <section id="value-prop" className="relative py-16 lg:py-20 bg-gradient-to-br from-[#FFDC35] via-[#FFE55C] to-[#FFF2A1] overflow-hidden">
+      {/* III. Value Proposition Section - simplified gradient on mobile */}
+      <section id="value-prop" className={`relative py-16 lg:py-20 overflow-hidden ${isMobile ? 'bg-[#FFDC35]' : 'bg-gradient-to-br from-[#FFDC35] via-[#FFE55C] to-[#FFF2A1]'}`}>
         {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-20 -right-20 w-40 h-40 border border-white/10 rounded-full"></div>
@@ -1153,7 +1159,7 @@ export default function BoatTradeshowLanding() {
 
           {/* Enhanced Comparison Table */}
           <div className="max-w-6xl mx-auto mb-16">
-            <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white/50">
+            <div className={`rounded-3xl overflow-hidden border ${isMobile ? 'bg-white shadow-lg border-white' : 'bg-white/95 backdrop-blur-sm shadow-2xl border-white/50'}`}>
               <div className="grid lg:grid-cols-2">
                 {/* Traditional Column */}
                 <div className="p-8 lg:p-12 bg-white border-r border-gray-200/50">
@@ -1299,7 +1305,7 @@ export default function BoatTradeshowLanding() {
           </div>
 
           <div className="max-w-lg mx-auto">
-            <div className="bg-white rounded-2xl p-8 shadow-xl border-4 border-gray-300">
+            <div className={`bg-white rounded-2xl p-8 border-4 border-gray-300 ${isMobile ? 'shadow-lg' : 'shadow-xl'}`}>
               <div className="text-center mb-8">
                 <div className="text-6xl font-bold text-[#171717] mb-2">$2</div>
                 <p className="text-xl text-gray-600">per qualified lead</p>
