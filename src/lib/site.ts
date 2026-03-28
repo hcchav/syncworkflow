@@ -4,7 +4,7 @@ export const siteConfig = {
   name: 'SyncWorkflow',
   title: 'SyncWorkflow | Find What Is Costing Your Law Firm Consultations',
   description:
-    'Free private audits for small law firms that review the homepage, intake form, and follow-up path before any ongoing website or workflow support.',
+    'Free private audits for law firms that review the homepage, intake form, and follow-up path before any ongoing website or workflow support.',
   url: process.env.NEXT_PUBLIC_SITE_URL || fallbackUrl,
   replyToEmail: process.env.AUDIT_REPLY_TO_EMAIL || 'hello@syncworkflow.com',
   notificationEmail:

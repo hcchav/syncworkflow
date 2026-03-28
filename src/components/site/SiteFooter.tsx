@@ -8,7 +8,7 @@ export function SiteFooter() {
           <p className="font-serif text-[1.35rem] leading-none tracking-[-0.03em] text-[#18263F]">
             SyncWorkflow
           </p>
-          <p>Free audits and ongoing site support for small law firms.</p>
+          <p>Free audits and ongoing site support.</p>
         </div>
         <div className="flex gap-4">
           <Link href="/privacy" className="hover:text-[#18263F]">

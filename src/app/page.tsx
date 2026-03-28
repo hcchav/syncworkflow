@@ -5,7 +5,7 @@ import { HomePage } from '@/modules/home/HomePage';
 export const metadata: Metadata = {
   title: 'Find What Is Costing Your Law Firm Consultations | Free Audit',
   description:
-    'Free private audits for small law firms that want to find what is costing them consultations on the homepage, intake form, and follow-up path.',
+    'Free private audits for law firms that want to find what is costing them consultations on the homepage, intake form, and follow-up path.',
 };
 
 export default function Page() {

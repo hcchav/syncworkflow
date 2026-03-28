@@ -63,7 +63,7 @@ const founderTiles = [
 
 export function HomePage() {
   const sampleAudit = getSampleAudit();
-  const heroProof = ['2 fields', 'Private review', 'Small law firms'];
+  const heroProof = ['2 fields', 'Private review', 'Fast first step'];
   const heroPreviewFinding = sampleAudit.findings[0];
 
   return (
@@ -76,7 +76,7 @@ export function HomePage() {
           <div className="absolute inset-x-0 top-0 -z-10 h-px bg-[linear-gradient(90deg,transparent,rgba(24,38,63,0.16),transparent)]" />
           <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 sm:py-12 lg:grid-cols-[minmax(0,0.72fr)_minmax(560px,1fr)] lg:gap-10 lg:px-8 lg:py-20">
             <div className="max-w-lg lg:pt-4">
-              <p className="eyebrow">Audit-first for small law firms</p>
+              <p className="eyebrow">Website + intake review</p>
               <h1 className="mt-4 font-serif text-[2.8rem] leading-[0.92] text-[#18263F] sm:text-[4.35rem]">
                 Find what is costing your law firm consultations.
               </h1>

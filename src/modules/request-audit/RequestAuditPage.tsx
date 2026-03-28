@@ -16,8 +16,8 @@ export function RequestAuditPage() {
               Start with your email and website, then decide whether ongoing help makes sense.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[hsl(221,16%,34%)]">
-              This is for small law firms that want a direct review of website conversion, intake
-              friction, response speed, and the full first-touch experience across the site.
+              This is for law firms that want a direct review of website conversion, intake
+              friction, response speed, and the full first-touch experience.
             </p>
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
               <div className="rounded-[28px] border border-[hsl(30,28%,86%)] bg-white/90 p-5 shadow-sm">
