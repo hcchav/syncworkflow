@@ -1,40 +1,13 @@
-import Homepage from '@/components/templates/homepage';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
+
+import { HomePage } from '@/modules/home/HomePage';
 
 export const metadata: Metadata = {
-  title: 'SyncWorkflow — Turn Trade Show Traffic into Qualified Leads',
-  description: 'Gamified lead generation system for trade shows. Verify contacts, qualify leads, and automate follow-ups. Pay only for qualified leads.',
-  keywords: 'trade show leads, lead generation, qualified leads, spin to win, QR code marketing, trade show marketing',
-  authors: [{ name: 'SyncWorkflow' }],
-  creator: 'SyncWorkflow',
-  publisher: 'SyncWorkflow',
-  robots: 'index, follow',
-  openGraph: {
-    title: 'SyncWorkflow — Turn Trade Show Traffic into Qualified Leads',
-    description: 'Gamified lead generation system for trade shows. Verify contacts, qualify leads, and automate follow-ups.',
-    url: '/',
-    siteName: 'SyncWorkflow',
-    type: 'website',
-    images: [
-      {
-        url: '/images/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'SyncWorkflow Lead Generation System',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'SyncWorkflow — Turn Trade Show Traffic into Qualified Leads',
-    description: 'Gamified lead generation system for trade shows. Verify contacts, qualify leads, and automate follow-ups.',
-    images: ['/images/og-image.jpg'],
-  },
-  alternates: {
-    canonical: '/',
-  },
+  title: 'Find What Is Costing Your Law Firm Consultations | Free Audit',
+  description:
+    'Free private audits for small law firms that want to find what is costing them consultations on the homepage, intake form, and follow-up path.',
 };
 
 export default function Page() {
-  return <Homepage />;
+  return <HomePage />;
 }

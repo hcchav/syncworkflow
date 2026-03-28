@@ -10,6 +10,27 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: [
+      ".next/**",
+      "coverage/**",
+      "dist/**",
+      "public/**",
+      "src/components/analytics/Hotjar.tsx",
+      "src/components/case-study/**",
+      "src/components/layout/**",
+      "src/components/sections/**",
+      "src/components/templates/**",
+      "src/components/wheel/**",
+      "src/components/MonitorMockup.tsx",
+      "src/components/PrizeWheel.tsx",
+      "src/components/PrizeWheel.tsx.new",
+      "src/components/ui/CustomWheel.tsx",
+      "src/content/**",
+      "src/styles/**",
+      "src/to do list/**",
+    ],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {

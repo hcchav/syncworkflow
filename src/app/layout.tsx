@@ -1,83 +1,58 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Cormorant_Garamond, Manrope } from 'next/font/google';
+import { Suspense } from 'react';
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
+import './globals.css';
+
+import { PageViewTracker } from '@/components/analytics/PageViewTracker';
+import { siteConfig } from '@/lib/site';
+import { AnalyticsProvider } from '@/providers/posthog-provider';
+
+const cormorantGaramond = Cormorant_Garamond({
+  variable: '--font-serif',
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['500', '600', '700'],
 });
 
-// SEO Defaults with Open Graph
+const manrope = Manrope({
+  variable: '--font-sans',
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+});
+
 export const metadata: Metadata = {
   title: {
-    default: "SyncWorkflow | Turn Booth Traffic into Qualified Leads",
-    template: "%s | SyncWorkflow"
+    default: siteConfig.title,
+    template: '%s | SyncWorkflow',
   },
-  description: "Transform your trade show ROI with our gamified lead capture system. Verified prospects, instant CRM delivery, and 3x more qualified leads guaranteed.",
-  keywords: ["trade show leads", "lead capture", "event marketing", "booth traffic", "qualified leads", "CRM integration", "gamification"],
-  authors: [{ name: "SyncWorkflow" }],
-  creator: "SyncWorkflow",
-  publisher: "SyncWorkflow",
+  description: siteConfig.description,
+  authors: [{ name: 'SyncWorkflow' }],
+  creator: 'SyncWorkflow',
+  publisher: 'SyncWorkflow',
+  metadataBase: new URL(siteConfig.url),
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://syncworkflow.com"),
-  alternates: {
-    canonical: "/",
-  },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: "/manifest.json",
-  themeColor: "#171717",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://syncworkflow.com",
-    title: "SyncWorkflow | Turn Booth Traffic into Qualified Leads",
-    description: "Transform your trade show ROI with our gamified lead capture system. Verified prospects, instant CRM delivery, and 3x more qualified leads guaranteed.",
-    siteName: "SyncWorkflow",
-    images: [
-      {
-        url: "/images/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "SyncWorkflow - Trade Show Lead Capture System",
-      },
-    ],
+    type: 'website',
+    locale: 'en_US',
+    url: siteConfig.url,
+    title: siteConfig.title,
+    description: siteConfig.description,
+    siteName: 'SyncWorkflow',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "SyncWorkflow | Turn Booth Traffic into Qualified Leads",
-    description: "Transform your trade show ROI with our gamified lead capture system. Verified prospects, instant CRM delivery, and 3x more qualified leads guaranteed.",
-    images: ["/images/og-image.png"],
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
   },
 };
 
@@ -87,9 +62,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased bg-white text-gray-900`} suppressHydrationWarning>
-        {children}
+    <html
+      lang="en"
+      className={`${cormorantGaramond.variable} ${manrope.variable} scroll-smooth`}
+      suppressHydrationWarning
+    >
+      <body className="bg-background font-sans text-foreground antialiased" suppressHydrationWarning>
+        <AnalyticsProvider>
+          <Suspense fallback={null}>
+            <PageViewTracker />
+          </Suspense>
+          {children}
+        </AnalyticsProvider>
       </body>
     </html>
   );

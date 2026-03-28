@@ -4,256 +4,70 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --background: 37 35% 94%;
+    --foreground: 219 44% 17%;
+    --card: 40 100% 99%;
+    --card-foreground: 219 44% 17%;
+    --popover: 40 100% 99%;
+    --popover-foreground: 219 44% 17%;
+    --primary: 219 44% 17%;
+    --primary-foreground: 40 100% 99%;
+    --secondary: 34 42% 88%;
+    --secondary-foreground: 219 44% 17%;
+    --muted: 34 32% 90%;
+    --muted-foreground: 218 16% 39%;
+    --accent: 150 18% 90%;
+    --accent-foreground: 219 44% 17%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-
-@keyframes scan {
-  0% {
-    top: 0;
-    opacity: 0.8;
-  }
-  50% {
-    top: 100%;
-    opacity: 0.5;
-  }
-  50.1% {
-    top: 0;
-    opacity: 0;
-  }
-  100% {
-    top: 0;
-    opacity: 0.8;
-  }
-}
-
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes scroll-right {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(0%);
-  }
-}
-
-.scrolling-wrapper {
-  display: flex;
-  overflow: hidden;
-  white-space: nowrap;
-  width: 100%;
-}
-
-.scrolling-content-left {
-  display: flex;
-  /* Change the number below to adjust speed: lower = faster, higher = slower */
-  animation: scroll-left 120s linear infinite;
-}
-
-/* No hover effect - continuous scrolling */
-
-/* Phone mockup animations */
-.viewfinder-grid {
-  background-image: 
-      linear-gradient(rgba(55, 119, 255, 0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(55, 119, 255, 0.2) 1px, transparent 1px);
-  background-size: 33.33% 33.33%;
-}
-
-.clip-path-triangle {
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-}
-
-.duration-3000 {
-  transition-duration: 3000ms;
-  opacity: 0.3;
-}
-
-.recording-dot {
-  animation: recording-blink 1s ease-in-out infinite;
-}
-
-@keyframes recording-blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0.3; }
-}
-
-.camera-float {
-  animation: camera-hover 4s ease-in-out infinite;
-}
-
-@keyframes camera-hover {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(1deg); }
-}
-
-.scrolling-item {
-  flex-shrink: 0;
-}
-
-.scanning-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: #3777ff;
-  animation: scanMove 5s ease-in-out infinite 5s;
-}
-
-@keyframes scanMove {
-  0% {
-    top: 0;
-    opacity: 0.8;
-  }
-  50% {
-    top: calc(100% - 2px);
-    opacity: 0.5;
-  }
-  50.1% {
-    top: 0;
-    opacity: 0;
-  }
-  100% {
-    top: 0;
-    opacity: 0.8;
-  }
-}
-
-.scan-line {
-  animation: scanAnimation 2s ease-in-out infinite;
-  box-shadow: 0 0 8px rgba(255, 220, 53, 0.8);
-}
-
-@keyframes scanAnimation {
-  0% {
-    top: 0;
-    opacity: 0.8;
-  }
-  50% {
-    top: calc(100% - 4px);
-    opacity: 0.5;
-  }
-  50.1% {
-    top: 0;
-    opacity: 0;
-  }
-  100% {
-    top: 0;
-    opacity: 0.8;
+    --border: 35 31% 78%;
+    --input: 35 31% 78%;
+    --ring: 35 57% 45%;
+    --radius: 1rem;
   }
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    margin: 0;
-    padding: 0;
   }
+
+  html {
+    @apply scroll-smooth;
+    scroll-padding-top: 7rem;
+  }
+
   body {
     @apply bg-background text-foreground;
-    margin: 0;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
+    background-image:
+      radial-gradient(circle at top left, rgba(185, 129, 50, 0.16), transparent 28%),
+      radial-gradient(circle at top right, rgba(141, 167, 156, 0.16), transparent 26%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgba(185, 129, 50, 0.24);
+  }
+
+  a {
+    @apply transition-colors;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.03em;
   }
 }
 
 @layer components {
-  /* Design System Utilities */
-  .card {
-    @apply bg-white rounded-2xl shadow-lg border border-gray-100;
-  }
-  
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
-  }
-  
-  .btn-primary {
-    @apply bg-brand-primary hover:bg-[#02a5c7] text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg;
-  }
-  
-  .btn-secondary {
-    @apply bg-brand-secondary hover:bg-opacity-90 text-black px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg;
-  }
-  
-  .btn-outline {
-    @apply border-2 border-white text-white hover:bg-white hover:text-brand-dark px-6 py-3 rounded-xl font-semibold transition-all duration-300;
-  }
-  
-  .glass-card {
-    @apply backdrop-blur-sm bg-white/75 border border-white/20 shadow-xl;
-  }
-  
-  .section-padding {
-    @apply py-16 lg:py-20;
-  }
-  
-  .container-width {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-  
-  .text-gradient {
-    @apply bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent;
-  }
-  
-  .bg-brand-gradient {
-    @apply bg-gradient-to-br from-brand-dark via-gray-800 to-brand-dark;
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-[#B98132] sm:text-xs sm:tracking-[0.2em];
   }
 }
