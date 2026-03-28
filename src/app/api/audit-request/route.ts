@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       delivered,
       message: delivered
         ? 'Full audit sent. Check your inbox for the private link.'
-        : 'Audit request recorded. Resend is not configured, so a preview link is included below.',
+        : 'Request saved. A preview link is below because email is not set up here.',
       previewUrl: delivered ? null : absoluteUrl(delivery.urlPath),
     });
   } catch (error) {

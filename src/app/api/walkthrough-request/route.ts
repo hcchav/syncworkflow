@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Walkthrough request received. I will follow up directly.',
+      message: 'Walkthrough request received. I will email you soon.',
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

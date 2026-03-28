@@ -24,7 +24,7 @@ export function TeaserPage({ audit, entry }: { audit: AuditRecord; entry: string
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <BrandMark />
           <Button asChild variant="outline" size="sm">
-            <a href="#request-full-audit">Send me the full audit</a>
+            <a href="#request-full-audit">Get full audit</a>
           </Button>
         </div>
       </header>
@@ -57,16 +57,15 @@ export function TeaserPage({ audit, entry }: { audit: AuditRecord; entry: string
               Free audit preview
             </p>
             <p className="mt-4 text-sm leading-6 text-[hsl(221,16%,35%)]">{audit.auditSummary}</p>
-            <p className="mt-4 text-sm leading-6 text-[hsl(221,16%,35%)]">{audit.reviewerNote}</p>
+            <p className="mt-3 text-sm leading-6 text-[hsl(221,16%,35%)]">{audit.reviewerNote}</p>
             <Button asChild className="mt-6 w-full" variant="brand" size="lg">
-              <a href="#request-full-audit">Send me the full audit</a>
+              <a href="#request-full-audit">Get full audit</a>
             </Button>
             <Button asChild className="mt-3 w-full" variant="outline" size="lg">
-              <a href="#walkthrough-request">Request a walkthrough</a>
+              <a href="#walkthrough-request">Ask for walkthrough</a>
             </Button>
             <p className="mt-4 text-sm leading-6 text-[hsl(221,16%,35%)]">
-              If the audit is useful, I can also help implement the fixes through ongoing website,
-              intake, and workflow support.
+              If the review helps, I can also help fix the site, form, and reply flow.
             </p>
           </aside>
         </section>
@@ -101,7 +100,7 @@ export function TeaserPage({ audit, entry }: { audit: AuditRecord; entry: string
               firmName={audit.firm.name}
               source="teaser_page"
               title="Want a short walkthrough first?"
-              description="Use this if you want to talk through the findings before deciding on implementation or next steps."
+              description="Use this if you want to talk through the findings before you decide on the next step."
             />
           </div>
         </section>
@@ -116,7 +115,7 @@ export function TeaserPage({ audit, entry }: { audit: AuditRecord; entry: string
             <p className="text-sm text-[hsl(221,16%,34%)]">Send the full audit by email</p>
           </div>
           <Button asChild variant="brand" size="sm">
-            <a href="#request-full-audit">Send it</a>
+            <a href="#request-full-audit">Get it</a>
           </Button>
         </div>
       </div>

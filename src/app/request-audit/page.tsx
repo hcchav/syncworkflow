@@ -5,7 +5,7 @@ import { RequestAuditPage } from '@/modules/request-audit/RequestAuditPage';
 export const metadata: Metadata = {
   title: 'Request Your Free Audit',
   description:
-    'Request a free audit of website conversion, intake friction, and response follow-up for a small law firm.',
+    'Request a free audit for your law firm website, form, and reply path.',
 };
 
 export default function Page() {

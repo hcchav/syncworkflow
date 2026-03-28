@@ -47,9 +47,9 @@ export function SampleReviewPage({ audit }: { audit: AuditRecord }) {
               Why this page exists
             </p>
             <p className="mt-4 text-sm leading-6 text-[hsl(221,16%,35%)]">{audit.auditSummary}</p>
-            <p className="mt-4 text-sm leading-6 text-[hsl(221,16%,35%)]">{audit.reviewerNote}</p>
+            <p className="mt-3 text-sm leading-6 text-[hsl(221,16%,35%)]">{audit.reviewerNote}</p>
             <Button asChild className="mt-6 w-full" variant="brand" size="lg">
-              <Link href="/request-audit">Get a free audit</Link>
+              <Link href="/request-audit">Get Free Audit</Link>
             </Button>
             <Button asChild className="mt-3 w-full" variant="outline" size="lg">
               <Link href="/">Back to homepage</Link>
@@ -86,17 +86,16 @@ export function SampleReviewPage({ audit }: { audit: AuditRecord }) {
 
           <div className="rounded-[30px] border border-[hsl(30,28%,84%)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(250,246,239,0.96))] p-6 shadow-[0_18px_52px_rgba(36,43,66,0.1)]">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(24,60%,40%)]">
-              If this format makes sense
+              Want your own review?
             </p>
             <h2 className="mt-3 font-serif text-3xl text-[hsl(221,45%,18%)]">
               Ask for your own free audit.
             </h2>
             <p className="mt-3 text-sm leading-6 text-[hsl(221,16%,34%)]">
-              The real version is personalized to a law firm’s current site, intake path, and
-              response workflow. It is private, practical, and designed to show what should change first.
+              The real version is private and built for your site, form, and reply path. It shows what to fix first.
             </p>
             <Button asChild className="mt-6 w-full" variant="brand" size="lg">
-              <Link href="/request-audit">Get a free audit</Link>
+              <Link href="/request-audit">Get Free Audit</Link>
             </Button>
             <Button asChild className="mt-3 w-full" variant="outline" size="lg">
               <Link href="/#web-team">See how the web team model works</Link>

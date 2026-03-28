@@ -14,7 +14,7 @@ export async function generateMetadata({
 
   return {
     title: audit ? `${audit.firm.name} Full Audit` : 'Private Audit',
-    description: 'Private full audit prepared for a small law firm.',
+    description: 'Private full audit prepared for a law firm website.',
     robots: {
       index: false,
       follow: false,

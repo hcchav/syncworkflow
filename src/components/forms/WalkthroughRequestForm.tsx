@@ -11,9 +11,9 @@ export function WalkthroughRequestForm({
   entry,
   firmName,
   source,
-  title = 'Want to talk through the audit?',
-  description = 'Request a walkthrough and I can follow up directly with the best next step.',
-  submitLabel = 'Request walkthrough',
+  title = 'Want to talk first?',
+  description = 'Send this and I will email next steps.',
+  submitLabel = 'Ask for a walkthrough',
 }: {
   entry?: string;
   firmName: string;
@@ -98,7 +98,7 @@ export function WalkthroughRequestForm({
           <textarea
             name="note"
             rows={4}
-            placeholder="Optional context or question before the walkthrough."
+            placeholder="Optional question before we talk."
             className="rounded-[24px] border border-[hsl(30,28%,82%)] bg-[hsl(40,40%,98%)] px-4 py-3 outline-none transition focus:border-[hsl(221,45%,18%)] focus:ring-2 focus:ring-[rgba(27,36,66,0.08)]"
           />
         </label>

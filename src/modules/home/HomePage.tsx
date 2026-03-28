@@ -46,8 +46,8 @@ const process = [
 const founderTiles = [
   {
     kicker: '10 years',
-    title: 'Systems and reporting',
-    body: 'Experience across IT, marketing systems, and legal SaaS.',
+    title: 'Systems and data',
+    body: 'Work across IT, marketing systems, and legal SaaS.',
   },
   {
     kicker: '3 layers',
@@ -81,7 +81,7 @@ export function HomePage() {
                 Find what is costing your law firm consultations.
               </h1>
               <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#556174] sm:mt-5 sm:text-xl sm:leading-8">
-                Get a private review of your homepage, intake, and follow-up.
+                I review your page, form, and reply path.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
                 <Button asChild size="lg" variant="brand">
@@ -196,12 +196,12 @@ export function HomePage() {
               <div className="absolute -top-20 right-0 h-48 w-48 rounded-full bg-[rgba(185,129,50,0.16)] blur-3xl" />
               <div className="absolute -bottom-16 left-10 h-40 w-40 rounded-full bg-[rgba(141,167,156,0.18)] blur-3xl" />
               <div className="relative">
-                <p className="eyebrow !text-[#E3BE8B]">Why this audit sees more</p>
+                <p className="eyebrow !text-[#E3BE8B]">Why this review helps</p>
                 <h2 className="mt-4 max-w-3xl font-serif text-4xl leading-[0.96] sm:text-[3.2rem]">
                   It looks at the page, the form, and the follow-up as one system.
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-8 text-[#E6DDD1]">
-                  That comes from work in IT, process improvement, marketing systems, and legal SaaS.
+                  I bring 10 years in IT, marketing systems, and legal SaaS.
                 </p>
               </div>
             </div>
@@ -231,8 +231,8 @@ export function HomePage() {
               Most law firm websites lose consultations in the first minute.
             </h2>
             <p className="mt-5 text-lg leading-8 text-[#556174]">
-              The audit checks the page, the form, and the response path together. That is where
-              early drop-off usually starts.
+              I check the page, the form, and the reply path together. That is where early
+              drop-off usually starts.
             </p>
           </div>
           <div className="mt-10 grid gap-5 lg:grid-cols-3">
@@ -260,7 +260,7 @@ export function HomePage() {
         <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8" id="how-it-works">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="rounded-[34px] border border-[rgba(216,200,179,0.88)] bg-[#18263F] p-8 text-[#FFF7EC] shadow-[0_24px_80px_rgba(24,38,63,0.2)]">
-              <p className="eyebrow !text-[#E3BE8B]">How the free audit works</p>
+              <p className="eyebrow !text-[#E3BE8B]">How it works</p>
               <ol className="mt-6 grid gap-5 text-sm leading-7 text-[#E6DDD1]">
                 {process.map((step, index) => (
                   <li key={step} className="flex gap-4">
@@ -273,14 +273,14 @@ export function HomePage() {
               </ol>
             </div>
             <div className="rounded-[34px] border border-[rgba(216,200,179,0.88)] bg-[rgba(255,253,249,0.92)] p-8 shadow-[0_18px_52px_rgba(24,38,63,0.08)]">
-              <p className="eyebrow">What the audit covers</p>
+              <p className="eyebrow">What I check</p>
               <h3 className="mt-4 font-serif text-3xl text-[#18263F]">
-                What the review covers.
+                Page, form, and reply path.
               </h3>
               <div className="mt-5 grid gap-3 text-sm leading-6 text-[#556174]">
                 <p>Homepage clarity and first action.</p>
                 <p>Form friction and mobile effort.</p>
-                <p>Response language after submit.</p>
+                <p>Reply message after submit.</p>
               </div>
               <div className="mt-6 grid gap-3">
                 <div className="flex items-start gap-3 rounded-[24px] bg-[#FFF8F0] p-4">
@@ -306,13 +306,12 @@ export function HomePage() {
         <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8" id="web-team">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
             <div className="rounded-[34px] border border-[rgba(216,200,179,0.88)] bg-[rgba(255,253,249,0.92)] p-8 shadow-[0_18px_52px_rgba(24,38,63,0.08)]">
-              <p className="eyebrow">Web team model</p>
+              <p className="eyebrow">Ongoing help</p>
               <h2 className="mt-4 max-w-3xl font-serif text-4xl text-[#18263F] sm:text-5xl">
                 If the audit is useful, I can keep improving the site with you.
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-[#556174]">
-                Ongoing support focuses on the site, intake path, and response system that need the
-                most work.
+                Ongoing help focuses on the parts of the site and reply path that need the most work.
               </p>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-[26px] bg-[#FFF8F0] p-5">
@@ -331,8 +330,8 @@ export function HomePage() {
             </div>
 
             <aside className="rounded-[34px] border border-[rgba(216,200,179,0.88)] bg-[#18263F] p-8 text-[#FFF7EC] shadow-[0_24px_80px_rgba(24,38,63,0.18)]">
-              <p className="eyebrow !text-[#E3BE8B]">Why this converts better</p>
-              <h3 className="mt-4 font-serif text-3xl">Audit first. Retainer second.</h3>
+              <p className="eyebrow !text-[#E3BE8B]">Why start this way</p>
+              <h3 className="mt-4 font-serif text-3xl">Review first. Ongoing help after.</h3>
               <p className="mt-4 text-sm leading-7 text-[#E6DDD1]">
                 You can inspect the work before deciding on ongoing help.
               </p>

@@ -23,7 +23,7 @@ export function FullAuditPage({ audit, entry }: { audit: AuditRecord; entry: str
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <BrandMark />
           <Button asChild variant="outline" size="sm">
-            <a href="#walkthrough-request">Request a walkthrough</a>
+            <a href="#walkthrough-request">Ask for walkthrough</a>
           </Button>
         </div>
       </header>
@@ -32,11 +32,10 @@ export function FullAuditPage({ audit, entry }: { audit: AuditRecord; entry: str
         <section className="rounded-[34px] border border-[hsl(30,28%,84%)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(249,243,233,0.94))] p-8 shadow-[0_24px_80px_rgba(36,43,66,0.1)]">
           <p className="eyebrow">Full audit for {audit.firm.name}</p>
           <h1 className="mt-4 max-w-4xl font-serif text-5xl leading-tight text-[hsl(221,45%,18%)] sm:text-6xl">
-            The biggest gains are likely to come from clarity, intake scope, and response speed.
+            The biggest gains should come from clarity, form length, and reply speed.
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-[hsl(221,16%,34%)]">
-            This page expands on the teaser and outlines the changes most likely to increase
-            qualified consultations without turning the site into a generic redesign project.
+            This page builds on the preview and shows the changes most likely to improve calls without a full redesign.
           </p>
         </section>
 
@@ -76,10 +75,9 @@ export function FullAuditPage({ audit, entry }: { audit: AuditRecord; entry: str
         <section className="mt-12 grid gap-6 rounded-[34px] border border-[hsl(30,28%,84%)] bg-[hsl(221,45%,18%)] p-8 text-[hsl(42,50%,96%)] shadow-[0_24px_80px_rgba(27,36,66,0.18)] lg:grid-cols-[minmax(0,1fr)_380px]">
           <div>
             <p className="eyebrow !text-[hsl(31,82%,78%)]">How implementation fits</p>
-            <h2 className="mt-4 font-serif text-4xl">If you want, I can also implement the fixes.</h2>
+            <h2 className="mt-4 font-serif text-4xl">If you want, I can also make the fixes.</h2>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-[hsl(42,40%,88%)]">
-              That usually means ongoing website updates, intake improvements, response workflow
-              changes, and lightweight chatbot or automation work where it actually helps the firm.
+              That can mean site updates, form changes, reply flow fixes, and light automation where it helps.
             </p>
             <ul className="mt-6 grid gap-3 text-sm leading-7 text-[hsl(42,40%,88%)]">
               {audit.implementationOptions.map((item) => (
@@ -92,8 +90,7 @@ export function FullAuditPage({ audit, entry }: { audit: AuditRecord; entry: str
           <div className="grid gap-4">
             <div className="rounded-[28px] bg-[rgba(247,243,235,0.08)] p-6">
               <p className="text-sm leading-7 text-[hsl(42,40%,88%)]">
-                If a walkthrough would help, send the request and I can talk through the
-                highest-priority changes first.
+                If a walkthrough would help, send the request and I can talk through the top fixes first.
               </p>
             </div>
             <WalkthroughRequestForm
@@ -101,7 +98,7 @@ export function FullAuditPage({ audit, entry }: { audit: AuditRecord; entry: str
               firmName={audit.firm.name}
               source="full_audit_page"
               title="Request a walkthrough"
-              description="If you want to talk through the audit before discussing ongoing support, send the request here."
+              description="If you want to talk through the audit before we discuss ongoing help, send this here."
             />
             <Button asChild className="mt-3 w-full" variant="outline" size="lg">
               <a href={`mailto:${audit.ctaEmail}?subject=${encodeURIComponent(`Questions about the ${audit.firm.name} audit`)}`}>

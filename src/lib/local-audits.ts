@@ -6,13 +6,13 @@ const sampleAudit: AuditRecord = {
   source: 'local',
   kind: 'sample',
   slug: 'sample-small-law-firm',
-  headline: 'What a free SyncWorkflow audit looks like for a small law firm',
+  headline: 'What a SyncWorkflow review looks like for one law firm',
   subheadline:
-    'This sanitized sample shows how I review website conversion, intake friction, and response workflow for a small law firm before recommending any build work.',
+    'This public sample shows how I check the page, form, and reply path before I suggest any build work.',
   auditSummary:
-    'This is a public sample. A real free audit is personalized, private, and focused on the specific issues on a firm’s current site and intake flow.',
+    'This is a public sample. A real review is private and built for one firm and one site.',
   reviewerNote:
-    'Sanitized example using fictional details. Shared publicly to show the review format without exposing a real firm.',
+    'Fictional details. Shared to show the format without naming a real firm.',
   reviewedAt: 'March 27, 2026',
   ctaEmail: 'audits@syncworkflow.com',
   firm: {
@@ -23,95 +23,95 @@ const sampleAudit: AuditRecord = {
     sizeBand: '2-10 attorneys',
   },
   curiosityBullets: [
-    'Annotated screenshots of the most important mobile friction points.',
-    'A recommended order for website, intake, and workflow fixes.',
-    'Notes on where ongoing monthly support would help most after the audit.',
+    'Marked-up screenshots of the main mobile slow points.',
+    'A simple fix order for the site, form, and reply process.',
+    'Notes on where ongoing help would matter most after the review.',
   ],
   implementationOptions: [
-    'Ongoing website updates without needing to hire an internal web team.',
-    'Simpler intake forms, stronger contact paths, and clearer next-step messaging.',
-    'Workflow improvements like chatbots, follow-up automations, and routing logic where they actually help.',
+    'Ongoing site updates without hiring an internal web team.',
+    'Shorter forms, clearer contact paths, and better next-step copy.',
+    'Simple automation where it actually helps the firm.',
   ],
   findings: [
     {
       id: 'homepage-message-gap',
       priority: 'Immediate',
-      label: 'Homepage clarity',
-      title: 'The homepage asks visitors to trust the firm before it clearly explains what to do next.',
+      label: 'Homepage',
+      title: 'The homepage does not make the next step clear.',
       detail:
-        'The first screen does not quickly answer who the firm helps, what the next step is, or how fast someone responds after a contact request.',
+        'The first screen does not quickly say who the firm helps, what to do next, or when someone will reply.',
       evidence:
-        'The CTA area competes with informational copy, while the strongest action is pushed below the fold on mobile.',
+        'The main action sits beside too much copy, and the strongest next step falls low on mobile.',
       impact:
-        'Potential clients often delay action when the first screen feels dense or uncertain.',
+        'People wait or leave when the first step feels unclear.',
       recommendation:
-        'Lead with one clear consultation action, then reinforce it with a short trust block and response expectation.',
+        'Lead with one clear contact action and a short reply-time note.',
     },
     {
       id: 'intake-scope',
       priority: 'High',
-      label: 'Intake form',
-      title: 'The first-step intake form tries to qualify too much before the firm has earned that effort.',
+      label: 'Form',
+      title: 'The first form asks for too much too soon.',
       detail:
-        'Several questions look useful internally, but they belong later in the process after the initial inquiry is secured.',
+        'Some questions are useful later, but they do not need to be in the first step.',
       evidence:
-        'The mobile form asks for matter detail before clearly explaining what happens after submit.',
+        'The mobile form asks for more detail before it explains what happens after submit.',
       impact:
-        'Longer first-touch forms create avoidable drop-off, especially on phones.',
+        'Long first forms make more people stop on their phone.',
       recommendation:
-        'Shorten the first form to essential routing fields and move lower-value questions into follow-up.',
+        'Keep the first form short and move deeper questions to follow-up.',
     },
     {
       id: 'response-workflow-gap',
       priority: 'High',
-      label: 'Response workflow',
-      title: 'The site does not do enough to prove that inquiries will get a fast, structured response.',
+      label: 'Reply path',
+      title: 'The site does not show what happens after submit.',
       detail:
-        'A strong website does not stop at form submission. It reassures people that their request is seen, routed, and answered quickly.',
+        'A strong site should tell people their request is seen and when they should expect a reply.',
       evidence:
-        'There is no visible “what happens next” block and no concrete follow-up expectation around contact requests.',
+        'There is no clear block that explains the next step or sets a reply expectation.',
       impact:
-        'Prospects are more likely to keep searching when response confidence is weak.',
+        'When people do not trust the reply process, they keep looking.',
       recommendation:
-        'Add stronger response messaging on the site and support it with a lightweight follow-up workflow behind the scenes.',
+        'Add a plain next-step block and back it up with a simple reply workflow.',
     },
   ],
   fullAuditSections: [
     {
-      title: 'Website Conversion',
+      title: 'Homepage path',
       summary:
-        'The website should guide a visitor toward one clear next step instead of forcing extra interpretation.',
+        'The site should guide people to one clear next step.',
       bullets: [
-        'Clarify the first-screen action and supporting trust language.',
-        'Tighten page hierarchy so important contact actions show up sooner on mobile.',
-        'Reduce copy blocks that slow down the first decision.',
+        'Make the main action clearer on the first screen.',
+        'Move contact actions higher on mobile.',
+        'Cut copy that slows the first decision.',
       ],
       implementation:
-        'This usually becomes a mix of messaging, layout, and page-level conversion work inside an ongoing site relationship.',
+        'This is mostly a copy and layout fix inside the site.',
     },
     {
-      title: 'Intake Experience',
+      title: 'Form path',
       summary:
-        'Small improvements to the intake path can remove friction without making the process feel robotic or generic.',
+        'Small form changes can remove friction without making the site feel robotic.',
       bullets: [
-        'Keep the first form short and useful.',
-        'Add better handoff expectations after submit.',
-        'Use follow-up logic to collect deeper details later.',
+        'Keep the first form short.',
+        'Explain what happens after submit.',
+        'Ask deeper questions later.',
       ],
       implementation:
-        'This often leads to form redesign, intake restructuring, and small automation changes that save staff time.',
+        'This often leads to a form update and small automation changes.',
     },
     {
-      title: 'Ongoing Web Team Support',
+      title: 'Ongoing help',
       summary:
-        'After the audit, the long-term value usually comes from consistent iteration rather than one isolated fix.',
+        'After the review, the long-term value comes from steady small fixes.',
       bullets: [
-        'Monthly website improvements and page updates.',
-        'Chatbot, contact, and follow-up experiments where they fit the firm.',
-        'Workflow tuning so leads move through the first-touch process faster.',
+        'Monthly site improvements and page updates.',
+        'Chat or contact experiments where they fit.',
+        'Reply-flow tuning so leads move faster.',
       ],
       implementation:
-        'This is the subscription-style web team offer: ongoing support that improves the site and the workflow together.',
+        'This is the ongoing support offer that improves the site and reply path together.',
     },
   ],
 };
@@ -123,13 +123,13 @@ const demoAudit: AuditRecord = {
   slug: 'evergreen-family-law',
   teaserToken: 'review-q4m7n2w1',
   previewDeliveryToken: 'audit-b8r9t4x2',
-  headline: '3 issues likely making it harder for Evergreen Family Law to win consultations',
+  headline: '3 issues likely making it harder for Evergreen Family Law to get calls',
   subheadline:
-    'I reviewed the public site, intake form, and follow-up path on mobile. This free audit preview shows the highest-signal issues only, not the full diagnosis.',
+    'I checked the public site, form, and reply path on mobile. This preview shows only the clearest issues.',
   auditSummary:
-    'This private preview shows a few of the clearest issues. The full audit expands on the friction points, annotated notes, and the order I would fix first.',
+    'This private preview shows a few clear issues. The full review adds notes, screenshots, and the order I would fix first.',
   reviewerNote:
-    'Private free audit preview prepared after reviewing the public site on mobile and desktop.',
+    'Private preview based on a review of the public site on mobile and desktop.',
   reviewedAt: 'March 26, 2026',
   ctaEmail: 'audits@syncworkflow.com',
   campaign: 'law-firm-outreach',
@@ -141,95 +141,95 @@ const demoAudit: AuditRecord = {
     sizeBand: '2-8 attorneys',
   },
   curiosityBullets: [
-    'A screenshot sequence showing where the mobile contact path loses urgency.',
-    'A short breakdown of intake questions that can be shortened or deferred.',
-    'A response-speed messaging rewrite designed to increase qualified inquiries.',
+    'A screenshot set showing where the mobile contact path loses urgency.',
+    'A short list of form questions that can be cut or moved later.',
+    'A rewrite for reply-speed messaging near the contact action.',
   ],
   implementationOptions: [
-    'Shorten the mobile intake path and move lower-value questions to follow-up.',
-    'Add faster-response cues around consult requests and contact options.',
-    'Install a tighter after-hours handoff flow using chat, forms, and follow-up email.',
+    'Shorten the mobile form and move lower-value questions to follow-up.',
+    'Add faster-reply cues around the main contact action.',
+    'Set up a tighter after-hours handoff with forms and follow-up email.',
   ],
   findings: [
     {
       id: 'mobile-cta-friction',
       priority: 'Immediate',
       label: 'Contact path',
-      title: 'The primary contact path asks visitors to choose too much too early.',
+      title: 'The main contact path asks visitors to choose too much too early.',
       detail:
-        'On mobile, the page asks a visitor to decide between calling, filling out a long form, or reading more before trust and urgency have been established.',
+        'On mobile, the page asks a visitor to choose between too many actions before trust and urgency are clear.',
       evidence:
-        'The first screen offers multiple actions, but no dominant next step and no clear response-time promise next to the consultation CTA.',
+        'The first screen offers more than one action, but no clear main step and no reply-time promise.',
       impact:
-        'Prospects are more likely to delay or bounce when the next step is unclear.',
+        'People are more likely to wait or leave when the next step is unclear.',
       recommendation:
-        'Reduce the first decision to one primary consultation action, then offer alternate contact paths after that commitment point.',
+        'Reduce the first decision to one main action, then offer other paths later.',
     },
     {
       id: 'form-length',
       priority: 'High',
-      label: 'Intake form',
-      title: 'The intake form asks for too much detail before the firm has earned that effort.',
+      label: 'Form',
+      title: 'The first form asks for too much detail.',
       detail:
-        'Several questions appear better suited for a follow-up call than for a first-touch mobile inquiry.',
+        'Several questions fit better in a follow-up call than in the first mobile step.',
       evidence:
-        'The form asks for multiple context fields before reinforcing what the prospect gets after submitting or how quickly someone replies.',
+        'The form asks for extra detail before it says what happens next or how fast someone replies.',
       impact:
-        'Longer mobile forms suppress completion and waste staff time following up on partial inquiries.',
+        'Long mobile forms cut completion and create more partial leads.',
       recommendation:
-        'Move qualifying detail downstream. Keep the first-step form to essential routing information and response expectations.',
+        'Move deeper questions later. Keep the first form to the minimum needed to reply.',
     },
     {
       id: 'response-confidence',
       priority: 'High',
-      label: 'Response speed',
-      title: 'There is not enough proof that inquiries will get a fast, useful response.',
+      label: 'Reply speed',
+      title: 'The site does not prove that inquiries get a fast reply.',
       detail:
-        'The current contact experience does not reassure a prospect about timing, ownership, or what happens after submit.',
+        'The current contact experience does not reassure a prospect about timing or what happens after submit.',
       evidence:
-        'The contact area lacks a plain-language “what happens next” block and does not show a concrete turnaround expectation.',
+        'The contact area lacks a plain next-step block and does not show a clear turnaround time.',
       impact:
-        'When legal prospects do not believe they will hear back quickly, they keep searching and contact another firm.',
+        'When people do not believe they will hear back soon, they keep searching.',
       recommendation:
-        'Add response-timing language, after-hours expectations, and a simple follow-up workflow that immediately confirms the request.',
+        'Add reply-time language, after-hours expectations, and a simple confirmation flow.',
     },
   ],
   fullAuditSections: [
     {
-      title: 'Homepage Conversion Path',
+      title: 'Homepage path',
       summary:
-        'The current homepage does not create a single dominant next step for consultation-seeking traffic.',
+        'The current homepage does not create one clear next step.',
       bullets: [
-        'Reduce competing first-screen actions and reinforce one consultation CTA.',
-        'Move low-priority informational blocks below trust-building proof and the first CTA.',
-        'Use clearer mobile spacing so the action path reads in one scroll, not as scattered modules.',
+        'Reduce competing first-screen actions and reinforce one CTA.',
+        'Move low-priority blocks below proof and the first CTA.',
+        'Use cleaner mobile spacing so the action path reads in one scroll.',
       ],
       implementation:
-        'This is a copy, hierarchy, and layout fix. It can be implemented without a full redesign.',
+        'This is a copy, hierarchy, and layout fix. It does not need a full redesign.',
     },
     {
-      title: 'Intake Form Scope',
+      title: 'Form scope',
       summary:
-        'The intake flow tries to both capture a lead and qualify the matter in one step. That is too much friction for first-touch traffic.',
+        'The form tries to capture a lead and qualify the matter in one step. That is too much for first-touch traffic.',
       bullets: [
-        'Trim the first form to the minimum needed to route the inquiry.',
-        'Defer matter details until after confirmation or during the first callback.',
-        'Add stronger reassurance around privacy and response timing on mobile.',
+        'Trim the first form to the minimum needed to route the lead.',
+        'Defer matter details until after the first confirmation or callback.',
+        'Add stronger reassurance around privacy and reply timing on mobile.',
       ],
       implementation:
-        'A shorter first-step intake plus automated follow-up can improve completion without reducing lead quality.',
+        'A shorter first form plus follow-up can improve completion without lowering lead quality.',
     },
     {
-      title: 'Response Workflow',
+      title: 'Reply workflow',
       summary:
-        'The site does not clearly show that inquiry submission triggers a fast, structured response process.',
+        'The site does not clearly show that submission triggers a fast reply process.',
       bullets: [
-        'Trigger immediate confirmation email or SMS after submit.',
-        'Route the inquiry internally with owner and deadline visibility.',
-        'Use an after-hours workflow so leads are not left in a dead zone overnight or on weekends.',
+        'Send a confirmation email or text right after submit.',
+        'Route the lead internally with a clear owner and deadline.',
+        'Use an after-hours flow so leads are not left waiting overnight or on weekends.',
       ],
       implementation:
-        'This is where chatbots, forms, inbox routing, and follow-up automations become useful after the audit identifies the weak points.',
+        'This is where forms, routing, chat, and follow-up automation can help after the review finds the weak points.',
     },
   ],
 };

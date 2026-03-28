@@ -6,7 +6,7 @@ import { SampleReviewPage } from '@/modules/review/SampleReviewPage';
 export const metadata: Metadata = {
   title: 'Sample Review',
   description:
-    'A sanitized example of the free SyncWorkflow audit format for small law firms.',
+    'A public sample of the SyncWorkflow review format for a law firm website.',
 };
 
 export default function Page() {

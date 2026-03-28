@@ -20,8 +20,8 @@ type Status = 'idle' | 'submitting' | 'success' | 'error';
 
 export function RequestAuditForm({
   source = 'request_audit_page',
-  submitLabel = 'Get My Free Audit',
-  helperText = 'Start with your email and website. Add more detail only if it helps.',
+  submitLabel = 'Get Free Audit',
+  helperText = 'Two fields now. I review the site and email the next step.',
   compact = false,
   className,
   initiallyExpanded = false,
@@ -115,7 +115,7 @@ export function RequestAuditForm({
           onClick={() => setShowDetails((current) => !current)}
           className="justify-self-start text-sm font-medium text-[#B98132] transition hover:text-[#9b6d28]"
         >
-          {showDetails ? 'Hide optional details' : 'Add firm details (optional)'}
+          {showDetails ? 'Hide extra details' : 'Add extra detail (optional)'}
         </button>
       ) : null}
 
@@ -131,11 +131,11 @@ export function RequestAuditForm({
           </label>
 
           <label className="grid gap-2 text-sm font-medium text-[#18263F]">
-            What should I look at?
+            Anything specific?
             <textarea
               name="note"
               rows={compact ? 4 : 5}
-              placeholder="Optional: page, workflow, intake issue, or conversion concern."
+              placeholder="Optional: page, form, slow step, or reply issue."
               className="rounded-[24px] border border-[rgba(216,200,179,0.9)] bg-[#FFF8F0] px-4 py-3 outline-none transition placeholder:text-[#8A8F97] focus:border-[#B98132] focus:ring-2 focus:ring-[rgba(185,129,50,0.16)]"
             />
           </label>

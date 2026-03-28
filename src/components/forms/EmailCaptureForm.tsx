@@ -92,14 +92,13 @@ export function EmailCaptureForm({
       className="rounded-[30px] border border-[hsl(30,28%,84%)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(250,246,239,0.96))] p-6 shadow-[0_18px_52px_rgba(36,43,66,0.1)]"
     >
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(24,60%,40%)]">
-        Send The Full Audit
+        Get the full audit
       </p>
       <h2 className="mt-3 font-serif text-3xl text-[hsl(221,45%,18%)]">
-        Want the full version?
+        Want the full review?
       </h2>
       <p className="mt-3 max-w-xl text-sm leading-6 text-[hsl(221,16%,34%)]">
-        Enter the best email for delivery. I&apos;ll send the private full audit with the
-        remaining findings, annotated notes, and the fix order I would start with.
+        Enter the best email. I&apos;ll send the private full review with the rest of the notes and the fix order.
       </p>
 
       <form className="mt-6 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]" onSubmit={handleSubmit}>
@@ -117,7 +116,7 @@ export function EmailCaptureForm({
           className="h-12 rounded-full border border-[hsl(30,28%,82%)] bg-white px-5 text-[15px] text-[hsl(221,45%,18%)] outline-none transition focus:border-[hsl(221,45%,18%)] focus:ring-2 focus:ring-[rgba(27,36,66,0.1)]"
         />
         <Button type="submit" variant="brand" size="lg" disabled={status === 'submitting'}>
-          {status === 'submitting' ? 'Sending...' : 'Send Me The Full Audit'}
+          {status === 'submitting' ? 'Sending...' : 'Get Full Audit'}
         </Button>
       </form>
 
@@ -132,7 +131,7 @@ export function EmailCaptureForm({
           }
           className="underline decoration-[hsl(31,80%,60%)] underline-offset-4 transition hover:text-[hsl(221,45%,18%)]"
         >
-          Prefer to reply by email?
+          Prefer email?
         </Link>
         <Link
           href="#walkthrough-request"
@@ -145,7 +144,7 @@ export function EmailCaptureForm({
           }
           className="underline decoration-[hsl(31,80%,60%)] underline-offset-4 transition hover:text-[hsl(221,45%,18%)]"
         >
-          Request a walkthrough instead
+          Want a walkthrough?
         </Link>
       </div>
 

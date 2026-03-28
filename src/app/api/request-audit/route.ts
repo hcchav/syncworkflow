@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Request received. I will review the site and follow up with the free audit next steps.',
+      message: 'Request received. I will review the site and email the next step.',
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

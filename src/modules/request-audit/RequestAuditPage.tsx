@@ -13,17 +13,16 @@ export function RequestAuditPage() {
           <section>
             <p className="eyebrow">Free audit request</p>
             <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-tight text-[hsl(221,45%,18%)] sm:text-6xl">
-              Start with your email and website, then decide whether ongoing help makes sense.
+              Send your email and website. I will review the site and send the next step.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[hsl(221,16%,34%)]">
-              This is for law firms that want a direct review of website conversion, intake
-              friction, response speed, and the full first-touch experience.
+              I look at the page, the form, and what happens after someone reaches out.
             </p>
             <div className="mt-10 grid gap-4 sm:grid-cols-3">
               <div className="rounded-[28px] border border-[hsl(30,28%,86%)] bg-white/90 p-5 shadow-sm">
                 <p className="text-sm font-medium text-[hsl(221,45%,18%)]">What I review</p>
                 <p className="mt-2 text-sm leading-6 text-[hsl(221,16%,35%)]">
-                  Homepage clarity, mobile contact flow, intake forms, and post-submit expectations.
+                  Page message, form length, and the reply path.
                 </p>
               </div>
               <div className="rounded-[28px] border border-[hsl(30,28%,86%)] bg-white/90 p-5 shadow-sm">
@@ -35,7 +34,7 @@ export function RequestAuditPage() {
               <div className="rounded-[28px] border border-[hsl(30,28%,86%)] bg-white/90 p-5 shadow-sm">
                 <p className="text-sm font-medium text-[hsl(221,45%,18%)]">What happens next</p>
                 <p className="mt-2 text-sm leading-6 text-[hsl(221,16%,35%)]">
-                  I review the site, prepare the audit, and follow up with the best next step from there.
+                  I review the site and email the best next step.
                 </p>
               </div>
             </div>
@@ -44,7 +43,7 @@ export function RequestAuditPage() {
           <aside>
             <RequestAuditForm
               source="request_audit_page"
-              helperText="Start with the two required fields. Add optional detail if you want the review pointed at a specific issue."
+              helperText="Two fields now. Add extra detail only if it helps."
             />
           </aside>
         </div>
