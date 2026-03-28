@@ -21,32 +21,26 @@ import { getSampleAudit } from '@/lib/local-audits';
 const improvements = [
   {
     title: 'Weak homepage message',
-    body: 'The first screen should quickly say who the firm helps and what to do next.',
+    body: 'The first screen should say who the firm helps and what to do next.',
     icon: FileSearch,
   },
   {
     title: 'Long intake form',
-    body: 'The first form should stay short on mobile and move extra questions later.',
+    body: 'The first form should stay short on mobile.',
     icon: MessagesSquare,
   },
   {
     title: 'Weak response trust',
-    body: 'The site should show what happens after submit and when someone replies.',
+    body: 'The site should show what happens after submit.',
     icon: Bot,
   },
 ];
 
 const process = [
   'Send your website and work email.',
-  'I review the homepage, intake path, and response flow from a mobile-first view.',
-  'You get the biggest leaks first, in plain language.',
-  'If the audit is useful, I can keep improving the site with you.',
-];
-
-const heroBullets = [
-  'Clarify your first screen',
-  'Cut mobile form friction',
-  'Show the next step',
+  'I review the page, intake path, and reply flow.',
+  'You get the biggest leaks first.',
+  'If it helps, I can keep improving the site with you.',
 ];
 
 const founderTiles = [
@@ -58,18 +52,18 @@ const founderTiles = [
   {
     kicker: '3 layers',
     title: 'Page, form, and follow-up',
-    body: 'The audit reviews the first-touch path as one connected system.',
+    body: 'Reviews the first-touch path as one system.',
   },
   {
     kicker: '1 output',
     title: 'Biggest leaks first',
-    body: 'You get clear priorities before any ongoing support conversation.',
+    body: 'Clear priorities before any ongoing support.',
   },
 ];
 
 export function HomePage() {
   const sampleAudit = getSampleAudit();
-  const heroProof = ['2 fields', 'Private review', 'Homepage + intake'];
+  const heroProof = ['2 fields', 'Private review', 'Small law firms'];
   const heroPreviewFinding = sampleAudit.findings[0];
 
   return (
@@ -87,12 +81,12 @@ export function HomePage() {
                 Find what is costing your law firm consultations.
               </h1>
               <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#556174] sm:mt-5 sm:text-xl sm:leading-8">
-                Start with a private audit of your homepage, intake form, and follow-up path.
+                Get a private review of your homepage, intake, and follow-up.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
                 <Button asChild size="lg" variant="brand">
                   <Link href="#hero-audit-form">
-                    Start Free Audit
+                    Get Free Audit
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -100,7 +94,7 @@ export function HomePage() {
                   href="/sample-review"
                   className="inline-flex min-h-11 items-center text-sm font-medium text-[#B98132] hover:text-[#9b6d28]"
                 >
-                  See {sampleAudit.findings.length} sample findings
+                  See sample review
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </div>
@@ -111,14 +105,6 @@ export function HomePage() {
                     className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[rgba(216,200,179,0.88)] bg-[rgba(255,253,249,0.82)] px-4 py-2 text-sm text-[#485568] shadow-sm"
                   >
                     <CheckCircle2 className="h-4 w-4 text-[#B98132]" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-5 hidden gap-2.5 sm:mt-7 sm:grid sm:gap-3">
-                {heroBullets.map((item) => (
-                  <div key={item} className="flex items-start gap-3 text-sm leading-6 text-[#445164]">
-                    <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-[#B98132]" />
                     <span>{item}</span>
                   </div>
                 ))}
@@ -137,7 +123,7 @@ export function HomePage() {
                         <span className="h-2.5 w-2.5 rounded-full bg-[hsl(148,34%,60%)]" />
                       </div>
                       <span className="rounded-full border border-[rgba(24,38,63,0.08)] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#6B7380]">
-                        Public sample review
+                        Sample review
                       </span>
                     </div>
                     <div className="relative min-h-[240px] flex-1 overflow-hidden bg-[#F6F0E7] sm:min-h-[320px]">
@@ -184,16 +170,16 @@ export function HomePage() {
                       Start here
                     </p>
                     <h2 className="mt-2 font-serif text-[1.9rem] leading-tight text-[#18263F]">
-                      Start the free audit.
+                      Two fields to start.
                     </h2>
                     <p className="mt-2 text-sm leading-6 text-[#556174]">
-                      Work email and website. That is enough to begin.
+                      Work email and website. That is enough.
                     </p>
                     <RequestAuditForm
                       compact
                       source="homepage_hero"
-                      submitLabel="Get My Free Audit"
-                      helperText="Private review. No long intake form."
+                      submitLabel="Get Free Audit"
+                      helperText="Private review. No long form."
                       showDetailsToggle={false}
                       className="mt-4 border-0 bg-transparent p-0 shadow-none"
                     />
@@ -215,8 +201,7 @@ export function HomePage() {
                   It looks at the page, the form, and the follow-up as one system.
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-8 text-[#E6DDD1]">
-                  That point of view comes from work in IT, process improvement, marketing systems,
-                  and legal SaaS. The goal is a cleaner path from visitor to consult request.
+                  That comes from work in IT, process improvement, marketing systems, and legal SaaS.
                 </p>
               </div>
             </div>
@@ -290,29 +275,29 @@ export function HomePage() {
             <div className="rounded-[34px] border border-[rgba(216,200,179,0.88)] bg-[rgba(255,253,249,0.92)] p-8 shadow-[0_18px_52px_rgba(24,38,63,0.08)]">
               <p className="eyebrow">What the audit covers</p>
               <h3 className="mt-4 font-serif text-3xl text-[#18263F]">
-                The free audit checks the site and the workflow behind it.
+                What the review covers.
               </h3>
               <div className="mt-5 grid gap-3 text-sm leading-6 text-[#556174]">
-                <p>Homepage clarity and first-screen messaging.</p>
-                <p>Form friction, mobile effort, and next-step confusion.</p>
-                <p>Response language, handoff logic, and follow-up flow after submit.</p>
+                <p>Homepage clarity and first action.</p>
+                <p>Form friction and mobile effort.</p>
+                <p>Response language after submit.</p>
               </div>
               <div className="mt-6 grid gap-3">
                 <div className="flex items-start gap-3 rounded-[24px] bg-[#FFF8F0] p-4">
                   <Clock3 className="mt-1 h-5 w-5 shrink-0 text-[#B98132]" />
                   <p className="text-sm leading-6 text-[#556174]">
-                    Start with a direct diagnosis before any monthly support is discussed.
+                    Direct diagnosis before any monthly support.
                   </p>
                 </div>
                 <div className="flex items-start gap-3 rounded-[24px] bg-[#FFF8F0] p-4">
                   <Send className="mt-1 h-5 w-5 shrink-0 text-[#B98132]" />
                   <p className="text-sm leading-6 text-[#556174]">
-                    Get the biggest issues first, in plain language, with a clear next-step path.
+                    Biggest issues first, in plain language.
                   </p>
                 </div>
               </div>
               <Button asChild className="mt-6 w-full" variant="brand" size="lg">
-                <Link href="/request-audit">Get My Free Audit</Link>
+                <Link href="/request-audit">Get Free Audit</Link>
               </Button>
             </div>
           </div>
@@ -326,20 +311,20 @@ export function HomePage() {
                 If the audit is useful, I can keep improving the site with you.
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-[#556174]">
-                The audit is the first step. Ongoing support comes after that, focused on the site,
-                intake path, and response system that need the most work.
+                Ongoing support focuses on the site, intake path, and response system that need the
+                most work.
               </p>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-[26px] bg-[#FFF8F0] p-5">
                   <p className="text-sm font-medium text-[#18263F]">Core support</p>
                   <p className="mt-2 text-sm leading-6 text-[#556174]">
-                    Ongoing website updates, conversion improvements, and intake optimization.
+                    Website updates, conversion fixes, and intake improvement.
                   </p>
                 </div>
                 <div className="rounded-[26px] bg-[#FFF8F0] p-5">
                   <p className="text-sm font-medium text-[#18263F]">Add-on work</p>
                   <p className="mt-2 text-sm leading-6 text-[#556174]">
-                    Chatbots, automation, and workflow projects when they solve a real bottleneck.
+                    Chatbots, automation, and workflow help when it solves a real bottleneck.
                   </p>
                 </div>
               </div>
@@ -347,13 +332,12 @@ export function HomePage() {
 
             <aside className="rounded-[34px] border border-[rgba(216,200,179,0.88)] bg-[#18263F] p-8 text-[#FFF7EC] shadow-[0_24px_80px_rgba(24,38,63,0.18)]">
               <p className="eyebrow !text-[#E3BE8B]">Why this converts better</p>
-              <h3 className="mt-4 font-serif text-3xl">The free audit earns the bigger engagement.</h3>
+              <h3 className="mt-4 font-serif text-3xl">Audit first. Retainer second.</h3>
               <p className="mt-4 text-sm leading-7 text-[#E6DDD1]">
-                The site does not ask firms to commit to a retainer first. It asks them to inspect
-                the process, request the audit, and decide from there.
+                You can inspect the work before deciding on ongoing help.
               </p>
               <Button asChild className="mt-6 w-full" variant="brandSecondary" size="lg">
-                <Link href="/request-audit">Start With The Free Audit</Link>
+                <Link href="/request-audit">Get Free Audit</Link>
               </Button>
             </aside>
           </div>
@@ -363,18 +347,17 @@ export function HomePage() {
           <div className="rounded-[36px] border border-[rgba(216,200,179,0.88)] bg-[linear-gradient(135deg,rgba(255,253,249,0.96),rgba(246,240,231,0.98))] p-8 shadow-[0_22px_70px_rgba(24,38,63,0.1)] sm:p-10">
             <p className="eyebrow">Start here</p>
             <h2 className="mt-4 max-w-3xl font-serif text-4xl text-[#18263F] sm:text-5xl">
-              Start with the free audit. Keep the ongoing support only if it earns its place.
+              Start with the free audit.
             </h2>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-[#556174]">
-              The first step is clarity: where the current site and intake path are slowing things
-              down, what to fix first, and whether ongoing help makes sense after that.
+              See what is slowing consultations before you decide on ongoing help.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" variant="brand">
-                <Link href="/request-audit">Get My Free Audit</Link>
+                <Link href="/request-audit">Get Free Audit</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/sample-review">See A Sample Review</Link>
+                <Link href="/sample-review">See Sample Review</Link>
               </Button>
             </div>
           </div>
@@ -391,7 +374,7 @@ export function HomePage() {
             </p>
           </div>
           <Button asChild variant="brand" size="sm">
-            <Link href="/request-audit">Start Audit</Link>
+            <Link href="/request-audit">Get Free Audit</Link>
           </Button>
         </div>
       </div>

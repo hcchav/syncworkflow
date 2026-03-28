@@ -32,7 +32,7 @@ export function BrandMark() {
           SyncWorkflow
         </span>
         <span className="hidden text-[11px] font-medium uppercase tracking-[0.18em] text-[#6B7380] sm:block">
-          Audit-first for small law firms
+          Website + intake systems
         </span>
       </span>
     </Link>
