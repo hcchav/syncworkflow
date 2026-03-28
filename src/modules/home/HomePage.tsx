@@ -45,11 +45,6 @@ const process = [
 
 const founderTiles = [
   {
-    kicker: '10 years',
-    title: 'Systems and data',
-    body: 'Work across IT, marketing systems, and legal SaaS.',
-  },
-  {
     kicker: '3 layers',
     title: 'Page, form, and follow-up',
     body: 'Reviews the first-touch path as one system.',
@@ -206,6 +201,35 @@ export function HomePage() {
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
+              <div className="rounded-[28px] border border-[rgba(216,200,179,0.88)] bg-[linear-gradient(180deg,rgba(255,253,249,0.96),rgba(246,240,231,0.92))] p-6 shadow-[0_18px_52px_rgba(24,38,63,0.08)] md:col-span-3 lg:col-span-1">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[24px] border border-[rgba(216,200,179,0.92)] bg-[#EDE1D1] shadow-[0_16px_32px_rgba(24,38,63,0.12)]">
+                    <Image
+                      src="/images/founder-placeholder.svg"
+                      alt="Founder portrait placeholder"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#B98132]">
+                      Founder-led
+                    </p>
+                    <div className="mt-3 max-w-[280px]">
+                      <Image
+                        src="/images/founder-lockup.png"
+                        alt=""
+                        width={900}
+                        height={220}
+                        className="h-auto w-full"
+                      />
+                    </div>
+                    <p className="mt-3 text-sm leading-6 text-[#556174]">
+                      Independent review from the founder. Placeholder portrait for now.
+                    </p>
+                  </div>
+                </div>
+              </div>
               {founderTiles.map((tile) => (
                 <div
                   key={tile.title}
