@@ -38,8 +38,8 @@ const improvements = [
 
 const benchmarkStats = [
   {
-    value: '15%',
-    body: 'let prospects book a consult on the site.',
+    value: '74%',
+    body: 'research a firm after they get a referral.',
   },
   {
     value: '35%',
@@ -340,7 +340,7 @@ export function HomePage() {
             ))}
           </div>
           <p className="mt-4 text-xs leading-6 text-[#6B7380]">
-            Based on ABA 2023, CallRail 2024, and Scorpion 2025.
+            Based on ABA 2023 and Scorpion 2025.
           </p>
           <div className="mt-12 grid gap-4">
             {contrastRows.map((row) => (
