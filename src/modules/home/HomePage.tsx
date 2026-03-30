@@ -36,6 +36,46 @@ const improvements = [
   },
 ];
 
+const benchmarkStats = [
+  {
+    value: '15%',
+    body: 'let prospects book a consult on the site.',
+  },
+  {
+    value: '35%',
+    body: 'said a client hired the firm through the website.',
+  },
+  {
+    value: '12%',
+    body: 'were sure their site had live chat.',
+  },
+  {
+    value: '72%',
+    body: 'say they move on if they do not hear back in 24 hours.',
+  },
+];
+
+const contrastRows = [
+  {
+    hurtsTitle: 'Hurts calls',
+    hurtsBody: 'Long intro. No clear next step. No reply note.',
+    helpsTitle: 'Helps calls',
+    helpsBody: 'Clear promise. One action. Fast next step.',
+  },
+  {
+    hurtsTitle: 'Hurts form starts',
+    hurtsBody: 'Too many fields. No clue what happens next.',
+    helpsTitle: 'Helps form starts',
+    helpsBody: 'Short form. Clear next step. Less work on mobile.',
+  },
+  {
+    hurtsTitle: 'Hurts trust',
+    hurtsBody: 'Stock talk. No sample. No real proof.',
+    helpsTitle: 'Helps trust',
+    helpsBody: 'Real sample. Real person. Clear fix order.',
+  },
+];
+
 const process = [
   'Send your website and work email.',
   'I review the page, intake path, and reply flow.',
@@ -275,6 +315,55 @@ export function HomePage() {
                 </article>
               );
             })}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="eyebrow">What most firms still miss</p>
+            <h2 className="mt-4 font-serif text-4xl text-[#18263F] sm:text-5xl">
+              Many law firm sites still miss basic intake tools.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-[#556174]">
+              Small changes still matter because many firms have not fixed the basics yet.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {benchmarkStats.map((item) => (
+              <article
+                key={item.value + item.body}
+                className="rounded-[28px] border border-[rgba(216,200,179,0.88)] bg-[rgba(255,253,249,0.92)] p-6 shadow-[0_18px_52px_rgba(24,38,63,0.08)]"
+              >
+                <p className="font-serif text-4xl text-[#18263F]">{item.value}</p>
+                <p className="mt-3 text-sm leading-6 text-[#556174]">{item.body}</p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-4 text-xs leading-6 text-[#6B7380]">
+            Based on ABA 2023, CallRail 2024, and Scorpion 2025.
+          </p>
+          <div className="mt-12 grid gap-4">
+            {contrastRows.map((row) => (
+              <div
+                key={row.hurtsTitle + row.helpsTitle}
+                className="grid gap-4 rounded-[30px] border border-[rgba(216,200,179,0.88)] bg-[rgba(255,253,249,0.92)] p-5 shadow-[0_18px_52px_rgba(24,38,63,0.08)] lg:grid-cols-2"
+              >
+                <div className="rounded-[24px] border border-[rgba(216,200,179,0.84)] bg-[#FFF8F0] p-5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#B98132]">
+                    {row.hurtsTitle}
+                  </p>
+                  <p className="mt-3 font-serif text-2xl text-[#18263F]">Weak pattern</p>
+                  <p className="mt-3 text-sm leading-6 text-[#556174]">{row.hurtsBody}</p>
+                </div>
+                <div className="rounded-[24px] border border-[rgba(141,167,156,0.52)] bg-[rgba(141,167,156,0.12)] p-5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5E766C]">
+                    {row.helpsTitle}
+                  </p>
+                  <p className="mt-3 font-serif text-2xl text-[#18263F]">Strong pattern</p>
+                  <p className="mt-3 text-sm leading-6 text-[#556174]">{row.helpsBody}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
