@@ -71,12 +71,12 @@ export function HomePage() {
           <div className="absolute inset-x-0 top-0 -z-10 h-px bg-[linear-gradient(90deg,transparent,rgba(24,38,63,0.16),transparent)]" />
           <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 sm:py-12 lg:grid-cols-[minmax(0,0.72fr)_minmax(560px,1fr)] lg:gap-10 lg:px-8 lg:py-20">
             <div className="max-w-lg lg:pt-4">
-              <p className="eyebrow">Website + intake review</p>
+              <p className="eyebrow">Site + form review</p>
               <h1 className="mt-4 font-serif text-[2.8rem] leading-[0.92] text-[#18263F] sm:text-[4.35rem]">
-                Find what is costing your law firm consultations.
+                Find what is costing your law firm new calls.
               </h1>
               <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#556174] sm:mt-5 sm:text-xl sm:leading-8">
-                I review your page, form, and reply path.
+                I review your page, form, and next step.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
                 <Button asChild size="lg" variant="brand">
@@ -193,7 +193,7 @@ export function HomePage() {
               <div className="relative">
                 <p className="eyebrow !text-[#E3BE8B]">Why this review helps</p>
                 <h2 className="mt-4 max-w-3xl font-serif text-4xl leading-[0.96] sm:text-[3.2rem]">
-                  It looks at the page, the form, and the follow-up as one system.
+                  I check the page, the form, and the next step together.
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-8 text-[#E6DDD1]">
                   I bring 10 years in IT, marketing systems, and legal SaaS.
@@ -225,7 +225,7 @@ export function HomePage() {
                       />
                     </div>
                     <p className="mt-3 text-sm leading-6 text-[#556174]">
-                      Independent review from the founder. Placeholder portrait for now.
+                      Founder-led review with 10 years in IT, marketing systems, and legal SaaS.
                     </p>
                   </div>
                 </div>
@@ -252,11 +252,10 @@ export function HomePage() {
           <div className="max-w-3xl">
             <p className="eyebrow">What I fix first</p>
             <h2 className="mt-4 font-serif text-4xl text-[#18263F] sm:text-5xl">
-              Most law firm websites lose consultations in the first minute.
+              Most law firm sites lose good calls in the first minute.
             </h2>
             <p className="mt-5 text-lg leading-8 text-[#556174]">
-              I check the page, the form, and the reply path together. That is where early
-              drop-off usually starts.
+              I check the page, the form, and the next step together. That is where drop-off starts.
             </p>
           </div>
           <div className="mt-10 grid gap-5 lg:grid-cols-3">
@@ -332,10 +331,10 @@ export function HomePage() {
             <div className="rounded-[34px] border border-[rgba(216,200,179,0.88)] bg-[rgba(255,253,249,0.92)] p-8 shadow-[0_18px_52px_rgba(24,38,63,0.08)]">
               <p className="eyebrow">Ongoing help</p>
               <h2 className="mt-4 max-w-3xl font-serif text-4xl text-[#18263F] sm:text-5xl">
-                If the audit is useful, I can keep improving the site with you.
+                If the audit helps, I can keep improving the site with you.
               </h2>
               <p className="mt-5 max-w-2xl text-lg leading-8 text-[#556174]">
-                Ongoing help focuses on the parts of the site and reply path that need the most work.
+                Ongoing help focuses on the parts of the site and next step that need the most work.
               </p>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-[26px] bg-[#FFF8F0] p-5">
@@ -373,7 +372,7 @@ export function HomePage() {
               Start with the free audit.
             </h2>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-[#556174]">
-              See what is slowing consultations before you decide on ongoing help.
+              See what is slowing calls before you pay for more help.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" variant="brand">

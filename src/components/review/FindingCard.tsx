@@ -68,33 +68,33 @@ export function FindingCard({
       <p className="mt-3 text-sm leading-6 text-[hsl(221,16%,34%)]">{finding.detail}</p>
 
       {density === 'compact' ? (
-        <div className="mt-5 grid gap-3 text-sm leading-6 text-[hsl(221,16%,34%)]">
+        <div className="mt-5 grid gap-3 text-sm leading-6 text-[hsl(221,16%,34%)] sm:grid-cols-3">
           <div className="rounded-[20px] bg-[hsl(40,40%,97%)] px-4 py-3">
-            <p className="font-medium text-[hsl(221,45%,18%)]">Observed</p>
+            <p className="font-medium text-[hsl(221,45%,18%)]">What I saw</p>
             <p className="mt-1">{finding.evidence}</p>
           </div>
           <div className="rounded-[20px] bg-[hsl(40,40%,97%)] px-4 py-3">
-            <p className="font-medium text-[hsl(221,45%,18%)]">Why it matters</p>
+            <p className="font-medium text-[hsl(221,45%,18%)]">Why it hurts</p>
             <p className="mt-1">{finding.impact}</p>
           </div>
           <div className="rounded-[20px] bg-[hsl(40,40%,97%)] px-4 py-3">
-            <p className="font-medium text-[hsl(221,45%,18%)]">Fix direction</p>
+            <p className="font-medium text-[hsl(221,45%,18%)]">Next fix</p>
             <p className="mt-1">{finding.recommendation}</p>
           </div>
         </div>
       ) : (
         <>
           <div className="mt-5 rounded-[22px] bg-[hsl(40,40%,97%)] p-4 text-sm text-[hsl(221,16%,30%)]">
-            <p className="font-medium text-[hsl(221,45%,18%)]">Observed</p>
+            <p className="font-medium text-[hsl(221,45%,18%)]">What I saw</p>
             <p className="mt-2">{finding.evidence}</p>
           </div>
           <div className="mt-4 grid gap-4 text-sm leading-6 text-[hsl(221,16%,34%)] md:grid-cols-2">
             <div>
-              <p className="font-medium text-[hsl(221,45%,18%)]">Why it matters</p>
+              <p className="font-medium text-[hsl(221,45%,18%)]">Why it hurts</p>
               <p className="mt-1">{finding.impact}</p>
             </div>
             <div>
-              <p className="font-medium text-[hsl(221,45%,18%)]">Fix direction</p>
+              <p className="font-medium text-[hsl(221,45%,18%)]">Next fix</p>
               <p className="mt-1">{finding.recommendation}</p>
             </div>
           </div>

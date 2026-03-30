@@ -6,13 +6,13 @@ const sampleAudit: AuditRecord = {
   source: 'local',
   kind: 'sample',
   slug: 'sample-small-law-firm',
-  headline: 'What a SyncWorkflow review looks like for one law firm',
+  headline: 'See what one law firm review can look like',
   subheadline:
-    'This public sample shows how I check the page, form, and reply path before I suggest any build work.',
+    'This public sample shows how I check the page, form, and next step before I suggest build work.',
   auditSummary:
     'This is a public sample. A real review is private and built for one firm and one site.',
   reviewerNote:
-    'Fictional details. Shared to show the format without naming a real firm.',
+    'Fake details. Shared to show the format, not a real firm.',
   reviewedAt: 'March 27, 2026',
   ctaEmail: 'audits@syncworkflow.com',
   firm: {
@@ -24,13 +24,13 @@ const sampleAudit: AuditRecord = {
   },
   curiosityBullets: [
     'Marked-up screenshots of the main mobile slow points.',
-    'A simple fix order for the site, form, and reply process.',
-    'Notes on where ongoing help would matter most after the review.',
+    'A simple fix order for the site, form, and next step.',
+    'Notes on where ongoing help would help most after the review.',
   ],
   implementationOptions: [
-    'Ongoing site updates without hiring an internal web team.',
-    'Shorter forms, clearer contact paths, and better next-step copy.',
-    'Simple automation where it actually helps the firm.',
+    'Site updates without hiring an internal web team.',
+    'Shorter forms, clearer contact steps, and better next-step copy.',
+    'Simple tools where they help the firm.',
   ],
   findings: [
     {
@@ -45,7 +45,7 @@ const sampleAudit: AuditRecord = {
       impact:
         'People wait or leave when the first step feels unclear.',
       recommendation:
-        'Lead with one clear contact action and a short reply-time note.',
+        'Lead with one clear contact action and a short reply note.',
     },
     {
       id: 'intake-scope',
@@ -55,7 +55,7 @@ const sampleAudit: AuditRecord = {
       detail:
         'Some questions are useful later, but they do not need to be in the first step.',
       evidence:
-        'The mobile form asks for more detail before it explains what happens after submit.',
+        'The mobile form asks for more detail before it says what happens next.',
       impact:
         'Long first forms make more people stop on their phone.',
       recommendation:
@@ -67,7 +67,7 @@ const sampleAudit: AuditRecord = {
       label: 'Reply path',
       title: 'The site does not show what happens after submit.',
       detail:
-        'A strong site should tell people their request is seen and when they should expect a reply.',
+        'A strong site should say the request was seen and when a reply will come.',
       evidence:
         'There is no clear block that explains the next step or sets a reply expectation.',
       impact:
@@ -92,7 +92,7 @@ const sampleAudit: AuditRecord = {
     {
       title: 'Form path',
       summary:
-        'Small form changes can remove friction without making the site feel robotic.',
+        'Small form changes can make the site feel easier, not robotic.',
       bullets: [
         'Keep the first form short.',
         'Explain what happens after submit.',
@@ -104,14 +104,14 @@ const sampleAudit: AuditRecord = {
     {
       title: 'Ongoing help',
       summary:
-        'After the review, the long-term value comes from steady small fixes.',
+        'After the review, the value comes from steady small fixes.',
       bullets: [
         'Monthly site improvements and page updates.',
         'Chat or contact experiments where they fit.',
         'Reply-flow tuning so leads move faster.',
       ],
       implementation:
-        'This is the ongoing support offer that improves the site and reply path together.',
+        'This is the ongoing support offer that improves the site and next step together.',
     },
   ],
 };
@@ -147,7 +147,7 @@ const demoAudit: AuditRecord = {
   ],
   implementationOptions: [
     'Shorten the mobile form and move lower-value questions to follow-up.',
-    'Add faster-reply cues around the main contact action.',
+    'Add faster reply cues around the main contact action.',
     'Set up a tighter after-hours handoff with forms and follow-up email.',
   ],
   findings: [
@@ -163,7 +163,7 @@ const demoAudit: AuditRecord = {
       impact:
         'People are more likely to wait or leave when the next step is unclear.',
       recommendation:
-        'Reduce the first decision to one main action, then offer other paths later.',
+        'Reduce the first choice to one main action, then offer other paths later.',
     },
     {
       id: 'form-length',
@@ -185,13 +185,13 @@ const demoAudit: AuditRecord = {
       label: 'Reply speed',
       title: 'The site does not prove that inquiries get a fast reply.',
       detail:
-        'The current contact experience does not reassure a prospect about timing or what happens after submit.',
+        'The current contact flow does not show when a reply will come or what happens after submit.',
       evidence:
         'The contact area lacks a plain next-step block and does not show a clear turnaround time.',
       impact:
         'When people do not believe they will hear back soon, they keep searching.',
       recommendation:
-        'Add reply-time language, after-hours expectations, and a simple confirmation flow.',
+        'Add a reply-time line, an after-hours note, and a simple confirmation flow.',
     },
   ],
   fullAuditSections: [
@@ -213,11 +213,11 @@ const demoAudit: AuditRecord = {
         'The form tries to capture a lead and qualify the matter in one step. That is too much for first-touch traffic.',
       bullets: [
         'Trim the first form to the minimum needed to route the lead.',
-        'Defer matter details until after the first confirmation or callback.',
+        'Save matter details for after the first reply or call.',
         'Add stronger reassurance around privacy and reply timing on mobile.',
       ],
       implementation:
-        'A shorter first form plus follow-up can improve completion without lowering lead quality.',
+        'A shorter first form plus follow-up can lift completion.',
     },
     {
       title: 'Reply workflow',
@@ -229,7 +229,7 @@ const demoAudit: AuditRecord = {
         'Use an after-hours flow so leads are not left waiting overnight or on weekends.',
       ],
       implementation:
-        'This is where forms, routing, chat, and follow-up automation can help after the review finds the weak points.',
+        'This is where forms, routing, chat, and follow-up tools can help after the review finds the weak points.',
     },
   ],
 };
