@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "WebFetch(domain:www.gohighlevel.com)",
+      "WebFetch(domain:www.hapana.com)",
+      "Bash(git init:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(git fetch:*)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git checkout:*)"
+    ]
+  }
+}

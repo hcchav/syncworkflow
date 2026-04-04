@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harris &amp; Cole Law — AI Receptionist</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0f1b2d;
+    --navy-light: #1a2942;
+    --navy-mid: #243550;
+    --gold: #c9a84c;
+    --gold-light: #e2c97e;
+    --gold-dim: rgba(201,168,76,0.15);
+    --white: #f8f8f8;
+    --gray: #94a3b8;
+    --light-gray: #cbd5e1;
+    --bg: #0b1220;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--navy);
+    border-bottom: 1px solid var(--navy-mid);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px; color: var(--navy);
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+  .header-text h1 { font-size: 18px; font-weight: 700; color: var(--white); }
+  .header-text p { font-size: 12px; color: var(--gray); margin-top: 2px; }
+  .status-dot {
+    width: 8px; height: 8px; background: #22c55e; border-radius: 50%;
+    display: inline-block; margin-right: 6px; animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+
+  /* ── Chat Area ── */
+  .chat-container {
+    flex: 1;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px;
+  }
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .message {
+    display: flex;
+    gap: 12px;
+    max-width: 85%;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .message.assistant { align-self: flex-start; }
+  .message.user { align-self: flex-end; flex-direction: row-reverse; }
+
+  .avatar {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .message.assistant .avatar {
+    background: var(--gold-dim);
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+  .message.user .avatar {
+    background: var(--navy-mid);
+    color: var(--gray);
+    border: 1px solid rgba(148,163,184,0.2);
+  }
+
+  .bubble {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .message.assistant .bubble {
+    background: var(--navy-light);
+    border: 1px solid var(--navy-mid);
+    color: var(--light-gray);
+  }
+  .message.user .bubble {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--navy);
+    font-weight: 500;
+  }
+
+  /* Typing indicator */
+  .typing-indicator { display: flex; gap: 4px; padding: 4px 0; }
+  .typing-indicator span {
+    width: 7px; height: 7px; background: var(--gray); border-radius: 50%;
+    animation: typingBounce 1.4s infinite;
+  }
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+  }
+
+  /* ── Quick Replies ── */
+  .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 0 12px;
+  }
+  .quick-reply {
+    background: var(--navy-light);
+    border: 1px solid var(--navy-mid);
+    color: var(--gold);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .quick-reply:hover {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+  }
+
+  /* ── Input ── */
+  .input-area {
+    padding: 16px 0 24px;
+    border-top: 1px solid var(--navy-mid);
+  }
+  .input-wrapper {
+    display: flex;
+    gap: 8px;
+    background: var(--navy-light);
+    border: 1px solid var(--navy-mid);
+    border-radius: 12px;
+    padding: 4px;
+    transition: border-color 0.2s;
+  }
+  .input-wrapper:focus-within { border-color: var(--gold); }
+  .input-wrapper input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-size: 14px;
+    padding: 10px 12px;
+    font-family: inherit;
+  }
+  .input-wrapper input::placeholder { color: var(--gray); }
+  .send-btn {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border: none;
+    color: var(--navy);
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+  }
+  .send-btn:hover { opacity: 0.85; }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .send-btn svg { width: 18px; height: 18px; }
+
+  /* ── API Key Modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100; padding: 16px;
+  }
+  .modal {
+    background: var(--navy);
+    border: 1px solid var(--navy-mid);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+  }
+  .modal h2 { font-size: 20px; color: var(--gold); margin-bottom: 8px; }
+  .modal p { font-size: 14px; color: var(--gray); line-height: 1.6; margin-bottom: 20px; }
+  .modal input {
+    width: 100%;
+    background: var(--navy-light);
+    border: 1px solid var(--navy-mid);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--white);
+    font-size: 14px;
+    font-family: monospace;
+    outline: none;
+    margin-bottom: 16px;
+  }
+  .modal input:focus { border-color: var(--gold); }
+  .modal button {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border: none;
+    color: var(--navy);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .modal button:hover { opacity: 0.9; }
+  .modal .note {
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  /* ── System Prompt Panel ── */
+  .system-prompt-toggle {
+    text-align: center;
+    padding: 8px 0 16px;
+  }
+  .system-prompt-toggle button {
+    background: none;
+    border: 1px solid var(--navy-mid);
+    color: var(--gray);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .system-prompt-toggle button:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .system-prompt-panel {
+    display: none;
+    background: var(--navy);
+    border: 1px solid var(--navy-mid);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 0 0 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--gray);
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .system-prompt-panel.open { display: block; }
+  .system-prompt-panel .label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--navy-mid); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- API Key Modal -->
+<div class="modal-overlay" id="apiModal">
+  <div class="modal">
+    <h2>&#x1f511; Enter Your Anthropic API Key</h2>
+    <p>This demo calls the Claude API directly from your browser via a local proxy. Your key is stored only in this browser session and never sent anywhere else.</p>
+    <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autofocus>
+    <button onclick="saveApiKey()">Start Chatting</button>
+    <div class="note">Key is stored in sessionStorage only. Cleared when you close this tab.</div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">H&amp;C</div>
+  <div class="header-text">
+    <h1>Harris &amp; Cole Law</h1>
+    <p><span class="status-dot"></span>AI Receptionist — Online</p>
+  </div>
+</header>
+
+<div class="chat-container">
+  <div class="messages" id="messages"></div>
+
+  <div class="quick-replies" id="quickReplies">
+    <button class="quick-reply" onclick="sendQuick(this)">What areas of law do you handle?</button>
+    <button class="quick-reply" onclick="sendQuick(this)">How do I schedule a consultation?</button>
+    <button class="quick-reply" onclick="sendQuick(this)">What are your fees?</button>
+    <button class="quick-reply" onclick="sendQuick(this)">Do you offer free consultations?</button>
+    <button class="quick-reply" onclick="sendQuick(this)">Where are you located?</button>
+  </div>
+
+  <div class="system-prompt-toggle">
+    <button onclick="togglePrompt()">&#x2699;&#xfe0f; View System Prompt</button>
+  </div>
+  <div class="system-prompt-panel" id="promptPanel">
+    <span class="label">System Prompt (sent to Claude)</span>
+<span id="systemPromptText"></span>
+  </div>
+
+  <div class="input-area">
+    <div class="input-wrapper">
+      <input type="text" id="userInput" placeholder="Type your message..." 
+             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}">
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  SYSTEM PROMPT — This is what configures Claude as the
+//  law firm receptionist. Show this to clients to demonstrate
+//  how the AI personality and guardrails are set up.
+// ══════════════════════════════════════════════════════════════
+const SYSTEM_PROMPT = `You are the AI receptionist for Harris & Cole Law, a professional small law firm. Your name is "Harris & Cole Assistant."
+
+ABOUT THE FIRM:
+- Full name: Harris & Cole Law
+- Practice areas: Family Law, Personal Injury, and Estate Planning
+- Location: 1200 Main Street, Suite 400, Sacramento, CA 95814
+- Phone: (916) 555-0142
+- Email: info@harrisandcolelaw.com
+- Hours: Monday–Friday, 8:30 AM – 5:30 PM PST
+- The firm offers FREE initial consultations for all practice areas
+- Founded by partners Sarah Harris and Michael Cole
+
+CONSULTATION SCHEDULING:
+- Visitors can schedule a free consultation by calling (916) 555-0142, emailing info@harrisandcolelaw.com, or using the online booking form at harrisandcolelaw.com/schedule
+- Consultations are available in-person, by phone, or via video call
+- Typical consultation lasts 30 minutes
+
+FEES:
+- Personal injury cases: Contingency fee basis (no upfront cost; the firm only gets paid if you win)
+- Family law: Hourly billing; rates discussed during consultation
+- Estate planning: Flat-fee packages available; details provided during consultation
+- Free initial consultation for all practice areas
+
+YOUR BEHAVIOR RULES:
+1. Be warm, professional, and helpful — like a friendly but competent law firm receptionist
+2. Answer general questions about the firm, its services, scheduling, fees, and location
+3. NEVER provide specific legal advice, legal opinions, or case assessments
+4. If someone asks a legal question (e.g., "Am I eligible for custody?", "Can I sue my employer?", "How much is my case worth?"), provide general educational information ONLY, then ALWAYS end with this exact disclaimer: "This is general information only — please contact our office for legal advice specific to your situation."
+5. For emergencies or urgent legal matters, direct them to call (916) 555-0142 immediately
+6. Keep responses concise — aim for 2-4 short paragraphs maximum
+7. If you don't know something specific about the firm, say you'll have someone from the office follow up
+8. Always encourage scheduling a free consultation as the next step
+9. Use a warm but professional tone — not overly formal, not too casual
+10. If asked about competitors or other firms, politely redirect to Harris & Cole's services`;
+
+// Show the system prompt in the UI
+document.getElementById('systemPromptText').textContent = SYSTEM_PROMPT;
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let conversationHistory = [];
+let isLoading = false;
+const API_URL = 'http://localhost:3001/api/chat'; // local proxy
+
+// ══════════════════════════════════════════════════════════════
+//  API KEY
+// ══════════════════════════════════════════════════════════════
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key) return;
+  sessionStorage.setItem('anthropic_key', key);
+  document.getElementById('apiModal').style.display = 'none';
+  addMessage('assistant', `Welcome to Harris & Cole Law! 👋
+
+I'm the firm's AI assistant. I can help you with information about our practice areas, scheduling a free consultation, fees, office location, and more.
+
+How can I help you today?`);
+}
+
+if (sessionStorage.getItem('anthropic_key')) {
+  document.getElementById('apiModal').style.display = 'none';
+  addMessage('assistant', `Welcome to Harris & Cole Law! 👋
+
+I'm the firm's AI assistant. I can help you with information about our practice areas, scheduling a free consultation, fees, office location, and more.
+
+How can I help you today?`);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MESSAGING
+// ══════════════════════════════════════════════════════════════
+function addMessage(role, content) {
+  const container = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = `message ${role}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = role === 'assistant' ? 'H&C' : 'You';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = content;
+
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function showTyping() {
+  const container = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'message assistant';
+  div.id = 'typing';
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = 'H&C';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing');
+  if (el) el.remove();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+
+  const apiKey = sessionStorage.getItem('anthropic_key');
+  if (!apiKey) {
+    document.getElementById('apiModal').style.display = 'flex';
+    return;
+  }
+
+  // Hide quick replies after first user message
+  document.getElementById('quickReplies').style.display = 'none';
+
+  input.value = '';
+  addMessage('user', text);
+  conversationHistory.push({ role: 'user', content: text });
+
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+  showTyping();
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        apiKey,
+        system: SYSTEM_PROMPT,
+        messages: conversationHistory,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `API error ${res.status}`);
+    }
+
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || data.content || 'I apologize, I had trouble processing that. Please try again.';
+
+    removeTyping();
+    addMessage('assistant', reply);
+    conversationHistory.push({ role: 'assistant', content: reply });
+  } catch (err) {
+    removeTyping();
+    addMessage('assistant', `I'm sorry, I'm having trouble connecting right now. Please make sure the proxy server is running (node server.js) and try again.\n\nError: ${err.message}`);
+  }
+
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+  input.focus();
+}
+
+function sendQuick(btn) {
+  document.getElementById('userInput').value = btn.textContent;
+  sendMessage();
+}
+
+function togglePrompt() {
+  document.getElementById('promptPanel').classList.toggle('open');
+}
+</script>
+</body>
+</html>
