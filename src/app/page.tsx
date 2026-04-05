@@ -643,15 +643,19 @@ export default function HomePage() {
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
 
                 <div className="relative">
-                  {/* Photo — zoomed to show face, yellow bg circle */}
+                  {/* Photo — with gradient fade to hide bottom crop */}
                   <div className="w-44 h-44 rounded-full mx-auto mb-6 relative overflow-hidden border-4 border-white/20 shadow-2xl ring-4 ring-white/10 bg-[#e8c840]">
-                    <Image
-                      src="/heron-chavez.png"
-                      alt="Heron Chavez"
-                      width={220}
-                      height={220}
-                      className="object-cover object-top scale-[2.6] translate-y-6"
-                    />
+                    <div className="absolute inset-0 flex items-start justify-center pt-2">
+                      <Image
+                        src="/heron-chavez.png"
+                        alt="Heron Chavez"
+                        width={300}
+                        height={300}
+                        className="w-[150%] max-w-none"
+                      />
+                    </div>
+                    {/* Gradient fade at bottom to blend cutoff into yellow bg */}
+                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#e8c840] to-transparent" />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-1">Heron Chavez</h3>
                   <p className="text-blue-200 text-sm mb-6">Digital Strategy Consultant</p>
