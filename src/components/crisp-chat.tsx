@@ -8,6 +8,7 @@ export function CrispChat() {
   useEffect(() => {
     (window as any).$crisp = [];
     (window as any).CRISP_WEBSITE_ID = CRISP_WEBSITE_ID;
+    (window as any).$crisp.push(["config", "color:theme", "blue"]);
 
     const script = document.createElement("script");
     script.src = "https://client.crisp.chat/l.js";

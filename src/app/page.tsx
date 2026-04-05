@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -18,9 +19,10 @@ import {
   Mail,
   MapPin,
   Linkedin,
-  ChevronRight,
   TrendingUp,
   Sparkles,
+  AlertTriangle,
+  XCircle,
 } from "lucide-react";
 
 const features = [
@@ -85,21 +87,21 @@ const testimonials = [
   {
     quote:
       "The audit revealed 6 gaps I had no idea existed. We implemented the quick wins and saw a 40% increase in form submissions within 2 weeks.",
-    name: "Managing Partner",
-    firm: "Personal Injury Firm, San Diego",
+    name: "David R., Managing Partner",
+    firm: "Personal Injury Firm, San Diego County",
     rating: 5,
   },
   {
     quote:
       "I was skeptical about another free audit, but this one actually showed me specific tools and costs. No fluff — just actionable fixes.",
-    name: "Solo Practitioner",
+    name: "Sarah M., Solo Practitioner",
     firm: "Family Law, Sacramento",
     rating: 5,
   },
   {
     quote:
       "We didn't realize our site had no schema markup or ADA basics. The revenue gap estimate was eye-opening — we booked the call immediately.",
-    name: "Office Manager",
+    name: "Lisa T., Office Manager",
     firm: "Workers' Comp Firm, Los Angeles",
     rating: 5,
   },
@@ -124,18 +126,116 @@ const auditCategories = [
 
 // Animation variants
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
 const stagger = {
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.08 } },
 };
+
+/* ---------- Mini audit dashboard mockup ---------- */
+function AuditDashboardMockup() {
+  const mockFindings = [
+    { label: "SSL / HTTPS", pass: true },
+    { label: "Mobile Responsive", pass: true },
+    { label: "Online Intake Form", pass: false },
+    { label: "Live Chat", pass: false },
+    { label: "Schema Markup", pass: false },
+    { label: "Online Scheduling", pass: false },
+    { label: "SEO Meta Tags", pass: true },
+    { label: "ADA Compliance", pass: false },
+  ];
+  const score = 38;
+
+  return (
+    <div className="bg-white rounded-2xl shadow-2xl shadow-blue/10 border border-gray-200 overflow-hidden">
+      {/* Browser chrome */}
+      <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 flex items-center gap-2">
+        <div className="flex gap-1.5">
+          <div className="w-3 h-3 rounded-full bg-red-400" />
+          <div className="w-3 h-3 rounded-full bg-amber-400" />
+          <div className="w-3 h-3 rounded-full bg-green-400" />
+        </div>
+        <div className="flex-1 mx-3">
+          <div className="bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-400 text-center">
+            syncworkflow.com/audit/your-firm
+          </div>
+        </div>
+      </div>
+
+      {/* Dashboard content */}
+      <div className="p-5 md:p-6 space-y-5">
+        {/* Score + header row */}
+        <div className="flex items-center gap-5">
+          {/* Score ring */}
+          <div className="relative w-20 h-20 shrink-0">
+            <svg viewBox="0 0 80 80" className="w-full h-full -rotate-90">
+              <circle cx="40" cy="40" r="34" fill="none" stroke="#f1f5f9" strokeWidth="6" />
+              <circle
+                cx="40" cy="40" r="34" fill="none"
+                stroke="#ef4444" strokeWidth="6" strokeLinecap="round"
+                strokeDasharray={`${(score / 100) * 213.6} 213.6`}
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-xl font-bold text-gray-900">{score}</span>
+              <span className="text-[10px] text-gray-400">/100</span>
+            </div>
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900 text-sm">Smith & Associates</h3>
+            <p className="text-xs text-gray-500 mt-0.5">3 of 14 checks passed</p>
+            <div className="flex items-center gap-1.5 mt-2">
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+                <AlertTriangle className="w-3 h-3" />
+                5 gaps found
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Revenue gap */}
+        <div className="bg-red-50 border border-red-100 rounded-xl p-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-red-500" />
+            <span className="text-xs font-medium text-red-700">Estimated Revenue Gap</span>
+          </div>
+          <span className="text-sm font-bold text-red-600">$72,000/yr</span>
+        </div>
+
+        {/* Checklist */}
+        <div className="space-y-1.5">
+          {mockFindings.map((f) => (
+            <div
+              key={f.label}
+              className="flex items-center justify-between py-1.5 px-3 rounded-lg text-xs hover:bg-gray-50 transition-colors"
+            >
+              <span className="text-gray-700">{f.label}</span>
+              {f.pass ? (
+                <CheckCircle className="w-4 h-4 text-green-500" />
+              ) : (
+                <XCircle className="w-4 h-4 text-red-400" />
+              )}
+            </div>
+          ))}
+          {/* Locked rows */}
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center justify-between py-1.5 px-3 rounded-lg opacity-40">
+              <div className="h-3 bg-gray-200 rounded w-24" />
+              <div className="h-4 w-4 bg-gray-200 rounded-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[#030d1a]" id="main">
-      {/* Skip to content link (ADA) */}
+    <main className="min-h-screen bg-white" id="main">
+      {/* Skip to content */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-accent focus:text-white focus:px-4 focus:py-2 focus:rounded-lg"
@@ -143,120 +243,154 @@ export default function HomePage() {
         Skip to main content
       </a>
 
-      {/* Nav — glassmorphism style */}
+      {/* Nav */}
       <nav
-        className="fixed top-0 w-full z-50 border-b border-white/5"
+        className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100"
         aria-label="Main navigation"
       >
-        <div className="bg-[#030d1a]/80 backdrop-blur-xl">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center gap-2.5"
-              aria-label="SyncWorkflow home"
-            >
-              <div className="w-9 h-9 bg-gradient-to-br from-accent to-[#00bfa5] rounded-xl flex items-center justify-center shadow-lg shadow-accent/20">
-                <Zap className="w-4.5 h-4.5 text-white" />
-              </div>
-              <span className="font-bold text-lg text-white">SyncWorkflow</span>
-            </Link>
-            <div className="hidden md:flex items-center gap-8">
-              {[
-                { href: "#how-it-works", label: "How It Works" },
-                { href: "#what-we-audit", label: "What We Audit" },
-                { href: "#testimonials", label: "Results" },
-                { href: "#about", label: "About" },
-                { href: "#contact", label: "Contact" },
-              ].map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5" aria-label="SyncWorkflow home">
+            <div className="w-9 h-9 bg-accent rounded-xl flex items-center justify-center shadow-sm">
+              <Zap className="w-4.5 h-4.5 text-white" />
             </div>
-            <Link
-              href="/audit/new"
-              className="relative bg-gradient-to-r from-accent to-[#00bfa5] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:shadow-lg hover:shadow-accent/25 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-2 focus:ring-offset-[#030d1a]"
-            >
-              Free Audit
-            </Link>
+            <span className="font-bold text-lg text-gray-900">SyncWorkflow</span>
+          </Link>
+          <div className="hidden md:flex items-center gap-8">
+            {[
+              { href: "#how-it-works", label: "How It Works" },
+              { href: "#what-we-audit", label: "What We Audit" },
+              { href: "#testimonials", label: "Results" },
+              { href: "#about", label: "About" },
+              { href: "#contact", label: "Contact" },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
+          <Link
+            href="/audit/new"
+            className="bg-accent text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:bg-blue-700 hover:shadow-lg hover:shadow-accent/20 hover:-translate-y-0.5"
+          >
+            Free Audit
+          </Link>
         </div>
       </nav>
 
       {/* ====== HERO ====== */}
-      <section
-        id="main-content"
-        className="relative pt-32 pb-24 overflow-hidden"
-      >
-        {/* Background effects */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-accent/8 rounded-full blur-[120px]" />
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue/10 rounded-full blur-[100px]" />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[80px]" />
-        </div>
+      <section id="main-content" className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden">
+        {/* Subtle background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white" />
 
         <div className="relative max-w-6xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left — text */}
+            <motion.div initial="hidden" animate="visible" variants={stagger}>
+              <motion.div variants={fadeUp}>
+                <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-accent text-sm px-4 py-2 rounded-full mb-6 font-medium">
+                  <Sparkles className="w-4 h-4" aria-hidden="true" />
+                  Free for California Law Firms
+                </div>
+              </motion.div>
+
+              <motion.h1
+                variants={fadeUp}
+                className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-gray-900 leading-[1.1] mb-6 tracking-tight"
+              >
+                Is Your Website{" "}
+                <span className="text-accent">Losing You Clients?</span>
+              </motion.h1>
+
+              <motion.p
+                variants={fadeUp}
+                className="text-lg text-gray-600 mb-8 leading-relaxed max-w-lg"
+              >
+                Most law firm websites fail on the basics — no intake forms, no
+                chat, no scheduling. Get your free 14-point audit in 60 seconds.
+              </motion.p>
+
+              <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 mb-4">
+                <Link
+                  href="/audit/new"
+                  className="group inline-flex items-center justify-center gap-2 bg-accent text-white px-7 py-3.5 rounded-xl text-base font-semibold transition-all hover:bg-blue-700 hover:shadow-lg hover:shadow-accent/20 hover:-translate-y-0.5"
+                >
+                  Audit My Site Free
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                </Link>
+                <a
+                  href="https://calendly.com/heroncchavez/30min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:inline-flex items-center justify-center gap-2 border border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50 px-7 py-3.5 rounded-xl text-base font-semibold transition-all"
+                >
+                  <Calendar className="w-4 h-4" aria-hidden="true" />
+                  Book Free Call
+                </a>
+                <a
+                  href="https://calendly.com/heroncchavez/30min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sm:hidden inline-flex items-center justify-center gap-1 text-sm text-accent font-medium hover:underline"
+                >
+                  <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
+                  or book a free strategy call
+                </a>
+              </motion.div>
+
+              <motion.p variants={fadeUp} className="text-gray-400 text-sm">
+                No signup required. Results in under 60 seconds.
+              </motion.p>
+            </motion.div>
+
+            {/* Right — audit dashboard mockup (desktop) */}
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" as const }}
+              className="hidden md:block"
+            >
+              <AuditDashboardMockup />
+            </motion.div>
+          </div>
+
+          {/* Mobile condensed dashboard preview */}
           <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={stagger}
-            className="max-w-3xl mx-auto text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="md:hidden mt-8"
           >
-            {/* Badge */}
-            <motion.div variants={fadeUp}>
-              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-gray-300 text-sm px-4 py-2 rounded-full mb-8 backdrop-blur-sm">
-                <Sparkles className="w-4 h-4 text-accent" aria-hidden="true" />
-                Free for California Law Firms
+            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="relative w-14 h-14 shrink-0">
+                  <svg viewBox="0 0 56 56" className="w-full h-full -rotate-90">
+                    <circle cx="28" cy="28" r="22" fill="none" stroke="#f1f5f9" strokeWidth="5" />
+                    <circle cx="28" cy="28" r="22" fill="none" stroke="#ef4444" strokeWidth="5" strokeLinecap="round" strokeDasharray={`${(38 / 100) * 138.2} 138.2`} />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-sm font-bold text-gray-900">38</span>
+                    <span className="text-[8px] text-gray-400">/100</span>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Sample Audit Result</p>
+                  <p className="text-sm font-semibold text-red-600">$72,000/yr revenue gap</p>
+                  <p className="text-xs text-gray-400">5 of 14 gaps found</p>
+                </div>
               </div>
-            </motion.div>
-
-            {/* Headline */}
-            <motion.h1
-              variants={fadeUp}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-6 tracking-tight"
-            >
-              Is Your Website{" "}
-              <span className="bg-gradient-to-r from-accent to-[#00e5cc] bg-clip-text text-transparent">
-                Losing You Clients?
-              </span>
-            </motion.h1>
-
-            {/* Subheadline */}
-            <motion.p
-              variants={fadeUp}
-              className="text-lg md:text-xl text-gray-400 mb-10 leading-relaxed max-w-2xl mx-auto"
-            >
-              Most law firm websites fail on the basics — no intake forms, no
-              chat, no scheduling. Get your free audit in 60 seconds.
-            </motion.p>
-
-            {/* CTA group */}
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Link
-                href="/audit/new"
-                className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-accent to-[#00bfa5] text-white px-8 py-4 rounded-xl text-base font-semibold transition-all hover:shadow-xl hover:shadow-accent/25 hover:-translate-y-0.5"
-              >
-                Audit My Site Free
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-              </Link>
-              <a
-                href="https://calendly.com/heroncchavez/30min"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 border border-white/15 text-white hover:bg-white/5 px-8 py-4 rounded-xl text-base font-semibold transition-all hover:-translate-y-0.5"
-              >
-                <Calendar className="w-4 h-4" aria-hidden="true" />
-                Book Free Call
-              </a>
-            </motion.div>
-
-            <motion.p variants={fadeUp} className="text-gray-500 text-sm">
-              No signup required. Results in under 60 seconds.
-            </motion.p>
+              <div className="flex gap-1.5">
+                {[true, true, true, false, false, false, false, false].map((pass, i) => (
+                  <div key={i} className={`h-1.5 flex-1 rounded-full ${pass ? "bg-green-400" : "bg-red-300"}`} />
+                ))}
+                {[1, 2, 3].map((i) => (
+                  <div key={`l${i}`} className="h-1.5 flex-1 rounded-full bg-gray-200" />
+                ))}
+              </div>
+            </div>
           </motion.div>
 
           {/* Stats row */}
@@ -265,15 +399,15 @@ export default function HomePage() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={stagger}
-            className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4"
+            className="mt-10 md:mt-20 grid grid-cols-2 md:grid-cols-4 gap-4"
           >
             {stats.map((stat) => (
               <motion.div
                 key={stat.label}
                 variants={fadeUp}
-                className="bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm rounded-2xl p-6 text-center hover:bg-white/[0.06] transition-colors"
+                className="bg-white border border-gray-100 rounded-2xl p-5 text-center shadow-sm hover:shadow-md hover:border-blue-100 transition-all"
               >
-                <div className="text-3xl md:text-4xl font-bold text-white mb-1">
+                <div className="text-3xl font-bold text-gray-900 mb-1">
                   {stat.value}
                 </div>
                 <div className="text-sm text-gray-500">{stat.label}</div>
@@ -284,23 +418,23 @@ export default function HomePage() {
       </section>
 
       {/* ====== WHAT WE AUDIT ====== */}
-      <section id="what-we-audit" className="py-24 bg-[#040e1e]" aria-labelledby="audit-heading">
+      <section id="what-we-audit" className="py-20 md:py-24 bg-gray-50" aria-labelledby="audit-heading">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={stagger}
-            className="text-center mb-16"
+            className="text-center mb-14"
           >
-            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 text-accent text-sm px-4 py-1.5 rounded-full mb-6">
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-accent text-sm px-4 py-1.5 rounded-full mb-5 font-medium">
               <Shield className="w-3.5 h-3.5" />
               Comprehensive Analysis
             </motion.div>
-            <motion.h2 variants={fadeUp} id="audit-heading" className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <motion.h2 variants={fadeUp} id="audit-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               What We Audit
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-gray-400 max-w-xl mx-auto text-lg">
+            <motion.p variants={fadeUp} className="text-gray-600 max-w-xl mx-auto text-lg">
               A comprehensive scan of everything that matters for converting
               website visitors into signed clients.
             </motion.p>
@@ -317,13 +451,13 @@ export default function HomePage() {
               <motion.div
                 key={f.title}
                 variants={fadeUp}
-                className="group bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 hover:bg-white/[0.06] hover:border-accent/20 transition-all hover:-translate-y-1"
+                className="group bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-blue-100 transition-all hover:-translate-y-1"
               >
-                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
+                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors">
                   <f.icon className="w-5.5 h-5.5 text-accent" aria-hidden="true" />
                 </div>
-                <h3 className="font-semibold text-white mb-2 text-lg">{f.title}</h3>
-                <p className="text-sm text-gray-400 leading-relaxed">
+                <h3 className="font-semibold text-gray-900 mb-2 text-lg">{f.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed">
                   {f.description}
                 </p>
               </motion.div>
@@ -336,7 +470,7 @@ export default function HomePage() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
-            className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 md:p-8"
+            className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm"
           >
             <h3 className="text-sm font-semibold text-gray-400 mb-5 text-center uppercase tracking-widest">
               All 14 Categories We Check
@@ -345,13 +479,10 @@ export default function HomePage() {
               {auditCategories.map((cat) => (
                 <div
                   key={cat}
-                  className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.04] hover:border-accent/20 transition-colors"
+                  className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 hover:border-blue-200 hover:bg-blue-50/50 transition-colors"
                 >
-                  <CheckCircle
-                    className="w-4 h-4 text-accent shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span className="text-sm text-gray-300">{cat}</span>
+                  <CheckCircle className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
+                  <span className="text-sm text-gray-700">{cat}</span>
                 </div>
               ))}
             </div>
@@ -360,23 +491,23 @@ export default function HomePage() {
       </section>
 
       {/* ====== HOW IT WORKS ====== */}
-      <section id="how-it-works" className="py-24 bg-[#030d1a]" aria-labelledby="steps-heading">
+      <section id="how-it-works" className="py-20 md:py-24 bg-white" aria-labelledby="steps-heading">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={stagger}
-            className="text-center mb-16"
+            className="text-center mb-14"
           >
-            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-blue/10 border border-blue/20 text-blue text-sm px-4 py-1.5 rounded-full mb-6">
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-accent text-sm px-4 py-1.5 rounded-full mb-5 font-medium">
               <Zap className="w-3.5 h-3.5" />
               Simple Process
             </motion.div>
-            <motion.h2 variants={fadeUp} id="steps-heading" className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <motion.h2 variants={fadeUp} id="steps-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               How It Works
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-gray-400 max-w-xl mx-auto text-lg">
+            <motion.p variants={fadeUp} className="text-gray-600 max-w-xl mx-auto text-lg">
               From URL to action plan in 3 simple steps.
             </motion.p>
           </motion.div>
@@ -390,21 +521,20 @@ export default function HomePage() {
           >
             {steps.map((s, i) => (
               <motion.div key={s.num} variants={fadeUp} className="relative">
-                {/* Connector line */}
                 {i < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-16 left-[calc(50%+40px)] right-[-calc(50%-40px)] h-px bg-gradient-to-r from-white/10 to-transparent" />
+                  <div className="hidden md:block absolute top-16 left-[calc(50%+40px)] right-[-calc(50%-40px)] h-px bg-gradient-to-r from-gray-200 to-transparent" />
                 )}
-                <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-8 text-center hover:bg-white/[0.06] transition-all hover:-translate-y-1">
-                  <div className="text-5xl font-bold text-white/[0.06] absolute top-4 right-6 select-none">
+                <div className="bg-white border border-gray-100 rounded-2xl p-8 text-center shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+                  <div className="text-5xl font-bold text-gray-100 absolute top-4 right-6 select-none">
                     {s.num}
                   </div>
-                  <div className="w-14 h-14 bg-gradient-to-br from-accent/20 to-accent/5 border border-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                  <div className="w-14 h-14 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
                     <s.icon className="w-6 h-6 text-accent" aria-hidden="true" />
                   </div>
-                  <h3 className="font-semibold text-white text-lg mb-3">
+                  <h3 className="font-semibold text-gray-900 text-lg mb-3">
                     {s.title}
                   </h3>
-                  <p className="text-sm text-gray-400 leading-relaxed">
+                  <p className="text-sm text-gray-500 leading-relaxed">
                     {s.description}
                   </p>
                 </div>
@@ -421,7 +551,7 @@ export default function HomePage() {
           >
             <Link
               href="/audit/new"
-              className="group inline-flex items-center gap-2 bg-gradient-to-r from-accent to-[#00bfa5] text-white px-8 py-4 rounded-xl text-base font-semibold transition-all hover:shadow-xl hover:shadow-accent/25 hover:-translate-y-0.5"
+              className="group inline-flex items-center gap-2 bg-accent text-white px-8 py-4 rounded-xl text-base font-semibold transition-all hover:bg-blue-700 hover:shadow-lg hover:shadow-accent/20 hover:-translate-y-0.5"
             >
               Start Your Free Audit
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
@@ -431,27 +561,23 @@ export default function HomePage() {
       </section>
 
       {/* ====== TESTIMONIALS ====== */}
-      <section
-        id="testimonials"
-        className="py-24 bg-[#040e1e]"
-        aria-labelledby="testimonials-heading"
-      >
+      <section id="testimonials" className="py-20 md:py-24 bg-gray-50" aria-labelledby="testimonials-heading">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={stagger}
-            className="text-center mb-16"
+            className="text-center mb-14"
           >
-            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm px-4 py-1.5 rounded-full mb-6">
-              <Star className="w-3.5 h-3.5 fill-amber-400" />
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-amber-50 border border-amber-100 text-amber-600 text-sm px-4 py-1.5 rounded-full mb-5 font-medium">
+              <Star className="w-3.5 h-3.5 fill-amber-500" />
               Client Results
             </motion.div>
-            <motion.h2 variants={fadeUp} id="testimonials-heading" className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <motion.h2 variants={fadeUp} id="testimonials-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               What Firms Are Saying
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-gray-400 max-w-xl mx-auto text-lg">
+            <motion.p variants={fadeUp} className="text-gray-600 max-w-xl mx-auto text-lg">
               Real results from California law firms who used our free audit.
             </motion.p>
           </motion.div>
@@ -467,28 +593,19 @@ export default function HomePage() {
               <motion.blockquote
                 key={i}
                 variants={fadeUp}
-                className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 md:p-8 flex flex-col hover:border-accent/20 transition-all"
+                className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 flex flex-col shadow-sm hover:shadow-md hover:border-blue-100 transition-all"
               >
-                <div
-                  className="flex gap-1 mb-5"
-                  aria-label={`${t.rating} out of 5 stars`}
-                >
+                <div className="flex gap-1 mb-4" aria-label={`${t.rating} out of 5 stars`}>
                   {Array.from({ length: t.rating }).map((_, j) => (
-                    <Star
-                      key={j}
-                      className="w-4 h-4 fill-amber-400 text-amber-400"
-                      aria-hidden="true"
-                    />
+                    <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" aria-hidden="true" />
                   ))}
                 </div>
-                <p className="text-gray-300 leading-relaxed mb-6 flex-1">
+                <p className="text-gray-600 leading-relaxed mb-6 flex-1">
                   &ldquo;{t.quote}&rdquo;
                 </p>
-                <footer className="border-t border-white/[0.06] pt-5">
-                  <div className="font-semibold text-white text-sm">
-                    {t.name}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-0.5">{t.firm}</div>
+                <footer className="border-t border-gray-100 pt-4">
+                  <div className="font-semibold text-gray-900 text-sm">{t.name}</div>
+                  <div className="text-xs text-gray-400 mt-0.5">{t.firm}</div>
                 </footer>
               </motion.blockquote>
             ))}
@@ -497,65 +614,53 @@ export default function HomePage() {
       </section>
 
       {/* ====== ABOUT ====== */}
-      <section id="about" className="py-24 bg-[#030d1a]" aria-labelledby="about-heading">
+      <section id="about" className="py-20 md:py-24 bg-white" aria-labelledby="about-heading">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
               variants={stagger}
             >
-              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 text-accent text-sm px-4 py-1.5 rounded-full mb-6">
+              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-accent text-sm px-4 py-1.5 rounded-full mb-5 font-medium">
                 <Users className="w-3.5 h-3.5" />
-                About Us
+                About
               </motion.div>
-              <motion.h2 variants={fadeUp} id="about-heading" className="text-3xl md:text-4xl font-bold text-white mb-6">
+              <motion.h2 variants={fadeUp} id="about-heading" className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
                 Why Trust SyncWorkflow?
               </motion.h2>
-              <motion.p variants={fadeUp} className="text-gray-400 leading-relaxed mb-6">
+              <motion.p variants={fadeUp} className="text-gray-600 leading-relaxed mb-5">
                 I&apos;m Heron Chavez, a digital strategy consultant who
                 specializes in helping California law firms modernize their
                 online presence. After auditing 58+ firm websites, I&apos;ve
                 seen the same patterns — firms losing thousands in potential
                 revenue because of fixable website gaps.
               </motion.p>
-              <motion.p variants={fadeUp} className="text-gray-400 leading-relaxed mb-8">
+              <motion.p variants={fadeUp} className="text-gray-600 leading-relaxed mb-8">
                 SyncWorkflow was built to give every firm — solo practitioners
                 and mid-size firms alike — access to the same audit insights
                 that agencies charge thousands for. No sales pitch, just data.
               </motion.p>
 
-              <motion.div variants={stagger} className="space-y-4">
+              <motion.div variants={stagger} className="space-y-3">
                 {[
                   { icon: Users, text: "58+ California law firms audited" },
-                  {
-                    icon: TrendingUp,
-                    text: "Average $72K/year revenue gap identified",
-                  },
+                  { icon: TrendingUp, text: "Average $72K/year revenue gap identified" },
                   { icon: Clock, text: "Results in under 60 seconds" },
-                  {
-                    icon: Shield,
-                    text: "100% free — no credit card, no obligation",
-                  },
+                  { icon: Shield, text: "100% free — no credit card, no obligation" },
                 ].map((item) => (
-                  <motion.div
-                    key={item.text}
-                    variants={fadeUp}
-                    className="flex items-center gap-3"
-                  >
-                    <div className="w-10 h-10 bg-accent/10 border border-accent/20 rounded-xl flex items-center justify-center shrink-0">
-                      <item.icon
-                        className="w-4.5 h-4.5 text-accent"
-                        aria-hidden="true"
-                      />
+                  <motion.div key={item.text} variants={fadeUp} className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-blue-50 border border-blue-100 rounded-lg flex items-center justify-center shrink-0">
+                      <item.icon className="w-4 h-4 text-accent" aria-hidden="true" />
                     </div>
-                    <span className="text-sm text-gray-300">{item.text}</span>
+                    <span className="text-sm text-gray-700">{item.text}</span>
                   </motion.div>
                 ))}
               </motion.div>
             </motion.div>
 
+            {/* Profile card with photo */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -563,47 +668,46 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              <div className="bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/[0.08] rounded-3xl p-10 text-center relative overflow-hidden">
-                {/* Glow */}
-                <div className="absolute top-0 right-0 w-40 h-40 bg-accent/10 rounded-full blur-[60px]" />
+              <div className="bg-gradient-to-br from-gray-50 to-blue-50/50 border border-gray-100 rounded-3xl p-8 md:p-10 text-center shadow-sm">
                 <div className="relative">
-                  <div className="w-28 h-28 bg-gradient-to-br from-accent/20 to-accent/5 border border-accent/20 rounded-full mx-auto mb-6 flex items-center justify-center">
-                    <span className="text-4xl font-bold text-white">HC</span>
+                  {/* Photo */}
+                  <div className="w-36 h-36 rounded-full mx-auto mb-6 relative overflow-hidden border-4 border-white shadow-lg">
+                    <Image
+                      src="/heron-chavez.png"
+                      alt="Heron Chavez"
+                      width={144}
+                      height={144}
+                      className="object-cover object-top scale-150 translate-y-4"
+                    />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-1">
                     Heron Chavez
                   </h3>
-                  <p className="text-gray-400 text-sm mb-8">
+                  <p className="text-gray-500 text-sm mb-8">
                     Digital Strategy Consultant
                   </p>
                   <div className="space-y-4 text-left max-w-xs mx-auto">
                     <a
                       href="mailto:heron@syncworkflow.com"
-                      className="flex items-center gap-3 text-gray-400 text-sm hover:text-accent transition-colors"
+                      className="flex items-center gap-3 text-gray-500 text-sm hover:text-accent transition-colors"
                     >
                       <Mail className="w-4 h-4 shrink-0" aria-hidden="true" />
                       heron@syncworkflow.com
                     </a>
                     <a
                       href="https://calendly.com/heroncchavez/30min"
-                      className="flex items-center gap-3 text-gray-400 text-sm hover:text-accent transition-colors"
+                      className="flex items-center gap-3 text-gray-500 text-sm hover:text-accent transition-colors"
                     >
-                      <Calendar
-                        className="w-4 h-4 shrink-0"
-                        aria-hidden="true"
-                      />
+                      <Calendar className="w-4 h-4 shrink-0" aria-hidden="true" />
                       Book a free 30-min call
                     </a>
                     <a
                       href="https://linkedin.com/in/heroncchavez"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3 text-gray-400 text-sm hover:text-accent transition-colors"
+                      className="flex items-center gap-3 text-gray-500 text-sm hover:text-accent transition-colors"
                     >
-                      <Linkedin
-                        className="w-4 h-4 shrink-0"
-                        aria-hidden="true"
-                      />
+                      <Linkedin className="w-4 h-4 shrink-0" aria-hidden="true" />
                       Connect on LinkedIn
                     </a>
                   </div>
@@ -615,9 +719,9 @@ export default function HomePage() {
       </section>
 
       {/* ====== CTA BANNER ====== */}
-      <section className="py-24 relative overflow-hidden" aria-labelledby="cta-heading">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-[#030d1a] to-blue/10" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/8 rounded-full blur-[150px]" />
+      <section className="py-20 md:py-24 bg-navy relative overflow-hidden" aria-labelledby="cta-heading">
+        <div className="absolute inset-0 bg-gradient-to-br from-navy via-[#1a365d] to-accent/30" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px]" />
 
         <div className="relative max-w-3xl mx-auto px-6 text-center">
           <motion.div
@@ -631,19 +735,16 @@ export default function HomePage() {
               id="cta-heading"
               className="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight"
             >
-              Ready to See What You&apos;re{" "}
-              <span className="bg-gradient-to-r from-accent to-[#00e5cc] bg-clip-text text-transparent">
-                Missing?
-              </span>
+              Ready to See What You&apos;re Missing?
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
+            <motion.p variants={fadeUp} className="text-blue-100/70 text-lg mb-10 max-w-xl mx-auto">
               Get your free audit in 60 seconds, or book a strategy call and
               we&apos;ll walk through everything together.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/audit/new"
-                className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-accent to-[#00bfa5] text-white px-8 py-4 rounded-xl text-base font-semibold transition-all hover:shadow-xl hover:shadow-accent/25 hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2 bg-white text-navy px-8 py-4 rounded-xl text-base font-semibold transition-all hover:shadow-xl hover:-translate-y-0.5"
               >
                 Run Free Audit
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
@@ -652,7 +753,7 @@ export default function HomePage() {
                 href="https://calendly.com/heroncchavez/30min"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 border border-white/15 text-white hover:bg-white/5 px-8 py-4 rounded-xl text-base font-semibold transition-all hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2 border border-white/20 text-white hover:bg-white/10 px-8 py-4 rounded-xl text-base font-semibold transition-all hover:-translate-y-0.5"
               >
                 <Calendar className="w-4 h-4" aria-hidden="true" />
                 Book Free Call
@@ -663,7 +764,7 @@ export default function HomePage() {
       </section>
 
       {/* ====== CONTACT ====== */}
-      <section id="contact" className="py-24 bg-[#040e1e]" aria-labelledby="contact-heading">
+      <section id="contact" className="py-20 md:py-24 bg-gray-50" aria-labelledby="contact-heading">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12">
             <motion.div
@@ -675,31 +776,23 @@ export default function HomePage() {
               <motion.h2
                 variants={fadeUp}
                 id="contact-heading"
-                className="text-3xl md:text-4xl font-bold text-white mb-4"
+                className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
               >
                 Get in Touch
               </motion.h2>
-              <motion.p variants={fadeUp} className="text-gray-400 leading-relaxed mb-10">
+              <motion.p variants={fadeUp} className="text-gray-600 leading-relaxed mb-10">
                 Have a question about your audit or want to learn more about how
                 we can help your firm? Send us a message or use any of the
                 methods below.
               </motion.p>
               <motion.div variants={stagger} className="space-y-5">
-                <motion.a
-                  variants={fadeUp}
-                  href="mailto:heron@syncworkflow.com"
-                  className="flex items-center gap-4 group"
-                >
-                  <div className="w-12 h-12 bg-accent/10 border border-accent/20 rounded-xl flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                <motion.a variants={fadeUp} href="mailto:heron@syncworkflow.com" className="flex items-center gap-4 group">
+                  <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
                     <Mail className="w-5 h-5 text-accent" aria-hidden="true" />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-white">
-                      Email
-                    </div>
-                    <div className="text-sm text-gray-400">
-                      heron@syncworkflow.com
-                    </div>
+                    <div className="text-sm font-semibold text-gray-900">Email</div>
+                    <div className="text-sm text-gray-500">heron@syncworkflow.com</div>
                   </div>
                 </motion.a>
                 <motion.a
@@ -709,35 +802,21 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 group"
                 >
-                  <div className="w-12 h-12 bg-accent/10 border border-accent/20 rounded-xl flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                    <Calendar
-                      className="w-5 h-5 text-accent"
-                      aria-hidden="true"
-                    />
+                  <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                    <Calendar className="w-5 h-5 text-accent" aria-hidden="true" />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-white">
-                      Schedule a Call
-                    </div>
-                    <div className="text-sm text-gray-400">
-                      Free 30-minute strategy session
-                    </div>
+                    <div className="text-sm font-semibold text-gray-900">Schedule a Call</div>
+                    <div className="text-sm text-gray-500">Free 30-minute strategy session</div>
                   </div>
                 </motion.a>
                 <motion.div variants={fadeUp} className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-accent/10 border border-accent/20 rounded-xl flex items-center justify-center">
-                    <MapPin
-                      className="w-5 h-5 text-accent"
-                      aria-hidden="true"
-                    />
+                  <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center">
+                    <MapPin className="w-5 h-5 text-accent" aria-hidden="true" />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-white">
-                      Location
-                    </div>
-                    <div className="text-sm text-gray-400">
-                      Serving California Law Firms
-                    </div>
+                    <div className="text-sm font-semibold text-gray-900">Location</div>
+                    <div className="text-sm text-gray-500">Serving California Law Firms</div>
                   </div>
                 </motion.div>
               </motion.div>
@@ -749,91 +828,49 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-6 md:p-8"
+              className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 shadow-sm"
             >
               <form
                 action="https://formsubmit.co/heron@syncworkflow.com"
                 method="POST"
                 className="space-y-5"
               >
-                <input
-                  type="hidden"
-                  name="_subject"
-                  value="New contact from syncworkflow.com"
-                />
+                <input type="hidden" name="_subject" value="New contact from syncworkflow.com" />
                 <input type="hidden" name="_captcha" value="false" />
-                <input
-                  type="hidden"
-                  name="_next"
-                  value="https://syncworkflow.com/?contacted=true"
-                />
+                <input type="hidden" name="_next" value="https://syncworkflow.com/?contacted=true" />
                 <div>
-                  <label
-                    htmlFor="contact-name"
-                    className="block text-sm font-semibold text-gray-300 mb-2"
-                  >
-                    Name
-                  </label>
+                  <label htmlFor="contact-name" className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
                   <input
-                    id="contact-name"
-                    type="text"
-                    name="name"
-                    required
-                    placeholder="Your name"
-                    className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-colors"
+                    id="contact-name" type="text" name="name" required placeholder="Your name"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="contact-email"
-                    className="block text-sm font-semibold text-gray-300 mb-2"
-                  >
-                    Email
-                  </label>
+                  <label htmlFor="contact-email" className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                   <input
-                    id="contact-email"
-                    type="email"
-                    name="email"
-                    required
-                    placeholder="you@yourfirm.com"
-                    className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-colors"
+                    id="contact-email" type="email" name="email" required placeholder="you@yourfirm.com"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="contact-website"
-                    className="block text-sm font-semibold text-gray-300 mb-2"
-                  >
-                    Website{" "}
-                    <span className="text-gray-600 font-normal">(optional)</span>
+                  <label htmlFor="contact-website" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Website <span className="text-gray-400 font-normal">(optional)</span>
                   </label>
                   <input
-                    id="contact-website"
-                    type="text"
-                    name="website"
-                    placeholder="www.yourfirm.com"
-                    className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-colors"
+                    id="contact-website" type="text" name="website" placeholder="www.yourfirm.com"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="contact-message"
-                    className="block text-sm font-semibold text-gray-300 mb-2"
-                  >
-                    Message
-                  </label>
+                  <label htmlFor="contact-message" className="block text-sm font-semibold text-gray-700 mb-2">Message</label>
                   <textarea
-                    id="contact-message"
-                    name="message"
-                    rows={4}
-                    required
-                    placeholder="How can we help?"
-                    className="w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40 transition-colors resize-none"
+                    id="contact-message" name="message" rows={4} required placeholder="How can we help?"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors resize-none"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-accent to-[#00bfa5] text-white py-3.5 rounded-xl text-sm font-semibold transition-all hover:shadow-lg hover:shadow-accent/25 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                  className="w-full bg-accent text-white py-3.5 rounded-xl text-sm font-semibold transition-all hover:bg-blue-700 hover:shadow-lg hover:shadow-accent/20 hover:-translate-y-0.5"
                 >
                   Send Message
                 </button>
@@ -844,28 +881,23 @@ export default function HomePage() {
       </section>
 
       {/* ====== FOOTER ====== */}
-      <footer className="bg-[#020a15] border-t border-white/[0.04] py-14" role="contentinfo">
+      <footer className="bg-navy py-14" role="contentinfo">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-10 mb-10">
-            {/* Brand */}
             <div>
               <div className="flex items-center gap-2.5 mb-5">
-                <div className="w-8 h-8 bg-gradient-to-br from-accent to-[#00bfa5] rounded-xl flex items-center justify-center">
+                <div className="w-8 h-8 bg-accent rounded-xl flex items-center justify-center">
                   <Zap className="w-4 h-4 text-white" aria-hidden="true" />
                 </div>
                 <span className="font-bold text-white">SyncWorkflow</span>
               </div>
-              <p className="text-gray-500 text-sm leading-relaxed">
+              <p className="text-blue-100/50 text-sm leading-relaxed">
                 Free website audits for California law firms. Discover the gaps
                 costing you clients and revenue.
               </p>
             </div>
-
-            {/* Quick Links */}
             <div>
-              <h3 className="text-white font-semibold text-sm mb-5">
-                Quick Links
-              </h3>
+              <h3 className="text-white font-semibold text-sm mb-5">Quick Links</h3>
               <nav aria-label="Footer navigation" className="space-y-3">
                 {[
                   { href: "/audit/new", label: "Free Audit Tool" },
@@ -877,55 +909,34 @@ export default function HomePage() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block text-sm text-gray-500 hover:text-accent transition-colors"
+                    className="block text-sm text-blue-100/50 hover:text-white transition-colors"
                   >
                     {link.label}
                   </Link>
                 ))}
               </nav>
             </div>
-
-            {/* Contact */}
             <div>
               <h3 className="text-white font-semibold text-sm mb-5">Contact</h3>
               <div className="space-y-3">
-                <a
-                  href="mailto:heron@syncworkflow.com"
-                  className="flex items-center gap-2 text-sm text-gray-500 hover:text-accent transition-colors"
-                >
+                <a href="mailto:heron@syncworkflow.com" className="flex items-center gap-2 text-sm text-blue-100/50 hover:text-white transition-colors">
                   <Mail className="w-4 h-4" aria-hidden="true" />
                   heron@syncworkflow.com
                 </a>
-                <a
-                  href="https://calendly.com/heroncchavez/30min"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-gray-500 hover:text-accent transition-colors"
-                >
+                <a href="https://calendly.com/heroncchavez/30min" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-blue-100/50 hover:text-white transition-colors">
                   <Calendar className="w-4 h-4" aria-hidden="true" />
                   Book a Free Call
                 </a>
-                <a
-                  href="https://linkedin.com/in/heroncchavez"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm text-gray-500 hover:text-accent transition-colors"
-                >
+                <a href="https://linkedin.com/in/heroncchavez" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-blue-100/50 hover:text-white transition-colors">
                   <Linkedin className="w-4 h-4" aria-hidden="true" />
                   LinkedIn
                 </a>
               </div>
             </div>
           </div>
-
-          <div className="border-t border-white/[0.04] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-gray-600">
-              &copy; {new Date().getFullYear()} SyncWorkflow. All rights
-              reserved.
-            </div>
-            <div className="text-sm text-gray-600">
-              Serving California Law Firms
-            </div>
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-sm text-blue-100/30">&copy; {new Date().getFullYear()} SyncWorkflow. All rights reserved.</div>
+            <div className="text-sm text-blue-100/30">Serving California Law Firms</div>
           </div>
         </div>
       </footer>
