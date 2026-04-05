@@ -650,7 +650,7 @@ export default function HomePage() {
                       alt="Heron Chavez"
                       width={220}
                       height={220}
-                      className="object-cover object-[center_30%] scale-[1.4] translate-y-2"
+                      className="object-cover object-top scale-[2.6] translate-y-6"
                     />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-1">Heron Chavez</h3>
