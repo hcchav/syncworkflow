@@ -1,31 +1,98 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 :root {
   --background: #ffffff;
-  --foreground: #1e293b;
-  --navy: #1e3a5f;
-  --blue: #2563eb;
-  --light-blue: #eff6ff;
-  --accent: #2563eb;
+  --foreground: #07223D;
+  --navy: #07223D;
+  --navy-light: #0a3258;
+  --navy-deep: #03101C;
+  --blue: #2896FB;
+  --light-blue: #e8f4ff;
+  --mid-blue: #095DC3;
+  --light-cyan: #8DE1FF;
+  --accent: #2896FB;
+  --yellow: #FFD000;
+  --yellow-hover: #FFBC00;
+  --green: #17D94B;
+  --cyan: #20EDF1;
   --dark-gray: #334155;
   --med-gray: #64748b;
-  --light-gray: #f8fafc;
-  --red: #c0392b;
-  --dark-red: #8b1a1a;
-  --green: #27ae60;
-  --amber: #e67e22;
+  --light-gray: #F6F6F6;
+  --red: #EB3D32;
+  --score-green: #17D94B;
+  --score-amber: #FFBC00;
+  --score-red: #EB3D32;
 }
 
 @theme inline {
   --color-navy: var(--navy);
+  --color-navy-light: var(--navy-light);
+  --color-navy-deep: var(--navy-deep);
   --color-blue: var(--blue);
   --color-light-blue: var(--light-blue);
+  --color-mid-blue: var(--mid-blue);
+  --color-light-cyan: var(--light-cyan);
   --color-accent: var(--accent);
+  --color-yellow: var(--yellow);
+  --color-yellow-hover: var(--yellow-hover);
+  --color-ghl-green: var(--green);
+  --color-cyan: var(--cyan);
   --color-dark-gray: var(--dark-gray);
   --color-med-gray: var(--med-gray);
   --color-light-gray: var(--light-gray);
-  --color-dark-red: var(--dark-red);
-  --color-score-red: var(--red);
-  --color-score-green: var(--green);
-  --color-score-amber: var(--amber);
+  --color-score-red: var(--score-red);
+  --color-score-green: var(--score-green);
+  --color-score-amber: var(--score-amber);
+  --font-poppins: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Premium button shine effect */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+}
+.btn-shine:hover::after {
+  left: 120%;
+}
+
+/* Gradient text utility */
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass card */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Subtle grid pattern */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(40, 150, 251, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(40, 150, 251, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
